@@ -3,6 +3,8 @@
         "appspot",
         "firebaseapp",
         "firestore",
+        "nativewind",
+        "tailwindcss",
         "UHQV"
     ]
 }
