@@ -4,7 +4,9 @@
         "firebaseapp",
         "firestore",
         "nativewind",
+        "pextrabold",
         "pmedium",
+        "pregular",
         "psemibold",
         "tailwindcss",
         "UHQV"
