@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import { View, Text, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context"; 
+import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "../../components/CustomButton";
 import renderList from "../../components/renderList";
 
@@ -49,15 +49,13 @@ export default function Booking() {
   return (
     <SafeAreaView className="px-4 bg-primary h-full">
       <ScrollView vertical={true}>
-        <View className="mt-20">
-          <Text className=" font-pblack text-gray-100 text-sm">
+        <View className="my-20">
+          <Text className="font-pblack text-white text-sm">
             Booking Details
           </Text>
+          {renderList("User Details", UserInfo)}
+          {renderList("Booking Details", BookingInfo)}
         </View>
-        {renderList("User Details", UserInfo)}
-        {renderList("Booking Details", BookingInfo)}
-        <CustomButton title={"ADD POD"} containerStyles={"m-2"} />
-        <CustomButton title={"Change Status"} containerStyles={"m-2"} />
       </ScrollView>
       <StatusBar backgroundColor="#161622" style="light" />
     </SafeAreaView>

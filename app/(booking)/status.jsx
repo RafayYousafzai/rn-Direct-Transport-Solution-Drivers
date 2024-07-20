@@ -54,7 +54,7 @@ export default function Status() {
             key={index}
             onPress={() => updateStatus(status)}
             className={`w-[90%] p-4 my-2 rounded-xl ${
-              currentStatus === status ? "bg-secondary" : "bg-secondary-100"
+              currentStatus === status ? "bg-secondary-100" : "bg-secondary"
             }`}
           >
             <Text
