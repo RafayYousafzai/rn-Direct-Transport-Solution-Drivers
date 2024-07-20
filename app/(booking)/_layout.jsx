@@ -1,9 +1,9 @@
 import { Tabs } from "expo-router";
+import { View, Text, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { Image, Text, View } from "react-native";
 import { icons } from "@/constants";
 
-export default function TabsLayout() {
+export default function BookingLayout() {
   const TabIcon = ({ icon, color, name, focused }) => {
     return (
       <View className="flex items-center justify-center gap-2">
@@ -39,37 +39,51 @@ export default function TabsLayout() {
         }}
       >
         <Tabs.Screen
-          name="Dashboard"
+          name="details"
           options={{
-            title: "Dashboard",
+            title: "Details",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.home}
+                icon={icons.docs}
                 color={color}
-                name="Dashboard"
+                name="Details"
                 focused={focused}
               />
             ),
           }}
         />
         <Tabs.Screen
-          name="History"
+          name="pod"
           options={{
-            title: "History",
+            title: "POD",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.bookmark}
+                icon={icons.photo}
                 color={color}
-                name="History"
+                name="POD"
+                focused={focused}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="status"
+          options={{
+            title: "Status",
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                icon={icons.circle}
+                color={color}
+                name="Status"
                 focused={focused}
               />
             ),
           }}
         />
       </Tabs>
-
       <StatusBar backgroundColor="#161622" style="light" />
     </>
   );

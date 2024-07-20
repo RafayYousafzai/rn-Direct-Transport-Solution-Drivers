@@ -1,18 +1,12 @@
-import { Link, useNavigation } from "expo-router";
-import { Text, View } from "react-native";
+import { Link } from 'expo-router'
+import { View, Text, SafeAreaView } from 'react-native'
 
-export default function Index() {
+export default function index() {
   return (
-    <View className="flex-1 items-center justify-center bg-primary">
-      <Text className="text-secondary-200 font-pextrabold text-4xl">
-        DTS Driver App.
-      </Text>
-      <Link
-        className="bg-secondary-100 py-6 px-16 rounded-md m-4"
-        href={"/(booking)/pod"}
-      >
-        Go
-      </Link>
-    </View>
-  );
+    <SafeAreaView>
+      <Text>index</Text>
+      <Link href={"/History"}>go</Link>
+      <Link href={"/details"}>go</Link>
+    </SafeAreaView>
+  )
 }
