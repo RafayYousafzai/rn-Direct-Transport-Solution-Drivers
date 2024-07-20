@@ -47,10 +47,10 @@ export default function Booking() {
   ];
 
   return (
-    <SafeAreaView className="bg-primary h-full">
-      <ScrollView>
-        <View className="mt-16">
-          <Text className=" px-4 font-pblack text-gray-100 text-sm">
+    <SafeAreaView className="px-4 bg-primary h-full">
+      <ScrollView  vertical={true}>
+        <View className="mt-20">
+          <Text className=" font-pblack text-gray-100 text-sm">
             Booking Details
           </Text>
         </View>
