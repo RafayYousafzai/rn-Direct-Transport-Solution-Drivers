@@ -9,7 +9,7 @@ export default function Index() {
       </Text>
       <Link
         className="bg-secondary-100 py-6 px-16 rounded-md m-4"
-        href={"/status"}
+        href={"/(booking)/pod"}
       >
         Go
       </Link>

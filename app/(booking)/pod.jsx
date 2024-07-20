@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Text, SafeAreaView, FlatList, Pressable } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import ImageViewer from "../components/common/ImageViewer";
-import CustomButton from "../components/common/CustomButton";
-import EmptyState from "../components/EmptyState";
+import ImageViewer from "../../components/common/ImageViewer";
+import CustomButton from "../../components/common/CustomButton";
+import EmptyState from "../../components/EmptyState";
 
 const Pod = () => {
   const [selectedImages, setSelectedImages] = useState([]);

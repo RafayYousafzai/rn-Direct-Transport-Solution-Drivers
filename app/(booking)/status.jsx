@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Pressable, ActivityIndicator } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { format } from "date-fns";
 
 const statuses = [
@@ -24,7 +24,7 @@ export default function Status() {
     const currentDateTime = format(new Date(), "MM/dd/yyyy HH:mm:ss");
 
     const updatedData = {
-        ...booking,
+      ...booking,
       progressInformation: {
         ...booking.progressInformation,
         [newStatus]: currentDateTime,

@@ -1,9 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { View, Text, FlatList, StyleSheet, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import renderList from "../../components/renderList";
+import { View, Text, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context"; 
 import CustomButton from "../../components/CustomButton";
+import renderList from "../../components/renderList";
 
 export default function Booking() {
   const [form, setForm] = useState({
@@ -48,7 +48,7 @@ export default function Booking() {
 
   return (
     <SafeAreaView className="px-4 bg-primary h-full">
-      <ScrollView  vertical={true}>
+      <ScrollView vertical={true}>
         <View className="mt-20">
           <Text className=" font-pblack text-gray-100 text-sm">
             Booking Details
