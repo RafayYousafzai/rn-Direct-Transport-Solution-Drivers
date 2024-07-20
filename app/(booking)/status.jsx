@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { View, Text, Pressable, SafeAreaView } from "react-native";
 import { format } from "date-fns";
 
-const statuses = [
-  "Allocated",
+const statuses = [ 
   "Picked Up",
   "Delivered",
   "Returned",
@@ -33,7 +32,6 @@ export default function Status() {
     };
 
     setBooking(updatedData);
-    console.log(updatedData);
 
     try {
       //   await updateDoc("place_bookings", booking.docId, updatedData);
