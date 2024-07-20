@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, SafeAreaView } from "react-native";
 import { format } from "date-fns";
 
 const statuses = [
@@ -44,7 +44,7 @@ export default function Status() {
     setLoading(false);
   };
   return (
-    <View className="flex-1 items-center justify-center bg-primary p-4">
+    <SafeAreaView className="flex-1 items-center justify-center bg-primary p-4">
       <Text className="text-3xl text-yellow-50 font-pextrabold mb-4">
         Change Status
       </Text>
@@ -54,7 +54,7 @@ export default function Status() {
             key={index}
             onPress={() => updateStatus(status)}
             className={`w-[90%] p-4 my-2 rounded-xl ${
-              currentStatus === status ? "bg-blue-500" : "bg-gray-300"
+              currentStatus === status ? "bg-secondary" : "bg-secondary-100"
             }`}
           >
             <Text
@@ -67,6 +67,6 @@ export default function Status() {
           </Pressable>
         ))}
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

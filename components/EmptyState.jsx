@@ -4,9 +4,9 @@ import { View, Text, Image } from "react-native";
 import { images } from "../constants";
 import CustomButton from "./CustomButton";
 
-const EmptyState = ({ title, subtitle }) => {
+const EmptyState = ({ title, subtitle, style }) => {
   return (
-    <View className="flex justify-center items-center px-4">
+    <View className={`flex justify-center items-center px-4 ${style}`}>
       <Image
         source={images.empty}
         resizeMode="contain"

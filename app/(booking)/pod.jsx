@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, SafeAreaView, FlatList, Pressable } from "react-native";
+import { Text, SafeAreaView, FlatList, Pressable, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import ImageViewer from "../../components/common/ImageViewer";
 import CustomButton from "../../components/common/CustomButton";
@@ -51,26 +51,23 @@ const Pod = () => {
           <EmptyState
             title="No Images Selected"
             subtitle="Please select an image to add in the bookings list"
+            style="mt-16"
           />
         )}
         ListHeaderComponent={() => (
-          <>
+          <View className="my-16">
             {selectedImages.length > 0 && (
               <CustomButton
                 title="Add to Booking"
                 handlePress={() => null}
-                containerStyles="w-full mt-8"
-                textStyles="text-white"
                 isLoading={false}
               />
             )}
             <CustomButton
               title="Select an image"
               handlePress={pickImageAsync}
-              containerStyles="w-full mt-8"
-              textStyles="text-white"
             />
-          </>
+          </View>
         )}
       />
     </SafeAreaView>
