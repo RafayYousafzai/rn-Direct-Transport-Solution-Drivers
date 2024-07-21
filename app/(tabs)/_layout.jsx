@@ -68,8 +68,22 @@ export default function TabsLayout() {
             ),
           }}
         />
+        <Tabs.Screen
+          name="Profile"
+          options={{
+            title: "Profile",
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                icon={icons.user}
+                color={color}
+                name="Profile"
+                focused={focused}
+              />
+            ),
+          }}
+        />
       </Tabs>
-
       <StatusBar backgroundColor="#161622" style="light" />
     </>
   );

@@ -15,6 +15,7 @@ import ribbon from "../assets/icons/ribbon.png";
 import circle from "../assets/icons/charging-circle.png";
 import docs from "../assets/icons/paper.png";
 import photo from "../assets/icons/photo-camera.png";
+import user from "../assets/icons/user.png";
 
 export default {
   play,
@@ -34,4 +35,5 @@ export default {
   circle,
   docs,
   photo,
+  user,
 };
