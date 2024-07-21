@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { GetUser } from "@/lib/firebase/functions/auth";
 
 const GlobalContext = createContext();
 
@@ -6,22 +7,26 @@ const useGlobalContext = () => useContext(GlobalContext);
 
 const GlobalProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // getCurrentUser()
-    //   .then((result) => {
-    //     if (result) {
-    //       setIsLoggedIn(true);
-    //       setUser(result);
-    //     } else {
-    //       setIsLoggedIn(false);
-    //       setUser(null);
-    //     }
-    //   })
-    //   .catch((error) => console.log(error))
-    //   .finally(() => setIsLoading(false));
+    const initializeUser = async () => {
+      try {
+        const result = await GetUser();
+        console.log(result);
+        if (result) {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initializeUser();
   }, []);
 
   return (
@@ -31,8 +36,6 @@ const GlobalProvider = ({ children }) => {
         setIsLoggedIn,
         isLoading,
         setIsLoading,
-        setUser,
-        user,
       }}
     >
       {children}

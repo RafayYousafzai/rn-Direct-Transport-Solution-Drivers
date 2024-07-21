@@ -2,15 +2,15 @@ import { useState } from "react";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
-
 import { images } from "@/constants";
 import CustomButton from "@/components/CustomButton";
-import FormField from "../../components/FormField";
-import { signInWithEmail } from "@/lib/functions/auth";
+import FormField from "@/components/FormField";
+import { signInWithEmail } from "@/lib/firebase/functions/auth";
 import useGlobalContext from "@/context/GlobalProvider";
+import { save } from "@/lib/SecureStore/SecureStore";
 
 const SignIn = () => {
-  const { setUser, setIsLoggedIn } = useGlobalContext();
+  const { setIsLoggedIn } = useGlobalContext();
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     email: "",
@@ -24,11 +24,10 @@ const SignIn = () => {
     setSubmitting(true);
     try {
       const result = await signInWithEmail(form.email, form.password);
-      // const result = await getCurrentUser();
-      setUser(result);
+      await save("user", JSON.stringify(result));
       setIsLoggedIn(true);
       Alert.alert("Success", "User signed in successfully");
-      router.replace("/");
+      router.replace("/Dashboard");
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {

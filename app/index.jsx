@@ -5,6 +5,7 @@ import { Text, SafeAreaView } from "react-native";
 
 export default function index() {
   const { isLoggedIn, isLoading } = useGlobalContext();
+
   return (
     <SafeAreaView className="flex-1 bg-primary pt-40">
       {isLoading ? (
