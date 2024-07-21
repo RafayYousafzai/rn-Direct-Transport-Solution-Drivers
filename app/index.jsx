@@ -14,7 +14,7 @@ export default function index() {
           {isLoggedIn ? (
             <>
               <Text className="text-white">Welcome</Text>
-              <Link className="text-white" href={"/dashboard"}>
+              <Link className="text-white" href={"/Dashboard"}>
                 Dashboard
               </Link>
             </>
