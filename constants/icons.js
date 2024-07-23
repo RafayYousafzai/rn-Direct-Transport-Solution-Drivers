@@ -16,6 +16,7 @@ import circle from "../assets/icons/charging-circle.png";
 import docs from "../assets/icons/paper.png";
 import photo from "../assets/icons/photo-camera.png";
 import user from "../assets/icons/user.png";
+import remove from "../assets/icons/remove.png";
 
 export default {
   play,
@@ -36,4 +37,5 @@ export default {
   docs,
   photo,
   user,
+  remove,
 };
