@@ -34,9 +34,17 @@
       "expo-secure-store",
       "expo-camera",
       [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow DTS to access your camera",
+          "microphonePermission": "Allow DTS to access your microphone",
+          "recordAudioAndroid": true
+        }
+      ],
+      [
         "expo-secure-store",
         {
-          "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
+          "faceIDPermission": "Allow DTS to access your Face ID biometric data."
         }
       ]
     ],

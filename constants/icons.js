@@ -17,6 +17,7 @@ import docs from "../assets/icons/paper.png";
 import photo from "../assets/icons/photo-camera.png";
 import user from "../assets/icons/user.png";
 import remove from "../assets/icons/remove.png";
+import camera from "../assets/icons/photo.png";
 
 export default {
   play,
@@ -38,4 +39,5 @@ export default {
   photo,
   user,
   remove,
+  camera,
 };

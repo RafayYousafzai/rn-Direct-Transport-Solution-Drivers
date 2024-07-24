@@ -19,12 +19,26 @@ const Pod = () => {
 
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
       quality: 1,
+      allowsMultipleSelection: true,
     });
 
     if (!result.canceled) {
-      setSelectedImages([result.assets[0].uri, ...selectedImages]);
+      setSelectedImages([...result.assets[0].uri, ...selectedImages]);
+    } else {
+      console.log("You did not select any image.");
+    }
+  };
+
+  const pickCameraAsync = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      quality: 1,
+      allowsMultipleSelection: true,
+    });
+
+    if (!result.canceled) {
+      const newUris = result.assets.map((asset) => asset.uri);
+      setSelectedImages([...newUris, ...selectedImages]);
     } else {
       console.log("You did not select any image.");
     }
@@ -82,19 +96,36 @@ const Pod = () => {
                 Thumbnail Image
               </Text>
 
-              <TouchableOpacity onPress={pickImageAsync}>
-                <View className="w-full h-16 px-4 bg-black-100 rounded-2xl border-2 border-black-200 flex justify-center items-center flex-row space-x-2">
+              <View className="w-full p-4 bg-black-100 rounded-xl border-2 border-transparent flex justify-around items-center flex-row space-x-4">
+                <TouchableOpacity
+                  onPress={pickImageAsync}
+                  className="flex justify-center items-center"
+                >
                   <Image
                     source={icons.upload}
                     resizeMode="contain"
                     alt="upload"
-                    className="w-5 h-5"
+                    className="w-8 h-8 mb-1"
                   />
-                  <Text className="text-sm text-gray-100 font-pmedium">
+                  <Text className="text-xs text-gray-100 font-plight">
                     Choose a file
                   </Text>
-                </View>
-              </TouchableOpacity>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={pickCameraAsync}
+                  className="flex justify-center items-center"
+                >
+                  <Image
+                    source={icons.camera}
+                    resizeMode="contain"
+                    alt="camera"
+                    className="w-8 h-8 mb-1"
+                  />
+                  <Text className="text-xs text-gray-100 font-plight">
+                    Take a photo
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         )}
