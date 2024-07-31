@@ -21,10 +21,12 @@ const Pod = () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       quality: 1,
       allowsMultipleSelection: true,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
 
     if (!result.canceled) {
-      setSelectedImages([...result.assets[0].uri, ...selectedImages]);
+      const newUris = result.assets.map((asset) => asset.uri);
+      setSelectedImages((prevImages) => [...newUris, ...prevImages]);
     } else {
       console.log("You did not select any image.");
     }
@@ -34,18 +36,22 @@ const Pod = () => {
     let result = await ImagePicker.launchCameraAsync({
       quality: 1,
       allowsMultipleSelection: true,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
 
     if (!result.canceled) {
       const newUris = result.assets.map((asset) => asset.uri);
-      setSelectedImages([...newUris, ...selectedImages]);
+      setSelectedImages((prevImages) => [...newUris, ...prevImages]);
     } else {
       console.log("You did not select any image.");
     }
   };
 
-  const removeImage = (uri) =>
-    setSelectedImages(selectedImages.filter((image) => image !== uri));
+  const removeImage = (uri) => {
+    setSelectedImages((prevImages) =>
+      prevImages.filter((image) => image !== uri)
+    );
+  };
 
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-primary">

@@ -1,49 +1,30 @@
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
 import { View, Text, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CustomButton from "../../components/CustomButton";
 import renderList from "../../components/renderList";
+import useGlobalContext from "@/context/GlobalProvider";
 
 export default function Booking() {
-  const [form, setForm] = useState({
-    contact: "",
-    email: "",
-    service: "Standard",
-    date: "",
-    time: "12:00 AM",
-    dropReference1: "",
-    pickupReference1: "",
-    items: [],
-    distanceData: {},
-    address: {
-      Origin: {},
-      Destination: {},
-    },
-    deliveryIns: "",
-    docId: "",
-    userName: "",
-    userEmail: "",
-  });
+  const { selectedBooking } = useGlobalContext();
 
   const BookingInfo = [
-    { label: "User Name", value: form.userName },
-    { label: "Time", value: form.time },
-    { label: "Service", value: form.service },
-    { label: "Date", value: form.date },
-    { label: "Contact", value: form.contact },
-    { label: "Job No.", value: form.docId },
-    { label: "User Email", value: form.userEmail },
+    { label: "User Name", value: selectedBooking?.userName },
+    { label: "Time", value: selectedBooking?.time },
+    { label: "Service", value: selectedBooking?.service },
+    { label: "Date", value: selectedBooking?.date },
+    { label: "Contact", value: selectedBooking?.contact },
+    { label: "Job No.", value: selectedBooking?.docId },
+    { label: "User Email", value: selectedBooking?.userEmail },
   ];
 
   const UserInfo = [
-    { label: "User Name", value: form.userName },
-    { label: "Time", value: form.time },
-    { label: "Service", value: form.service },
-    { label: "Date", value: form.date },
-    { label: "Contact", value: form.contact },
-    { label: "Job No.", value: form.docId },
-    { label: "User Email", value: form.userEmail },
+    { label: "User Name", value: selectedBooking?.userName },
+    { label: "Time", value: selectedBooking?.time },
+    { label: "Service", value: selectedBooking?.service },
+    { label: "Date", value: selectedBooking?.date },
+    { label: "Contact", value: selectedBooking?.contact },
+    { label: "Job No.", value: selectedBooking?.docId },
+    { label: "User Email", value: selectedBooking?.userEmail },
   ];
 
   return (

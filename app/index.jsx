@@ -4,7 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { Text, SafeAreaView } from "react-native";
 
 export default function index() {
-  const { isLoggedIn, isLoading } = useGlobalContext();
+  const { bookings, user, isLoggedIn, isLoading } = useGlobalContext();
 
   return (
     <SafeAreaView className="flex-1 bg-primary pt-40">
@@ -15,7 +15,7 @@ export default function index() {
           {isLoggedIn ? (
             <>
               <Text className="text-white">Welcome</Text>
-              <Link className="text-white" href={"/details"}>
+              <Link className="text-white" href={"/Dashboard"}>
                 Dashboard
               </Link>
             </>
