@@ -28,34 +28,35 @@ const BookingCard = ({ item, setSelectedBooking, router }) => {
         setSelectedBooking(item);
         router.push("details");
       }}
-      className="w-full p-4 my-2 bg-slate-800 rounded-lg shadow-md flex-row items-center justify-between"
+      className="w-full p-4 my-2 bg-slate-800 rounded-lg shadow-md flex-row items-center"
     >
-      <View className="flex-row items-center w-full">
+      <View className="flex-row items-center">
         <View className="mr-4">{getStatusIcon(item.currentStatus)}</View>
-        <View className=" w-full">
+        <View className="flex-1">
           <Text className="text-lg text-white font-semibold">
             {item.contact}
           </Text>
-          <Text className="text-gray-200 text-sm mb-1">{item.userEmail}</Text>
-          <View className="flex-row">
+          <Text className="text-gray-400 text-sm mb-1">{item.userEmail}</Text>
+          <View className="flex-row items-center">
             <Text
               className={`text-xs font-bold uppercase ${
                 item.status === "pickedup"
-                  ? "text-blue-500"
+                  ? "text-blue-400"
                   : item.status === "returned"
-                  ? "text-orange-500"
+                  ? "text-orange-400"
                   : item.status === "cancelled"
-                  ? "text-red-500"
+                  ? "text-red-400"
                   : item.status === "delivered"
-                  ? "text-purple-500"
-                  : "text-gray-500"
+                  ? "text-purple-400"
+                  : "text-gray-400"
               }`}
             >
               {item.currentStatus}
             </Text>
-            <Text className="text-gray-200  ml-auto mr-10">{item.date}</Text>
+            <Text className="text-gray-400 ml-auto mr-10">{item.date}</Text>
           </View>
         </View>
+        <MaterialIcons name="keyboard-arrow-right" size={24} color="white" />
       </View>
     </Pressable>
   );
