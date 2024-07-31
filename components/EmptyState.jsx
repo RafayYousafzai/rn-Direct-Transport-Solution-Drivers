@@ -10,7 +10,7 @@ const EmptyState = ({ title, subtitle, style }) => {
       <Image
         source={images.empty}
         resizeMode="contain"
-        className="w-[270px] h-[216px]"
+        className="w-[270px] h-[180px]"
       />
 
       <Text className="text-sm font-pmedium text-gray-100">{title}</Text>

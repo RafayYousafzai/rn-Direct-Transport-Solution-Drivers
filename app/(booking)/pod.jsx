@@ -14,11 +14,12 @@ import CustomButton from "../../components/common/CustomButton";
 import EmptyState from "../../components/EmptyState";
 import { icons } from "../../constants";
 import useGlobalContext from "@/context/GlobalProvider";
+import { uploadImages } from "@/lib/firebase/functions/post";
 
 const Pod = () => {
   const { selectedBooking } = useGlobalContext();
-
-  const [selectedImages, setSelectedImages] = useState([]);
+  const defaultImages = selectedBooking?.images ? selectedBooking?.images : [];
+  const [selectedImages, setSelectedImages] = useState(defaultImages);
 
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -54,6 +55,20 @@ const Pod = () => {
     setSelectedImages((prevImages) =>
       prevImages.filter((image) => image !== uri)
     );
+  };
+
+  const uploadAllImages = async () => {
+    const images = await Promise.all(
+      selectedImages.map(async (image) => {
+        const url = await uploadImages(image);
+        return url;
+      })
+    );
+
+    await updateBooking("place_bookings", selectedBooking.docId, {
+      ...selectedBooking,
+      images,
+    });
   };
 
   return (
@@ -95,7 +110,7 @@ const Pod = () => {
             {selectedImages.length > 0 && (
               <CustomButton
                 title="Add to Booking"
-                handlePress={() => null}
+                handlePress={uploadAllImages}
                 isLoading={false}
               />
             )}
