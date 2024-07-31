@@ -1,21 +1,21 @@
 import React, { useState } from "react";
-import { View, Text, Pressable, SafeAreaView } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  SafeAreaView,
+  ActivityIndicator,
+} from "react-native";
 import { format } from "date-fns";
+import useGlobalContext from "@/context/GlobalProvider";
+import { updateBooking } from "@/lib/firebase/functions/post";
 
-const statuses = [ 
-  "Picked Up",
-  "Delivered",
-  "Returned",
-  "Cancelled",
-];
+const statuses = ["pickedup", "delivered", "returned", "cancelled"];
 
 export default function Status() {
-  const invoice = { currentStatus: "Allocated", progressInformation: {} };
-  const [booking, setBooking] = useState(invoice);
-
+  const { selectedBooking, setSelectedBooking } = useGlobalContext();
   const [loading, setLoading] = useState(false);
-
-  const currentStatus = booking.currentStatus;
+  const currentStatus = selectedBooking.currentStatus;
 
   const updateStatus = async (newStatus) => {
     setLoading(true);
@@ -23,24 +23,24 @@ export default function Status() {
     const currentDateTime = format(new Date(), "MM/dd/yyyy HH:mm:ss");
 
     const updatedData = {
-      ...booking,
+      ...selectedBooking,
       progressInformation: {
-        ...booking.progressInformation,
+        ...selectedBooking.progressInformation,
         [newStatus]: currentDateTime,
       },
       currentStatus: newStatus,
     };
 
-    setBooking(updatedData);
-
     try {
-      //   await updateDoc("place_bookings", booking.docId, updatedData);
+      await updateBooking("place_bookings", selectedBooking.docId, updatedData);
+      setSelectedBooking(updatedData);
     } catch (error) {
       console.error("Error updating status:", error);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
+
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-primary p-4">
       <Text className="text-3xl text-yellow-50 font-pextrabold mb-4">
@@ -56,7 +56,7 @@ export default function Status() {
             }`}
           >
             <Text
-              className={`text-center ${
+              className={`text-center capitalize ${
                 currentStatus === status ? "text-white" : "text-black"
               }`}
             >
@@ -65,6 +65,9 @@ export default function Status() {
           </Pressable>
         ))}
       </View>
+      {loading && (
+        <ActivityIndicator size="large" color="#FBBF24" className="mt-4" />
+      )}
     </SafeAreaView>
   );
 }

@@ -13,8 +13,11 @@ import ImageViewer from "../../components/common/ImageViewer";
 import CustomButton from "../../components/common/CustomButton";
 import EmptyState from "../../components/EmptyState";
 import { icons } from "../../constants";
+import useGlobalContext from "@/context/GlobalProvider";
 
 const Pod = () => {
+  const { selectedBooking } = useGlobalContext();
+
   const [selectedImages, setSelectedImages] = useState([]);
 
   const pickImageAsync = async () => {
