@@ -9,12 +9,13 @@ import {
   Image,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import ImageViewer from "../../components/common/ImageViewer";
-import CustomButton from "../../components/common/CustomButton";
-import EmptyState from "../../components/EmptyState";
-import { icons } from "../../constants";
+import ImageViewer from "@/components/common/ImageViewer";
+import CustomButton from "@/components/common/CustomButton";
+import EmptyState from "@/components/EmptyState";
+import { icons } from "@/constants";
 import useGlobalContext from "@/context/GlobalProvider";
 import { uploadImages } from "@/lib/firebase/functions/post";
+import { updateBooking } from "@/lib/firebase/functions/post";
 
 const Pod = () => {
   const { selectedBooking } = useGlobalContext();
