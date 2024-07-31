@@ -5,17 +5,37 @@ import BookingCard from "../../components/BookingCard";
 import useGlobalContext from "@/context/GlobalProvider";
 import { useRouter } from "expo-router";
 import { images } from "@/constants";
+import { useMemo } from "react";
+import { startOfDay, isToday, parse } from "date-fns";
 
 export default function History() {
   const { bookings, setSelectedBooking, user } = useGlobalContext();
   const router = useRouter();
 
+  const parseDate = (dateString) => {
+    try {
+      const parsedDate = parse(dateString, "dd/MM/yyyy", new Date());
+      return startOfDay(parsedDate);
+    } catch (error) {
+      console.error("Error parsing date:", error, "Date string:", dateString);
+      return null;
+    }
+  };
+
+  const todaysBookings = useMemo(
+    () =>
+      bookings.filter((booking) => {
+        if (!booking.date) return false;
+        const bookingDate = parseDate(booking.date);
+        return bookingDate && isToday(bookingDate);
+      }),
+    [bookings]
+  );
+
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-primary p-4">
       <FlatList
-        data={bookings.filter(
-          (booking) => booking.currentStatus !== "delivered"
-        )}
+        data={todaysBookings}
         keyExtractor={(item) => item.docId}
         renderItem={({ item }) => (
           <BookingCard
