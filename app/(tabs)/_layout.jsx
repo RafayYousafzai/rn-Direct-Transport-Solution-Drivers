@@ -39,15 +39,30 @@ export default function TabsLayout() {
         }}
       >
         <Tabs.Screen
-          name="Dashboard"
+          name="Home"
           options={{
-            title: "Dashboard",
+            title: "Home",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 icon={icons.home}
                 color={color}
-                name="Dashboard"
+                name="Home"
+                focused={focused}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="Today"
+          options={{
+            title: "Today",
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                icon={icons.calendar}
+                color={color}
+                name="Today"
                 focused={focused}
               />
             ),
@@ -60,24 +75,9 @@ export default function TabsLayout() {
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.bookmark}
+                icon={icons.history}
                 color={color}
                 name="History"
-                focused={focused}
-              />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="Profile"
-          options={{
-            title: "Profile",
-            headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                icon={icons.user}
-                color={color}
-                name="Profile"
                 focused={focused}
               />
             ),

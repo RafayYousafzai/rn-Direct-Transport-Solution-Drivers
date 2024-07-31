@@ -18,6 +18,8 @@ import photo from "../assets/icons/photo-camera.png";
 import user from "../assets/icons/user.png";
 import remove from "../assets/icons/remove.png";
 import camera from "../assets/icons/photo.png";
+import calendar from "../assets/icons/calendar.png";
+import history from "../assets/icons/history.png";
 
 export default {
   play,
@@ -40,4 +42,6 @@ export default {
   user,
   remove,
   camera,
+  calendar,
+  history,
 };
