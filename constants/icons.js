@@ -21,6 +21,11 @@ import camera from "../assets/icons/photo.png";
 import calendar from "../assets/icons/calendar.png";
 import history from "../assets/icons/history.png";
 
+import approved from "../assets/icons/approved.png";
+import cancel from "../assets/icons/cancel.png";
+import future from "../assets/icons/future.png";
+import today from "../assets/icons/today.png";
+
 export default {
   play,
   bookmark,
@@ -44,4 +49,8 @@ export default {
   camera,
   calendar,
   history,
+  approved,
+  cancel,
+  future,
+  today,
 };

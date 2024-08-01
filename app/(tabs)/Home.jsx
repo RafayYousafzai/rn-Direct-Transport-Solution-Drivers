@@ -1,18 +1,24 @@
 import { View, Text, ScrollView, Image } from "react-native";
-import React from "react";
+import React, { useMemo } from "react";
 import useGlobalContext from "@/context/GlobalProvider";
+import { startOfDay, isToday, parse, isBefore, isFuture } from "date-fns";
 import { images } from "@/constants";
+import { icons } from "@/constants";
 
 const DashboardCard = ({ title, value, icon }) => (
-  <View className="bg-black-200
-   shadow-lg rounded-xl p-5 mb-4 flex-row items-center justify-between border-l-4 border-teal-500">
+  <View
+    className="bg-black-200
+   shadow-lg rounded-xl p-5 mb-4 flex-row items-center justify-between border-l-4 border-teal-500"
+  >
     <View className="flex-row items-center">
       <View className="bg-teal-500 p-3 rounded-full shadow-lg flex items-center justify-center">
-        {icon}
+        <Image source={icon} resizeMode="contain" className="w-6 h-6" />
       </View>
       <View className="ml-4">
         <Text className="text-slate-100 text-sm font-medium">{title}</Text>
-        <Text className="text-2xl font-semibold text-slate-200 mt-1">{value}</Text>
+        <Text className="text-2xl font-semibold text-slate-200 mt-1">
+          {value}
+        </Text>
       </View>
     </View>
     <View className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
@@ -21,14 +27,47 @@ const DashboardCard = ({ title, value, icon }) => (
   </View>
 );
 
-
-
-
-
-
-
 const Dashboard = () => {
   const { bookings, user } = useGlobalContext();
+
+  const parseDate = (dateString) => {
+    try {
+      const parsedDate = parse(dateString, "dd/MM/yyyy", new Date());
+      return startOfDay(parsedDate);
+    } catch (error) {
+      console.error("Error parsing date:", error, "Date string:", dateString);
+      return null;
+    }
+  };
+
+  const pastBookings = useMemo(() => {
+    const today = startOfDay(new Date());
+    return bookings.filter((booking) => {
+      if (!booking.date) return false;
+      const bookingDate = parseDate(booking.date);
+      return bookingDate && isBefore(bookingDate, today);
+    });
+  }, [bookings]);
+
+  const futureBookings = useMemo(() => {
+    const today = startOfDay(new Date());
+    // || booking.createdAt < today
+    return bookings.filter((booking) => {
+      if (!booking.date) return false;
+      const bookingDate = parseDate(booking.date);
+      return bookingDate && isFuture(bookingDate) && bookingDate > today;
+    });
+  }, [bookings]);
+
+  const todaysBookings = useMemo(
+    () =>
+      bookings.filter((booking) => {
+        if (!booking.date) return false;
+        const bookingDate = parseDate(booking.date);
+        return bookingDate && isToday(bookingDate);
+      }),
+    [bookings]
+  );
 
   return (
     <ScrollView className="flex bg-primary p-4">
@@ -58,23 +97,29 @@ const Dashboard = () => {
 
       <DashboardCard
         title="Today's Deliveries"
-        value="125"
-        icon={<Text className="text-blue-500 text-3xl">📅</Text>}
+        value={todaysBookings.length}
+        icon={icons.today}
       />
       <DashboardCard
         title="Future Deliveries"
-        value="30"
-        icon={<Text className="text-yellow-500 text-3xl">⏳</Text>}
+        value={futureBookings.length}
+        icon={icons.future}
       />
       <DashboardCard
-        title="Completed Deliveries"
-        value="95"
-        icon={<Text className="text-green-500 text-3xl">✔️</Text>}
+        title="Deliveries Completed"
+        value={
+          bookings.filter((booking) => booking.currentStatus === "delivered")
+            .length
+        }
+        icon={icons.approved}
       />
       <DashboardCard
-        title="Cancelled Deliveries"
-        value="10"
-        icon={<Text className="text-red-500 text-3xl">❌</Text>}
+        title="Deliveries Cancelled"
+        value={
+          bookings.filter((booking) => booking.currentStatus === "cancelled")
+            .length
+        }
+        icon={icons.cancel}
       />
     </ScrollView>
   );
