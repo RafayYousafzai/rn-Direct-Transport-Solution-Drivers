@@ -8,7 +8,7 @@ export default function AuthLayout() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      router.navigate("/Dashboard");
+      router.navigate("/");
     }
   }, [isLoggedIn]);
 

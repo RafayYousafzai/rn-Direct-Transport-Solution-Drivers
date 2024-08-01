@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import useGlobalContext from "@/context/GlobalProvider";
 import { useRouter } from "expo-router";
-import { Text, SafeAreaView } from "react-native";
+import { Text, SafeAreaView, TouchableOpacity, View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function Index() {
-  const { isLoggedIn, isLoading } = useGlobalContext();
+  const { isLoggedIn, isLoading, user } = useGlobalContext();
   const router = useRouter();
 
   useEffect(() => {
@@ -23,11 +23,27 @@ export default function Index() {
     };
 
     handleNavigationAndSplash();
-  }, [isLoggedIn, isLoading]);
+  }, [isLoggedIn, isLoading, user, router]);
 
   return (
-    <SafeAreaView>
-      {isLoading ? <Text className="text-white">Loading...</Text> : null}
+    <SafeAreaView className="flex-1 bg-primary justify-center items-center">
+      {isLoading ? (
+        <Text className="text-white text-xl">Loading...</Text>
+      ) : (
+        <View className="w-3/4 p-4 bg-secondary-200 rounded-lg shadow-lg">
+          <Text className="text-slate-200 text-2xl font-bold mb-4 text-center">
+            Welcome!
+          </Text>
+          <TouchableOpacity
+            onPress={() => router.push(isLoggedIn ? "Home" : "signin")}
+            className="bg-secondary-100 py-3 px-6 rounded-lg mt-4"
+          >
+            <Text className="text-white text-center text-lg">
+              {isLoggedIn ? "Go to Home" : "Sign In"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </SafeAreaView>
   );
 }

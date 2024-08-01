@@ -7,7 +7,6 @@ import menu from "../assets/icons/menu.png";
 import search from "../assets/icons/search.png";
 import upload from "../assets/icons/upload.png";
 import rightArrow from "../assets/icons/right-arrow.png";
-import logout from "../assets/icons/logout.png";
 import eyeHide from "../assets/icons/eye-hide.png";
 import eye from "../assets/icons/eye.png";
 import play from "../assets/icons/play.png";
@@ -25,6 +24,7 @@ import approved from "../assets/icons/approved.png";
 import cancel from "../assets/icons/cancel.png";
 import future from "../assets/icons/future.png";
 import today from "../assets/icons/today.png";
+import logout from "../assets/icons/switch.png";
 
 export default {
   play,

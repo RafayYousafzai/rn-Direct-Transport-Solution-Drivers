@@ -9,7 +9,7 @@ import { parse, startOfDay, isBefore, isFuture } from "date-fns";
 import { useMemo } from "react";
 
 export default function History() {
-  const { bookings, setSelectedBooking, user } = useGlobalContext();
+  const { bookings, setSelectedBooking } = useGlobalContext();
   const router = useRouter();
 
   const parseDate = (dateString) => {
@@ -31,15 +31,15 @@ export default function History() {
     });
   }, [bookings]);
 
-  const futureBookings = useMemo(() => {
-    const today = startOfDay(new Date());
-    // || booking.createdAt < today
-    return bookings.filter((booking) => {
-      if (!booking.date) return false;
-      const bookingDate = parseDate(booking.date);
-      return bookingDate && isFuture(bookingDate) && bookingDate > today;
-    });
-  }, [bookings]);
+  // const futureBookings = useMemo(() => {
+  //   const today = startOfDay(new Date());
+  //   // || booking.createdAt < today
+  //   return bookings.filter((booking) => {
+  //     if (!booking.date) return false;
+  //     const bookingDate = parseDate(booking.date);
+  //     return bookingDate && isFuture(bookingDate) && bookingDate > today;
+  //   });
+  // }, [bookings]);
 
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-primary p-4">
@@ -56,23 +56,20 @@ export default function History() {
         contentContainerStyle={{ width: "100%" }}
         ListEmptyComponent={() => (
           <EmptyState
-            title="No Images Selected"
-            subtitle="No bookings yet!"
+            title="No Bookings History"
+            subtitle="You have no bookings assigned to you today."
             style="mt-16"
           />
         )}
         ListHeaderComponent={() => (
-          <View className="flex my-6   space-y-6 mt-12 h-20">
+          <View className="flex my-6 space-y-6 mt-12 h-20">
             <View className="flex justify-between items-start flex-row mb-6">
               <View>
                 <Text className="font-pmedium text-sm text-gray-100 capitalize">
                   Well Done! You Completed
                 </Text>
                 <Text className="text-2xl font-psemibold text-white capitalize">
-                  {
-                    pastBookings.length
-                  }{" "}
-                  Deliveries
+                  {pastBookings.length} Deliveries
                 </Text>
               </View>
 
@@ -83,12 +80,6 @@ export default function History() {
                   resizeMode="contain"
                 />
               </View>
-            </View>
-
-            <View className="w-full flex-1 pt-5 pb-8">
-              <Text className="text-lg font-pregular text-gray-100 mb-3">
-                Latest Videos
-              </Text>
             </View>
           </View>
         )}

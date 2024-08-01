@@ -1,9 +1,11 @@
-import { View, Text, ScrollView, Image } from "react-native";
+import { View, Text, ScrollView, Image, Pressable } from "react-native";
 import React, { useMemo } from "react";
 import useGlobalContext from "@/context/GlobalProvider";
 import { startOfDay, isToday, parse, isBefore, isFuture } from "date-fns";
 import { images } from "@/constants";
 import { icons } from "@/constants";
+import { signOut } from "@/lib/firebase/functions/auth";
+import { useRouter } from "expo-router";
 
 const DashboardCard = ({ title, value, icon }) => (
   <View
@@ -21,14 +23,17 @@ const DashboardCard = ({ title, value, icon }) => (
         </Text>
       </View>
     </View>
-    <View className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+    {/* <View className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
       <Text className="text-gray-400 text-xs">i</Text>
-    </View>
+    </View> */}
   </View>
 );
 
 const Dashboard = () => {
-  const { bookings, user } = useGlobalContext();
+  const { bookings, user, setIsLoggedIn } = useGlobalContext();
+  const router = useRouter();
+
+  console.log(user);
 
   const parseDate = (dateString) => {
     try {
@@ -51,7 +56,6 @@ const Dashboard = () => {
 
   const futureBookings = useMemo(() => {
     const today = startOfDay(new Date());
-    // || booking.createdAt < today
     return bookings.filter((booking) => {
       if (!booking.date) return false;
       const bookingDate = parseDate(booking.date);
@@ -68,6 +72,17 @@ const Dashboard = () => {
       }),
     [bookings]
   );
+
+  const handleSnout = async () => {
+    try {
+      await signOut();
+      setIsLoggedIn(false);
+      router.push("signin");
+    } catch (error) {
+      setIsLoggedIn(false);
+      console.log(error);
+    }
+  };
 
   return (
     <ScrollView className="flex bg-primary p-4">
@@ -121,6 +136,13 @@ const Dashboard = () => {
         }
         icon={icons.cancel}
       />
+      <Pressable onPress={handleSnout}>
+        <DashboardCard
+          title="Press here to logout from your account!"
+          value="Sign out"
+          icon={icons.logout}
+        />
+      </Pressable>
     </ScrollView>
   );
 };

@@ -74,37 +74,41 @@ const GlobalProvider = ({ children }) => {
     );
   };
 
-  useEffect(() => {
-    const initializeListeners = async () => {
-      try {
-        const value = await getValueFor("user");
-        if (value) {
-          const userData = JSON.parse(value);
-          const userUnsubscribe = listenUser(userData.email);
-          const bookingsUnsubscribe = listenBookings(userData.email);
+  const initializeListeners = async () => {
+    try {
+      const value = await getValueFor("user");
+      if (value) {
+        const userData = JSON.parse(value);
+        const userUnsubscribe = listenUser(userData.email);
+        const bookingsUnsubscribe = listenBookings(userData.email);
 
-          return () => {
-            userUnsubscribe();
-            bookingsUnsubscribe();
-          };
-        } else {
-          router.push("/signin");
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.error(error);
+        return () => {
+          userUnsubscribe();
+          bookingsUnsubscribe();
+        };
+      } else {
+        router.push("/signin");
         setIsLoading(false);
-        setIsLoggedIn(false);
       }
-    };
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+      setIsLoggedIn(false);
+    }
+  };
 
+  useEffect(() => {
     initializeListeners();
   }, []);
+  useEffect(() => {
+    initializeListeners();
+  }, [isLoggedIn]);
 
   return (
     <GlobalContext.Provider
       value={{
         isLoggedIn,
+        setIsLoggedIn,
         isLoading,
         bookings,
         user,

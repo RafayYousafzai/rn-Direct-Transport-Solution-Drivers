@@ -47,8 +47,8 @@ export default function History() {
         contentContainerStyle={{ width: "100%" }}
         ListEmptyComponent={() => (
           <EmptyState
-            title="No Images Selected"
-            subtitle="Please select an image to add in the bookings list"
+            title="No Bookings Assigned for Today"
+            subtitle="You have no bookings assigned to you today."
             style="mt-16"
           />
         )}
@@ -71,12 +71,6 @@ export default function History() {
                   resizeMode="contain"
                 />
               </View>
-            </View>
-
-            <View className="w-full flex-1 pt-5 pb-8">
-              <Text className="text-lg font-pregular text-gray-100 mb-3">
-                Latest Videos
-              </Text>
             </View>
           </View>
         )}
