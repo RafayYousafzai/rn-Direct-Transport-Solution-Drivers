@@ -1,32 +1,33 @@
+import React, { useEffect } from "react";
 import useGlobalContext from "@/context/GlobalProvider";
-import { Link } from "expo-router";
-import { StatusBar } from "expo-status-bar";
+import { useRouter } from "expo-router";
 import { Text, SafeAreaView } from "react-native";
+import * as SplashScreen from "expo-splash-screen";
 
-export default function index() {
-  const { bookings, user, isLoggedIn, isLoading } = useGlobalContext();
+SplashScreen.preventAutoHideAsync();
+
+export default function Index() {
+  const { isLoggedIn, isLoading } = useGlobalContext();
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleNavigationAndSplash = async () => {
+      try {
+        if (!isLoading) {
+          isLoggedIn ? router.push("Home") : router.push("signin");
+        }
+        await SplashScreen.hideAsync();
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    handleNavigationAndSplash();
+  }, [isLoggedIn, isLoading]);
 
   return (
-    <SafeAreaView className="flex-1 bg-primary pt-40">
-      {isLoading ? (
-        <Text className="text-white ">Loading...</Text>
-      ) : (
-        <>
-          {isLoggedIn ? (
-            <>
-              <Text className="text-white">Welcome</Text>
-              <Link className="text-white" href={"/Today"}>
-                Dashboard
-              </Link>
-            </>
-          ) : (
-            <Link className="text-white" href={"/signin"}>
-              Sign In
-            </Link>
-          )}
-        </>
-      )}
-      <StatusBar />
+    <SafeAreaView>
+      {isLoading ? <Text className="text-white">Loading...</Text> : null}
     </SafeAreaView>
   );
 }
