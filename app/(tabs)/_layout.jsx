@@ -1,9 +1,20 @@
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Image, Text, View } from "react-native";
 import { icons } from "@/constants";
+import useGlobalContext from "@/context/GlobalProvider";
+import { useEffect } from "react";
 
 export default function TabsLayout() {
+  const { isLoggedIn, isLoading, user } = useGlobalContext();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push("/signin");
+    }
+  }, [isLoggedIn, isLoading, user]);
+
   const TabIcon = ({ icon, color, name, focused }) => {
     return (
       <View className="flex items-center justify-center gap-2">

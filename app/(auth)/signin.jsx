@@ -24,11 +24,13 @@ const SignIn = () => {
     setSubmitting(true);
     try {
       const result = await signInWithEmail(form.email, form.password);
-      await save("user", JSON.stringify(result));
-      setIsLoggedIn(true);
-      router.push("Home");
-      // Alert.alert("Success", "User signed in successfully");
-      router.replace("/Home");
+      if (result) {
+        await save("user", JSON.stringify(result));
+        setIsLoggedIn(true);
+        router.push("Home");
+      } else {
+        Alert.alert("Invalid Credentials");
+      }
     } catch (error) {
       setIsLoggedIn(false);
       Alert.alert("Error", error.message);

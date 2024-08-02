@@ -3,6 +3,7 @@ import useGlobalContext from "@/context/GlobalProvider";
 import { useRouter } from "expo-router";
 import { Text, SafeAreaView, TouchableOpacity, View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
+import { remove } from "@/lib/SecureStore/SecureStore";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -19,6 +20,8 @@ export default function Index() {
         await SplashScreen.hideAsync();
       } catch (error) {
         console.log(error);
+        remove("user");
+        router.navigate("signin");
       }
     };
 

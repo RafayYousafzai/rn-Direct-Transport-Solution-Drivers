@@ -1,5 +1,5 @@
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 

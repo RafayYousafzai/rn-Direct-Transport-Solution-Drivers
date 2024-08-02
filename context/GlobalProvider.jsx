@@ -9,7 +9,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 import app from "@/lib/firebase/firebaseConfig";
-import { getValueFor, save } from "@/lib/SecureStore/SecureStore";
+import { getValueFor, remove, save } from "@/lib/SecureStore/SecureStore";
 import { useRouter } from "expo-router";
 
 const GlobalContext = createContext();
@@ -35,9 +35,11 @@ const GlobalProvider = ({ children }) => {
         if (docSnapshot.exists()) {
           const userData = docSnapshot.data();
           setUser(userData);
-          save("user", JSON.stringify(userData)); // Update the stored user data if needed
+          save("user", JSON.stringify(userData));
           setIsLoggedIn(true);
         } else {
+          remove("user");
+          router.navigate("signin");
           console.error("User document not found.");
           setIsLoggedIn(false);
         }
@@ -45,6 +47,8 @@ const GlobalProvider = ({ children }) => {
       },
       (error) => {
         console.error("Error fetching user:", error);
+        remove("user");
+        router.navigate("signin");
         setIsLoading(false);
         setIsLoggedIn(false);
       }
@@ -66,7 +70,17 @@ const GlobalProvider = ({ children }) => {
           id: doc.id,
           ...doc.data(),
         }));
+
         setBookings(documents);
+
+        if (selectedBooking) {
+          const updatedBooking = documents.find(
+            (booking) => booking.docId === selectedBooking.docId
+          );
+          if (updatedBooking) {
+            setSelectedBooking(updatedBooking);
+          }
+        }
       },
       (error) => {
         console.error("Error fetching bookings:", error);
