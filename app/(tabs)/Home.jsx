@@ -33,7 +33,7 @@ const Dashboard = () => {
   const { bookings, user, setIsLoggedIn } = useGlobalContext();
   const router = useRouter();
 
-  console.log(user);
+  // console.log(user);
 
   const parseDate = (dateString) => {
     try {

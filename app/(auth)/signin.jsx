@@ -27,7 +27,7 @@ const SignIn = () => {
       await save("user", JSON.stringify(result));
       setIsLoggedIn(true);
       router.push("Home");
-      Alert.alert("Success", "User signed in successfully");
+      // Alert.alert("Success", "User signed in successfully");
       router.replace("/Home");
     } catch (error) {
       setIsLoggedIn(false);

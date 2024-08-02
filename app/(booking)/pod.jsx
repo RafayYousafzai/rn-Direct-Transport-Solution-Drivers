@@ -33,7 +33,7 @@ const Pod = () => {
       const newUris = result.assets.map((asset) => asset.uri);
       setSelectedImages((prevImages) => [...newUris, ...prevImages]);
     } else {
-      console.log("You did not select any image.");
+      // console.log("You did not select any image.");
     }
   };
 
@@ -48,7 +48,7 @@ const Pod = () => {
       const newUris = result.assets.map((asset) => asset.uri);
       setSelectedImages((prevImages) => [...newUris, ...prevImages]);
     } else {
-      console.log("You did not select any image.");
+      // console.log("You did not select any image.");
     }
   };
 
