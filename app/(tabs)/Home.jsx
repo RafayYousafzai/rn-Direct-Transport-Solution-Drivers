@@ -2,10 +2,10 @@ import { View, Text, ScrollView, Image, Pressable } from "react-native";
 import React, { useMemo } from "react";
 import useGlobalContext from "@/context/GlobalProvider";
 import { startOfDay, isToday, parse, isBefore, isFuture } from "date-fns";
-import { images } from "@/constants";
 import { icons } from "@/constants";
 import { signOut } from "@/lib/firebase/functions/auth";
 import { useRouter } from "expo-router";
+import Header from "@/components/Header";
 
 const DashboardCard = ({ title, value, icon }) => (
   <View
@@ -86,26 +86,8 @@ const Dashboard = () => {
 
   return (
     <ScrollView className="flex bg-primary p-4">
-      <View className="flex my-6  space-y-6 h-20 mt-12">
-        <View className="flex justify-between items-start flex-row mb-6">
-          <View>
-            <Text className="font-pmedium text-sm text-slate-700 capitalize">
-              Welcome Back
-            </Text>
-            <Text className="text-2xl font-psemibold text-slate-800 capitalize">
-              {user?.firstName}
-            </Text>
-          </View>
+      <Header title={"Welcome Back"} subtitle={user?.firstName} />
 
-          <View className="mt-1.5">
-            <Image
-              source={images.logo}
-              className="w-32 h-10"
-              resizeMode="contain"
-            />
-          </View>
-        </View>
-      </View>
       <Text className="text-lg font-pextrabold text-slate-700 mb-3">
         Dashboard
       </Text>

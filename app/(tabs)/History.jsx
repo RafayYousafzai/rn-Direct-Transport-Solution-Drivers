@@ -1,12 +1,12 @@
 import React from "react";
-import { View, Text, FlatList, SafeAreaView, Image } from "react-native";
+import { FlatList, SafeAreaView } from "react-native";
 import EmptyState from "@/components/EmptyState";
-import BookingCard from "../../components/BookingCard";
+import BookingCard from "@/components/BookingCard";
 import useGlobalContext from "@/context/GlobalProvider";
-import { images } from "@/constants";
 import { useRouter } from "expo-router";
-import { parse, startOfDay, isBefore, isFuture } from "date-fns";
+import { parse, startOfDay, isBefore } from "date-fns";
 import { useMemo } from "react";
+import Header from "@/components/Header";
 
 export default function History() {
   const { bookings, setSelectedBooking } = useGlobalContext();
@@ -62,26 +62,10 @@ export default function History() {
           />
         )}
         ListHeaderComponent={() => (
-          <View className="flex my-6 space-y-6 mt-12 h-20">
-            <View className="flex justify-between items-start flex-row mb-6">
-              <View>
-                <Text className="font-pmedium text-sm text-slate-700 capitalize">
-                  Well Done! You Completed
-                </Text>
-                <Text className="text-2xl font-psemibold text-slate-800 capitalize">
-                  {pastBookings.length} Deliveries
-                </Text>
-              </View>
-
-              <View className="mt-1.5">
-                <Image
-                  source={images.logo}
-                  className="w-32 h-10"
-                  resizeMode="contain"
-                />
-              </View>
-            </View>
-          </View>
+          <Header
+            title={" Well Done! You Completed"}
+            subtitle={` ${pastBookings.length} Deliveries`}
+          />
         )}
       />
     </SafeAreaView>

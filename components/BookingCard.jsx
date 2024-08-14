@@ -28,7 +28,7 @@ const BookingCard = ({ item, setSelectedBooking, router }) => {
         setSelectedBooking(item);
         router.push("details");
       }}
-      className="w-full p-4 my-2 bg-slate-800 rounded-lg shadow-md flex-row items-center"
+      className="w-full p-4 my-2 bg-black rounded-lg shadow-xl flex-row items-center"
     >
       <View className="flex-row items-center">
         <View className="mr-4">{getStatusIcon(item.currentStatus)}</View>
@@ -36,7 +36,7 @@ const BookingCard = ({ item, setSelectedBooking, router }) => {
           <Text className="text-lg text-slate-800 font-semibold">
             {item.contact}
           </Text>
-          <Text className="text-gray-400 text-sm mb-1">{item.userEmail}</Text>
+          <Text className="text-gray-500 text-sm mb-1">{item.docId}</Text>
           <View className="flex-row items-center">
             <Text
               className={`text-xs font-bold uppercase ${
@@ -53,10 +53,10 @@ const BookingCard = ({ item, setSelectedBooking, router }) => {
             >
               {item.currentStatus}
             </Text>
-            <Text className="text-gray-400 ml-auto mr-10">{item.date}</Text>
+            <Text className="text-gray-400 ml-auto mr-2">{`${item.date} - ${item.time}`}</Text>
           </View>
         </View>
-        <MaterialIcons name="keyboard-arrow-right" size={24} color="white" />
+        <MaterialIcons name="keyboard-arrow-right" size={24} color="gray" />
       </View>
     </Pressable>
   );
