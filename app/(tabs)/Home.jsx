@@ -9,11 +9,11 @@ import { useRouter } from "expo-router";
 
 const DashboardCard = ({ title, value, icon }) => (
   <View
-    className="bg-black-200
-   shadow-lg rounded-xl p-5 mb-4 flex-row items-center justify-between border-l-4 border-teal-500"
+    className="bg-secondary-100
+   shadow-lg rounded-xl p-5 mb-4 flex-row items-center justify-between border-l-4 border-slate-300"
   >
     <View className="flex-row items-center">
-      <View className="bg-teal-500 p-3 rounded-full shadow-lg flex items-center justify-center">
+      <View className="bg-slate-950 p-3 rounded-full shadow-lg flex items-center justify-center">
         <Image source={icon} resizeMode="contain" className="w-6 h-6" />
       </View>
       <View className="ml-4">
@@ -89,10 +89,10 @@ const Dashboard = () => {
       <View className="flex my-6  space-y-6 h-20 mt-12">
         <View className="flex justify-between items-start flex-row mb-6">
           <View>
-            <Text className="font-pmedium text-sm text-gray-100 capitalize">
+            <Text className="font-pmedium text-sm text-slate-700 capitalize">
               Welcome Back
             </Text>
-            <Text className="text-2xl font-psemibold text-white capitalize">
+            <Text className="text-2xl font-psemibold text-slate-800 capitalize">
               {user?.firstName}
             </Text>
           </View>
@@ -106,7 +106,7 @@ const Dashboard = () => {
           </View>
         </View>
       </View>
-      <Text className="text-lg font-pextrabold text-gray-100 mb-3">
+      <Text className="text-lg font-pextrabold text-slate-700 mb-3">
         Dashboard
       </Text>
 

@@ -13,8 +13,8 @@ const EmptyState = ({ title, subtitle, style }) => {
         className="w-[270px] h-[180px]"
       />
 
-      <Text className="text-sm font-pmedium text-gray-100">{title}</Text>
-      <Text className="text-xl text-center font-psemibold text-white mt-2">
+      <Text className="text-sm font-pmedium text-slate-700">{title}</Text>
+      <Text className="text-xl text-center font-psemibold text-slate-800 mt-2">
         {subtitle}
       </Text>
 

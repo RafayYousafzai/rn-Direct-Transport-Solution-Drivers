@@ -43,7 +43,7 @@ const SignIn = () => {
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
         <View
-          className="w-full flex justify-center h-full px-4 my-6"
+          className="w-full flex justify-center align-middle items-center h-full px-4 my-6"
           style={{
             minHeight: Dimensions.get("window").height - 100,
           }}
@@ -51,10 +51,10 @@ const SignIn = () => {
           <Image
             source={images.logo}
             resizeMode="contain"
-            className="w-[115px] h-[34px]"
+            className="w-[250px] h-[100px]"
           />
 
-          <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
+          <Text className="text-2xl font-semibold text-slate-800 mt-10 font-psemibold">
             Log in to DTS
           </Text>
 
@@ -76,7 +76,7 @@ const SignIn = () => {
           <CustomButton
             title="Sign In"
             handlePress={submit}
-            containerStyles="mt-7"
+            containerStyles="mt-7 w-full"
             isLoading={isSubmitting}
           />
         </View>

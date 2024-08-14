@@ -57,7 +57,7 @@ export default function Status() {
           >
             <Text
               className={`text-center capitalize ${
-                currentStatus === status ? "text-white" : "text-black"
+                currentStatus === status ? "text-slate-800" : "text-black"
               }`}
             >
               {status}

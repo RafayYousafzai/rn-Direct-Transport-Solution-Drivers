@@ -56,10 +56,10 @@ export default function History() {
           <View className="flex my-6  space-y-6 h-20 mt-12">
             <View className="flex justify-between items-start flex-row mb-6">
               <View>
-                <Text className="font-pmedium text-sm text-gray-100 capitalize">
+                <Text className="font-pmedium text-sm text-slate-700 capitalize">
                   Ready to get started?
                 </Text>
-                <Text className="text-2xl font-psemibold text-white capitalize">
+                <Text className="text-2xl font-psemibold text-slate-800 capitalize">
                   {todaysBookings.length} Deliveries
                 </Text>
               </View>

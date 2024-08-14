@@ -117,7 +117,7 @@ const Pod = () => {
             )}
 
             <View className="mt-7 space-y-2">
-              <Text className="text-base text-gray-100 font-pmedium">
+              <Text className="text-base text-slate-700 font-pmedium">
                 Thumbnail Image
               </Text>
 
@@ -132,7 +132,7 @@ const Pod = () => {
                     alt="upload"
                     className="w-8 h-8 mb-1"
                   />
-                  <Text className="text-xs text-gray-100 font-plight">
+                  <Text className="text-xs text-slate-700 font-plight">
                     Choose a file
                   </Text>
                 </TouchableOpacity>
@@ -146,7 +146,7 @@ const Pod = () => {
                     alt="camera"
                     className="w-8 h-8 mb-1"
                   />
-                  <Text className="text-xs text-gray-100 font-plight">
+                  <Text className="text-xs text-slate-700 font-plight">
                     Take a photo
                   </Text>
                 </TouchableOpacity>

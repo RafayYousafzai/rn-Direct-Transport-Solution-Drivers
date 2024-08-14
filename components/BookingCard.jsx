@@ -33,7 +33,7 @@ const BookingCard = ({ item, setSelectedBooking, router }) => {
       <View className="flex-row items-center">
         <View className="mr-4">{getStatusIcon(item.currentStatus)}</View>
         <View className="flex-1">
-          <Text className="text-lg text-white font-semibold">
+          <Text className="text-lg text-slate-800 font-semibold">
             {item.contact}
           </Text>
           <Text className="text-gray-400 text-sm mb-1">{item.userEmail}</Text>

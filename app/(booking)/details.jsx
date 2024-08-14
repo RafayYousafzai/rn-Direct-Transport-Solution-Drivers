@@ -73,18 +73,18 @@ export default function Booking() {
 
   return (
     <SafeAreaView className="px-4 bg-primary h-full">
-      <StatusBar backgroundColor="#161622" style="light" />
+      <StatusBar backgroundColor="#f1faee" style="light" />
       <ScrollView vertical={true}>
         <View className="my-20">
-          <Text className="font-pblack text-white text-sm mb-4">
+          {/* <Text className="font-pblack text-slate-800 text-sm mb-4">
             Booking Details
           </Text>
           <View className=" flex-row   ">
             {getStatusIcon(selectedBooking?.currentStatus || "")}
-            <Text className="font-pblack uppercase mt-[2px] text-white text-md mb-4">
+            <Text className="font-pblack uppercase mt-[2px] text-slate-800 text-md mb-4">
               {selectedBooking?.currentStatus || ""}
             </Text>
-          </View>
+          </View> */}
           {renderList("Job Details", obInfo)}
           {renderList("More Details", UserInfo)}
           {renderList("Address Details", BookingInfo)}

@@ -27,13 +27,13 @@ export default function BookingLayout() {
     <>
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: "#FFA001",
-          tabBarInactiveTintColor: "#CDCDE0",
+          tabBarActiveTintColor: "#0055bc",
+          tabBarInactiveTintColor: "#adb5bd",
           tabBarShowLabel: false,
           tabBarStyle: {
-            backgroundColor: "#161622",
+            backgroundColor: "#f1faee",
             borderTopWidth: 1,
-            borderTopColor: "#232533",
+            borderTopColor: "#ced4da",
             height: 84,
           },
         }}
@@ -84,7 +84,7 @@ export default function BookingLayout() {
           }}
         />
       </Tabs>
-      <StatusBar backgroundColor="#161622" style="light" />
+      <StatusBar backgroundColor="#f1faee" style="light" />
     </>
   );
 }

@@ -31,7 +31,7 @@ export default function Index() {
   return (
     <SafeAreaView className="flex-1 bg-primary justify-center items-center">
       {isLoading ? (
-        <Text className="text-white text-xl">Loading...</Text>
+        <Text className="text-slate-800 text-xl">Loading...</Text>
       ) : (
         <View className="w-3/4 p-4 bg-secondary-200 rounded-lg shadow-lg">
           <Text className="text-slate-200 text-2xl font-bold mb-4 text-center">
@@ -41,7 +41,7 @@ export default function Index() {
             onPress={() => router.push(isLoggedIn ? "Home" : "signin")}
             className="bg-secondary-100 py-3 px-6 rounded-lg mt-4"
           >
-            <Text className="text-white text-center text-lg">
+            <Text className="text-slate-800 text-center text-lg">
               {isLoggedIn ? "Go to Home" : "Sign In"}
             </Text>
           </TouchableOpacity>

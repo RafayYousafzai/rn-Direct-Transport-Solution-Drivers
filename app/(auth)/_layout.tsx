@@ -23,7 +23,7 @@ export default function AuthLayout() {
         />
       </Stack>
 
-      <StatusBar backgroundColor="#161622" style="light" />
+      <StatusBar backgroundColor="#f1faee" style="light" />
     </>
   );
 }
