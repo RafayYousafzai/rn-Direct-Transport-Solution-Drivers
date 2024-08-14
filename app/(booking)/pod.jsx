@@ -7,6 +7,7 @@ import {
   View,
   TouchableOpacity,
   Image,
+  ActivityIndicator, // Import for loading indicator
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import ImageViewer from "@/components/common/ImageViewer";
@@ -21,6 +22,8 @@ const Pod = () => {
   const { selectedBooking } = useGlobalContext();
   const defaultImages = selectedBooking?.images ? selectedBooking?.images : [];
   const [selectedImages, setSelectedImages] = useState(defaultImages);
+  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [successMessage, setSuccessMessage] = useState(""); // Success message state
 
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -59,17 +62,28 @@ const Pod = () => {
   };
 
   const uploadAllImages = async () => {
-    const images = await Promise.all(
-      selectedImages.map(async (image) => {
-        const url = await uploadImages(image);
-        return url;
-      })
-    );
+    setIsLoading(true); // Start loading
+    setSuccessMessage(""); // Clear previous success message
 
-    await updateBooking("place_bookings", selectedBooking.docId, {
-      ...selectedBooking,
-      images,
-    });
+    try {
+      const images = await Promise.all(
+        selectedImages.map(async (image) => {
+          const url = await uploadImages(image);
+          return url;
+        })
+      );
+
+      await updateBooking("place_bookings", selectedBooking.docId, {
+        ...selectedBooking,
+        images,
+      });
+
+      setSuccessMessage("Images uploaded successfully!"); // Set success message
+    } catch (error) {
+      console.error("Error uploading images:", error);
+    } finally {
+      setIsLoading(false); // Stop loading
+    }
   };
 
   return (
@@ -94,7 +108,7 @@ const Pod = () => {
                 source={icons.remove}
                 resizeMode="contain"
                 alt="remove"
-                className="w-8 h-8  "
+                className="w-8 h-8"
               />
             </TouchableOpacity>
           </View>
@@ -112,8 +126,14 @@ const Pod = () => {
               <CustomButton
                 title="Add to Booking"
                 handlePress={uploadAllImages}
-                isLoading={false}
+                isLoading={isLoading}
               />
+            )}
+
+            {successMessage !== "" && (
+              <Text className="text-green-600 text-center mt-4 font-pmedium">
+                {successMessage}
+              </Text>
             )}
 
             <View className="mt-7 space-y-2">

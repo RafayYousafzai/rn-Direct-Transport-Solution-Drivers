@@ -5,6 +5,7 @@ import renderList from "../../components/renderList";
 import useGlobalContext from "@/context/GlobalProvider";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import ItemList from "../../components/common/ItemList";
 
 export default function Booking() {
   const { selectedBooking } = useGlobalContext();
@@ -73,9 +74,8 @@ export default function Booking() {
 
   return (
     <SafeAreaView className="px-4 bg-primary h-full">
-      <StatusBar backgroundColor="#f1faee" style="light" />
       <ScrollView vertical={true}>
-        <View className="my-20">
+        <View className="mb-20">
           {/* <Text className="font-pblack text-slate-800 text-sm mb-4">
             Booking Details
           </Text>
@@ -85,9 +85,10 @@ export default function Booking() {
               {selectedBooking?.currentStatus || ""}
             </Text>
           </View> */}
-          {renderList("Job Details", obInfo)}
-          {renderList("More Details", UserInfo)}
+          {/* {renderList("Job Details", obInfo)} */}
+          {renderList("Job Details", UserInfo)}
           {renderList("Address Details", BookingInfo)}
+          <ItemList items={selectedBooking?.items} title={"All Items"} />
         </View>
       </ScrollView>
     </SafeAreaView>

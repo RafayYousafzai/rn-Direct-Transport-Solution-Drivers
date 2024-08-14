@@ -16,7 +16,7 @@ export default function Header({ title, subtitle }) {
           <Text className="font-pmedium text-sm text-slate-700 capitalize">
             {title}
           </Text>
-          <Text className="text-2xl font-psemibold text-slate-800 capitalize">
+          <Text className="text-xl font-psemibold text-slate-800 capitalize">
             {subtitle}
           </Text>
         </View>

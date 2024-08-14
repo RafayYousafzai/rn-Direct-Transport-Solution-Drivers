@@ -1,9 +1,13 @@
 import { Tabs } from "expo-router";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { icons } from "@/constants";
+import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons"; // Optional: For a nice back arrow icon
 
 export default function BookingLayout() {
+  const navigation = useNavigation();
+
   const TabIcon = ({ icon, color, name, focused }) => {
     return (
       <View className="flex items-center justify-center gap-2">
@@ -19,6 +23,17 @@ export default function BookingLayout() {
         >
           {name}
         </Text>
+      </View>
+    );
+  };
+
+  const HeaderWithBackButton = ({ title }) => {
+    return (
+      <View className="flex flex-row items-center p-4 mt-6 bg-primary">
+        <TouchableOpacity onPress={() => navigation.goBack()} className="mr-4">
+          <Ionicons name="arrow-back" size={24} color="#0055bc" />
+        </TouchableOpacity>
+        <Text className="font-psemibold text-lg">{title}</Text>
       </View>
     );
   };
@@ -41,8 +56,7 @@ export default function BookingLayout() {
         <Tabs.Screen
           name="details"
           options={{
-            title: "Details",
-            headerShown: false,
+            header: () => <HeaderWithBackButton title="Details" />,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 icon={icons.docs}
@@ -56,8 +70,7 @@ export default function BookingLayout() {
         <Tabs.Screen
           name="pod"
           options={{
-            title: "POD",
-            headerShown: false,
+            header: () => <HeaderWithBackButton title="POD" />,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 icon={icons.photo}
@@ -71,8 +84,7 @@ export default function BookingLayout() {
         <Tabs.Screen
           name="status"
           options={{
-            title: "Status",
-            headerShown: false,
+            header: () => <HeaderWithBackButton title="Status" />,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 icon={icons.circle}

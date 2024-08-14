@@ -10,10 +10,10 @@ import Header from "@/components/Header";
 const DashboardCard = ({ title, value, icon }) => (
   <View
     className="bg-secondary-100
-   shadow-lg rounded-xl p-5 mb-4 flex-row items-center justify-between border-l-4 border-slate-300"
+   shadow-xl rounded-xl p-5 mb-4 flex-row items-center justify-between  border-l-4 border-slate-300"
   >
     <View className="flex-row items-center">
-      <View className="bg-slate-950 p-3 rounded-full shadow-lg flex items-center justify-center">
+      <View className="bg-white p-3 rounded-full shadow-lg flex items-center justify-center">
         <Image source={icon} resizeMode="contain" className="w-6 h-6" />
       </View>
       <View className="ml-4">
