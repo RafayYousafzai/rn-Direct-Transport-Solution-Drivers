@@ -1,5 +1,5 @@
 import React from "react";
-import {  FlatList, SafeAreaView,   } from "react-native";
+import { FlatList, SafeAreaView } from "react-native";
 import EmptyState from "@/components/EmptyState";
 import BookingCard from "@/components/BookingCard";
 import useGlobalContext from "@/context/GlobalProvider";

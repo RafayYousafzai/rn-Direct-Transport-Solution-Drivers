@@ -25,6 +25,7 @@ import cancel from "../assets/icons/cancel.png";
 import future from "../assets/icons/future.png";
 import today from "../assets/icons/today.png";
 import logout from "../assets/icons/switch.png";
+import pencil from "../assets/icons/pencil.png";
 
 export default {
   play,
@@ -53,4 +54,5 @@ export default {
   cancel,
   future,
   today,
+  pencil,
 };

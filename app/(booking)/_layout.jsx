@@ -31,7 +31,7 @@ export default function BookingLayout() {
     return (
       <View className="flex flex-row items-center p-4 mt-6 bg-primary">
         <TouchableOpacity onPress={() => navigation.goBack()} className="mr-4">
-          <Ionicons name="arrow-back" size={24} color="#0055bc" />
+          <Ionicons name="arrow-back" size={24} color="#1384e1" />
         </TouchableOpacity>
         <Text className="font-psemibold text-lg">{title}</Text>
       </View>
@@ -42,11 +42,11 @@ export default function BookingLayout() {
     <>
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: "#0055bc",
+          tabBarActiveTintColor: "#1384e1",
           tabBarInactiveTintColor: "#adb5bd",
           tabBarShowLabel: false,
           tabBarStyle: {
-            backgroundColor: "#f1faee",
+            backgroundColor: "#fff",
             borderTopWidth: 1,
             borderTopColor: "#ced4da",
             height: 84,
@@ -81,6 +81,22 @@ export default function BookingLayout() {
             ),
           }}
         />
+
+        <Tabs.Screen
+          name="signature"
+          options={{
+            header: () => <HeaderWithBackButton title="Signature" />,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                icon={icons.pencil}
+                color={color}
+                name="Sign"
+                focused={focused}
+              />
+            ),
+          }}
+        />
+
         <Tabs.Screen
           name="status"
           options={{
@@ -96,7 +112,7 @@ export default function BookingLayout() {
           }}
         />
       </Tabs>
-      <StatusBar backgroundColor="#f1faee" style="light" />
+      <StatusBar backgroundColor="#fff" translucent style="dark" />
     </>
   );
 }

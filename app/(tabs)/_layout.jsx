@@ -38,11 +38,11 @@ export default function TabsLayout() {
     <>
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: "#0055bc",
+          tabBarActiveTintColor: "#1384e1",
           tabBarInactiveTintColor: "#adb5bd",
           tabBarShowLabel: false,
           tabBarStyle: {
-            backgroundColor: "#f1faee",
+            backgroundColor: "#fff",
             borderTopWidth: 1,
             borderTopColor: "#ced4da",
             height: 84,
@@ -95,7 +95,7 @@ export default function TabsLayout() {
           }}
         />
       </Tabs>
-      <StatusBar backgroundColor="#f1faee" style="light" />
+      <StatusBar backgroundColor="#fff" translucent style="dark" />
     </>
   );
 }
