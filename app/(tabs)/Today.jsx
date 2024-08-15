@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { FlatList, SafeAreaView } from "react-native";
 import EmptyState from "@/components/EmptyState";
 import BookingCard from "@/components/BookingCard";
 import useGlobalContext from "@/context/GlobalProvider";
 import { useRouter } from "expo-router";
-import { useMemo } from "react";
 import { startOfDay, isToday, parse } from "date-fns";
 import Header from "@/components/Header";
+import Pagination from "@/components/common/Pagination";
+
+const itemsPerPage = 5;
 
 export default function History() {
   const { bookings, setSelectedBooking, user } = useGlobalContext();
   const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(1);
 
   const parseDate = (dateString) => {
     try {
@@ -32,10 +35,17 @@ export default function History() {
     [bookings]
   );
 
+  // Calculate paginated data based on current page
+  const paginatedBookings = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return todaysBookings.slice(startIndex, endIndex);
+  }, [currentPage, todaysBookings]);
+
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-primary p-4">
       <FlatList
-        data={todaysBookings}
+        data={paginatedBookings}
         keyExtractor={(item) => item.docId}
         renderItem={({ item }) => (
           <BookingCard
@@ -56,6 +66,14 @@ export default function History() {
           <Header
             title={"Today's Bookings "}
             subtitle={` ${todaysBookings.length} Deliveries`}
+          />
+        )}
+        ListFooterComponent={() => (
+          <Pagination
+            data={todaysBookings}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            itemsPerPage={itemsPerPage}
           />
         )}
       />
