@@ -9,7 +9,7 @@ import { useMemo } from "react";
 import Header from "@/components/Header";
 import Pagination from "@/components/common/Pagination";
 
-const itemsPerPage = 2;
+const itemsPerPage = 5;
 
 export default function History() {
   const { bookings, setSelectedBooking } = useGlobalContext();

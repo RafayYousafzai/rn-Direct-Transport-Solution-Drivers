@@ -11,7 +11,7 @@ import Pagination from "@/components/common/Pagination";
 const itemsPerPage = 5;
 
 export default function History() {
-  const { bookings, setSelectedBooking, user } = useGlobalContext();
+  const { bookings, setSelectedBooking } = useGlobalContext();
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
