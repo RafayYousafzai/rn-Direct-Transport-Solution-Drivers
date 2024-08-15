@@ -43,7 +43,7 @@ export default function Status() {
 
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-primary p-4">
-      <Text className="text-3xl text-yellow-50 font-pextrabold mb-4">
+      <Text className="text-3xl text-slate-950 font-pextrabold mb-4">
         Change Status
       </Text>
       <View className="w-full flex flex-col items-center">
@@ -57,7 +57,7 @@ export default function Status() {
           >
             <Text
               className={`text-center capitalize ${
-                currentStatus === status ? "text-slate-800" : "text-black"
+                currentStatus === status ? "text-white" : "text-slate-200"
               }`}
             >
               {status}
