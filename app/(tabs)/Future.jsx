@@ -4,7 +4,7 @@ import EmptyState from "@/components/EmptyState";
 import BookingCard from "@/components/BookingCard";
 import useGlobalContext from "@/context/GlobalProvider";
 import { useRouter } from "expo-router";
-import { parse, startOfDay, isBefore } from "date-fns";
+import { parse, startOfDay, isFuture } from "date-fns";
 import { useMemo } from "react";
 import Header from "@/components/Header";
 import Pagination from "@/components/common/Pagination";
@@ -26,23 +26,21 @@ export default function History() {
     }
   };
 
-  const pastBookings = useMemo(() => {
+  const futureBookings = useMemo(() => {
     const today = startOfDay(new Date());
     return bookings.filter((booking) => {
       if (!booking.date) return false;
       const bookingDate = parseDate(booking.date);
-      return (
-        (bookingDate && isBefore(bookingDate, today)) ||
-        booking.currentStatus === "delivered"
-      );
+      return bookingDate && isFuture(bookingDate) && bookingDate > today;
     });
   }, [bookings]);
 
+  // Calculate paginated data based on current page
   const paginatedBookings = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return pastBookings.slice(startIndex, endIndex);
-  }, [currentPage, pastBookings]);
+    return futureBookings.slice(startIndex, endIndex);
+  }, [currentPage, futureBookings]);
 
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-primary p-4">
@@ -66,13 +64,13 @@ export default function History() {
         )}
         ListHeaderComponent={() => (
           <Header
-            title={" Well Done! You Completed"}
-            subtitle={` ${pastBookings.length} Deliveries`}
+            title={"Future Bookings"}
+            subtitle={` ${futureBookings.length} Deliveries`}
           />
         )}
         ListFooterComponent={() => (
           <Pagination
-            data={pastBookings}
+            data={futureBookings}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
             itemsPerPage={itemsPerPage}

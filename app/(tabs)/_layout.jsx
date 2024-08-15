@@ -80,6 +80,21 @@ export default function TabsLayout() {
           }}
         />
         <Tabs.Screen
+          name="Future"
+          options={{
+            title: "Future",
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                icon={icons.future}
+                color={color}
+                name="Future"
+                focused={focused}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
           name="History"
           options={{
             title: "History",
