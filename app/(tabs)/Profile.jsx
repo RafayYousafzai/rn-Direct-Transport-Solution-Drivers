@@ -4,13 +4,16 @@ import * as WebBrowser from "expo-web-browser";
 import FeatureCard from "@/components/common/FeatureCard";
 import { signOut } from "@/lib/firebase/functions/auth";
 import { icons } from "@/constants";
+import { useRouter } from "expo-router";
 
 const img = "https://cdn-icons-png.flaticon.com/512/4128/4128176.png";
 const resetPasswordLink = "https://dts.courierssydney.com.au/ResetPassword";
 
 const Profile = () => {
-  const { user } = useGlobalContext();
+  const { user, setIsLoggedIn } = useGlobalContext();
   const { firstName, email } = user;
+  const router = useRouter();
+
 
   const _handlePressButtonAsync = async () => {
     let result = await WebBrowser.openBrowserAsync(resetPasswordLink);
@@ -20,11 +23,11 @@ const Profile = () => {
   const handleSnout = async () => {
     try {
       await signOut();
-      setIsLoggedIn(false);
       router.push("signin");
     } catch (error) {
-      setIsLoggedIn(false);
       console.log(error);
+    } finally {
+      setIsLoggedIn(false);
     }
   };
 

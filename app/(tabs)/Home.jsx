@@ -3,15 +3,11 @@ import React, { useMemo } from "react";
 import useGlobalContext from "@/context/GlobalProvider";
 import { startOfDay, isToday, parse, isBefore, isFuture } from "date-fns";
 import { icons } from "@/constants";
-import { useRouter } from "expo-router";
 import Header from "@/components/Header";
 import FeatureCard from "@/components/common/FeatureCard";
 
 const Dashboard = () => {
-  const { bookings, user, setIsLoggedIn } = useGlobalContext();
-  const router = useRouter();
-
-  // console.log(user);
+  const { bookings, user } = useGlobalContext();
 
   const parseDate = (dateString) => {
     try {
