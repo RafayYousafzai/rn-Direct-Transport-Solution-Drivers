@@ -17,6 +17,11 @@ const Pagination = ({ data, currentPage, setCurrentPage, itemsPerPage }) => {
     }
   };
 
+  // Don't render pagination controls if there's only one page
+  if (totalPages <= 1) {
+    return null;
+  }
+
   return (
     <View className="flex-row justify-between mt-4">
       <TouchableOpacity
