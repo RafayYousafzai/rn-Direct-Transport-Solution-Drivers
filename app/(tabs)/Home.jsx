@@ -56,16 +56,19 @@ const Dashboard = () => {
       </Text>
 
       <FeatureCard
+        href="/Today"
         title="Today's Deliveries"
         value={todaysBookings.length}
         icon={icons.today}
       />
       <FeatureCard
+        href="/Future"
         title="Future Deliveries"
         value={futureBookings.length}
         icon={icons.future}
       />
       <FeatureCard
+        href="/History"
         title="Deliveries Completed"
         value={
           bookings.filter((booking) => booking.currentStatus === "delivered")
@@ -74,6 +77,7 @@ const Dashboard = () => {
         icon={icons.approved}
       />
       <FeatureCard
+        href="/History"
         title="Deliveries Cancelled"
         value={
           bookings.filter((booking) => booking.currentStatus === "cancelled")
