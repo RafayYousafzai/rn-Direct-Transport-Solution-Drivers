@@ -9,7 +9,7 @@ import Header from "@/components/Header";
 
 const DashboardCard = ({ title, value, icon }) => (
   <View
-    className="bg-secondary-100
+    className="bg-secondary
    shadow-xl rounded-xl p-5 mb-4 flex-row items-center justify-between  border-l-4 border-slate-300"
   >
     <View className="flex-row items-center">

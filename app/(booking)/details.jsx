@@ -47,9 +47,9 @@ export default function Booking() {
     { label: "Email", value: selectedBooking?.userEmail },
   ];
   const UserInfo = [
-    { label: "Date", value: selectedBooking?.date },
-    { label: "Time", value: selectedBooking?.time },
     { label: "Contact", value: selectedBooking?.contact },
+    { label: "Ready Date", value: selectedBooking?.date },
+    { label: "Ready Time", value: selectedBooking?.time },
     { label: "Internal Reference", value: selectedBooking?.internalReference },
   ];
 

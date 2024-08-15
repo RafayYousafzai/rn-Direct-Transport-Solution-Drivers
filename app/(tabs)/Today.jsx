@@ -54,7 +54,7 @@ export default function History() {
         )}
         ListHeaderComponent={() => (
           <Header
-            title={"Ready to get started?"}
+            title={"Today's Bookings "}
             subtitle={` ${todaysBookings.length} Deliveries`}
           />
         )}
