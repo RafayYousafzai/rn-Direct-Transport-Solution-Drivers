@@ -120,7 +120,7 @@ const Dashboard = () => {
       />
       <Pressable onPress={handleSnout}>
         <DashboardCard
-          title="Press here to logout from your account!"
+          title="Logout from your account!"
           value="Sign out"
           icon={icons.logout}
         />

@@ -1,11 +1,10 @@
-import { StatusBar } from "expo-status-bar";
-import { View, Text, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import renderList from "../../components/renderList";
+import renderList from "@/components/renderList";
 import useGlobalContext from "@/context/GlobalProvider";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import ItemList from "../../components/common/ItemList";
+import ItemList from "@/components/common/ItemList";
 
 export default function Booking() {
   const { selectedBooking } = useGlobalContext();

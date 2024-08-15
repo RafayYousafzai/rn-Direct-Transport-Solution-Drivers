@@ -1,24 +1,42 @@
 import React, { useRef, useState } from "react";
-import { View, Text, Image, TouchableOpacity, Modal } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Modal,
+  SafeAreaView,
+} from "react-native";
 import Signature from "react-native-signature-canvas";
 import { Dimensions } from "react-native";
 
-const SignatureComponent = () => {
+const SignatureComponent = ({ handleSave, currentSign }) => {
   const [signature, setSignature] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const ref = useRef();
   const screenHeight = Dimensions.get("window").height;
 
   const handleOK = (signature) => {
-    setSignature(signature);
-    setIsFullscreen(false); // Close the modal after saving the signature
+    if (signature) {
+      const base64Data = signature.split(",")[1];
+      const pngImage = `data:image/png;base64,${base64Data}`;
+
+      // Save the PNG image
+      handleSave(pngImage);
+
+      // Close the modal after saving the signature
+      setSignature(signature);
+      setIsFullscreen(false);
+    } else {
+      console.warn("No signature data found.");
+    }
   };
 
   const handleClear = () => {
     ref.current.clearSignature();
   };
 
-  const handleConfirm = async () => {
+  const handleConfirm = () => {
     ref.current.readSignature();
   };
 
@@ -26,7 +44,7 @@ const SignatureComponent = () => {
     "https://img.freepik.com/free-vector/hand-drawn-essay-illustration_23-2150268421.jpg?t=st=1723626153~exp=1723629753~hmac=4625206d373b5f731691c2cbb177e96d2f2b040040ec0beccb02e09bfaa9e2b0&w=740";
 
   return (
-    <View className="flex-1 justify-center items-center bg-white p-4">
+    <SafeAreaView className="flex-1 justify-center items-center bg-white p-4">
       <Text className="text-2xl font-semibold text-gray-800 mb-6">
         Sign Below
       </Text>
@@ -42,7 +60,9 @@ const SignatureComponent = () => {
           <Image
             className="aspect-square w-full border border-slate-200  rounded-lg"
             resizeMode="contain"
-            source={{ uri: signature ? signature : img }}
+            source={{
+              uri: signature ? signature : currentSign ? currentSign : img,
+            }}
           />
         </TouchableOpacity>
       </View>
@@ -57,8 +77,6 @@ const SignatureComponent = () => {
             ref={ref}
             onOK={handleOK}
             descriptionText="Sign"
-            clearText="Clear"
-            confirmText="Save"
             webStyle={`
               .m-signature-pad { border: none; border-radius: 12px; height: ${
                 screenHeight * 0.65
@@ -98,7 +116,7 @@ const SignatureComponent = () => {
           </TouchableOpacity>
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 
