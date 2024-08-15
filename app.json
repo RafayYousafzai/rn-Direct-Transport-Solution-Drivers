@@ -27,7 +27,7 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.rafaykhan177.dtsdriver"
+      "package": "com.courierssydney.dtsdriver"
     },
     "web": {
       "bundler": "metro",
