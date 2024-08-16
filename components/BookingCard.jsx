@@ -28,13 +28,13 @@ const BookingCard = ({ item, setSelectedBooking, router }) => {
         setSelectedBooking(item);
         router.push("details");
       }}
-      className="w-full p-4 my-2 bg-secondary rounded-lg shadow-xl flex-row items-center"
+      className=" p-4 m-[2%] bg-secondary rounded-lg shadow-xl flex-row items-center"
     >
       <View className="flex-row items-center">
         <View className="mr-4">{getStatusIcon(item.currentStatus)}</View>
         <View className="flex-1">
           <Text className="text-lg text-white font-semibold">
-            {item.contact}
+            {item.userName}
           </Text>
           <Text className="text-slate-100 text-sm mb-1">{item.docId}</Text>
           <View className="flex-row items-center">

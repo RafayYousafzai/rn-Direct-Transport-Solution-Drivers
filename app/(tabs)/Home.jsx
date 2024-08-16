@@ -48,10 +48,10 @@ const Dashboard = () => {
   );
 
   return (
-    <ScrollView className="flex bg-primary p-4">
+    <ScrollView className="flex bg-primary">
       <Header title={"Welcome Back"} subtitle={user?.firstName} />
 
-      <Text className="text-lg font-pextrabold text-slate-700 mb-3">
+      <Text className="text-lg ml-2 font-pextrabold text-slate-700 mb-3">
         Dashboard
       </Text>
 

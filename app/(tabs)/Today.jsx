@@ -47,7 +47,7 @@ export default function History() {
   }, [currentPage, todaysBookings]);
 
   return (
-    <SafeAreaView className="flex-1 items-center justify-center bg-primary p-4">
+    <SafeAreaView className="flex-1 items-center justify-center bg-primary ">
       <FlatList
         data={paginatedBookings}
         keyExtractor={(item) => item.docId}

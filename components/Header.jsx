@@ -3,7 +3,7 @@ import { images } from "@/constants";
 
 export default function Header({ title, subtitle }) {
   return (
-    <View className="flex my-6 space-y-6 h-20 mt-12">
+    <View className="flex my-6 space-y-6 h-20 mt-12 px-[4%]">
       <View className="flex justify-between items-start flex-row mb-6">
         <View className="mt-1.5">
           <Image
