@@ -22,7 +22,6 @@ const resetPasswordLink = "https://dts.courierssydney.com.au/ResetPassword";
 
 const Profile = () => {
   const { user, setIsLoggedIn } = useGlobalContext();
-  const { firstName, email, phone, pfp } = user || {};
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +58,7 @@ const Profile = () => {
 
         const newUri = result.assets[0].uri;
         const url = await uploadImages(newUri);
-        await updateBooking("users", email, {
+        await updateBooking("users", user?.email, {
           ...user,
           pfp: url,
         });
@@ -71,18 +70,34 @@ const Profile = () => {
     }
   };
 
+  if (!user) {
+    return (
+      <View className="flex-1 items-center justify-center bg-white">
+        <Text className="text-2xl font-bold text-gray-800">Profile</Text>
+        <Text className="text-lg text-gray-600 mt-2">
+          Please sign in to view your profile.
+        </Text>
+      </View>
+    );
+  }
+
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-white ">
       <View className="items-center mt-20 ">
         <Pressable onPress={handleProfilePicture} disabled={isLoading}>
           <Image
-            source={{ uri: pfp || img }}
+            source={{ uri: user?.pfp || img }}
             className="w-24 h-24 rounded-full mb-4"
           />
         </Pressable>
-        <Text className="text-2xl font-bold text-gray-800">{firstName}</Text>
-        <Text className="text-lg text-gray-600 mt-2">{email}</Text>
-        <Text className="text-lg text-gray-600 mt-2">{phone}</Text>
+        <Text className="text-2xl font-bold text-gray-800">
+          {user?.firstName}
+        </Text>
+        <Text className="text-lg text-gray-600 mt-2">{user?.email}</Text>
+        <Text className="text-lg text-gray-600 mt-2">{user?.phone}</Text>
+        <Text className="text-lg text-gray-600 mt-2">
+          {user?.companyAddress}
+        </Text>
       </View>
       <ScrollView className="w-full">
         <View className="w-full mt-10">
@@ -104,7 +119,7 @@ const Profile = () => {
             <FeatureCard
               title="Change my profile picture"
               value="Profile Picture"
-              uri={pfp || img}
+              uri={user?.pfp || img}
             />
           </Pressable>
         </View>
