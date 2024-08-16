@@ -17,9 +17,10 @@ import { icons } from "@/constants";
 import useGlobalContext from "@/context/GlobalProvider";
 import { uploadImages } from "@/lib/firebase/functions/post";
 import { updateBooking } from "@/lib/firebase/functions/post";
+import FormField from "@/components/FormField";
 
 const Pod = () => {
-  const { selectedBooking } = useGlobalContext();
+  const { selectedBooking, setSelectedBooking } = useGlobalContext();
   const defaultImages = selectedBooking?.images ? selectedBooking?.images : [];
   const [selectedImages, setSelectedImages] = useState(defaultImages);
   const [isLoading, setIsLoading] = useState(false); // Loading state
@@ -91,7 +92,6 @@ const Pod = () => {
       <FlatList
         data={selectedImages}
         keyExtractor={(item) => item}
-        contentContainerStyle={{ width: 350 }}
         renderItem={({ item }) => (
           <View className="relative">
             <ImageViewer
@@ -121,7 +121,7 @@ const Pod = () => {
           />
         )}
         ListHeaderComponent={() => (
-          <View className="my-16">
+          <View className="my-16 mx-[2%]">
             {selectedImages.length > 0 && (
               <CustomButton
                 title="Add to Booking"
@@ -135,6 +135,18 @@ const Pod = () => {
                 {successMessage}
               </Text>
             )}
+
+            <FormField
+              title="Receiver Name"
+              value={selectedBooking?.receiverName}
+              placeholder="Write Receiver Name"
+              handleChangeText={(text) =>
+                setSelectedBooking({
+                  ...selectedBooking,
+                  receiverName: text,
+                })
+              }
+            />
 
             <View className="mt-7 space-y-2">
               <Text className="text-base text-slate-700 font-pmedium">
