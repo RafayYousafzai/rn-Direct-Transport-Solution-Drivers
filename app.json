@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "dts-driver",
+    "name": "DTS Driver",
     "slug": "dts-driver",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -16,7 +16,8 @@
       "supportsTablet": true,
       "config": {
         "usesNonExemptEncryption": false
-      }
+      },
+      "bundleIdentifier": "com.courierssydney.dtsdriver"
     },
     "android": {
       "adaptiveIcon": {

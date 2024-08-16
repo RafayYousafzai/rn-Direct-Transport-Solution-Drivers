@@ -3,11 +3,11 @@ import {
   Text,
   SafeAreaView,
   FlatList,
-  Pressable,
-  View,
   TouchableOpacity,
+  View,
   Image,
-  ActivityIndicator, // Import for loading indicator
+  ActivityIndicator,
+  TextInput,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import ImageViewer from "@/components/common/ImageViewer";
@@ -15,16 +15,16 @@ import CustomButton from "@/components/common/CustomButton";
 import EmptyState from "@/components/EmptyState";
 import { icons } from "@/constants";
 import useGlobalContext from "@/context/GlobalProvider";
-import { uploadImages } from "@/lib/firebase/functions/post";
-import { updateBooking } from "@/lib/firebase/functions/post";
+import { uploadImages, updateBooking } from "@/lib/firebase/functions/post";
 import FormField from "@/components/FormField";
 
 const Pod = () => {
-  const { selectedBooking, setSelectedBooking } = useGlobalContext();
-  const defaultImages = selectedBooking?.images ? selectedBooking?.images : [];
+  const { selectedBooking } = useGlobalContext();
+  const [name, setName] = useState(selectedBooking?.receiverName || "");
+  const defaultImages = selectedBooking?.images || [];
   const [selectedImages, setSelectedImages] = useState(defaultImages);
-  const [isLoading, setIsLoading] = useState(false); // Loading state
-  const [successMessage, setSuccessMessage] = useState(""); // Success message state
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -36,23 +36,18 @@ const Pod = () => {
     if (!result.canceled) {
       const newUris = result.assets.map((asset) => asset.uri);
       setSelectedImages((prevImages) => [...newUris, ...prevImages]);
-    } else {
-      // console.log("You did not select any image.");
     }
   };
 
   const pickCameraAsync = async () => {
     let result = await ImagePicker.launchCameraAsync({
       quality: 1,
-      allowsMultipleSelection: true,
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
 
     if (!result.canceled) {
       const newUris = result.assets.map((asset) => asset.uri);
       setSelectedImages((prevImages) => [...newUris, ...prevImages]);
-    } else {
-      // console.log("You did not select any image.");
     }
   };
 
@@ -63,8 +58,8 @@ const Pod = () => {
   };
 
   const uploadAllImages = async () => {
-    setIsLoading(true); // Start loading
-    setSuccessMessage(""); // Clear previous success message
+    setIsLoading(true);
+    setSuccessMessage("");
 
     try {
       const images = await Promise.all(
@@ -76,19 +71,29 @@ const Pod = () => {
 
       await updateBooking("place_bookings", selectedBooking.docId, {
         ...selectedBooking,
+        receiverName: name,
         images,
       });
 
-      setSuccessMessage("Images uploaded successfully!"); // Set success message
+      setSuccessMessage("Images uploaded successfully!");
     } catch (error) {
       console.error("Error uploading images:", error);
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false);
     }
   };
 
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-primary">
+      <View className="w-[90%]">
+        <FormField
+          title="Receiver Name"
+          value={name}
+          placeholder="Write Receiver Name"
+          handleChangeText={(e) => setName(e)}
+          otherStyles="mb-2"
+        />
+      </View>
       <FlatList
         data={selectedImages}
         keyExtractor={(item) => item}
@@ -99,7 +104,6 @@ const Pod = () => {
               selectedImage={item}
               styles="w-full h-60 mt-6"
             />
-
             <TouchableOpacity
               className="absolute top-7 right-2"
               onPress={() => removeImage(item)}
@@ -116,7 +120,7 @@ const Pod = () => {
         ListEmptyComponent={() => (
           <EmptyState
             title="No Images Selected"
-            subtitle="Please select an image to add in the bookings list"
+            subtitle="Please select an image to add to the bookings list"
             style="mt-16"
           />
         )}
@@ -124,29 +128,16 @@ const Pod = () => {
           <View className="my-16 mx-[2%]">
             {selectedImages.length > 0 && (
               <CustomButton
-                title="Add to Booking"
+                title="Save Booking"
                 handlePress={uploadAllImages}
                 isLoading={isLoading}
               />
             )}
-
             {successMessage !== "" && (
               <Text className="text-green-600 text-center mt-4 font-pmedium">
                 {successMessage}
               </Text>
             )}
-
-            <FormField
-              title="Receiver Name"
-              value={selectedBooking?.receiverName}
-              placeholder="Write Receiver Name"
-              handleChangeText={(text) =>
-                setSelectedBooking({
-                  ...selectedBooking,
-                  receiverName: text,
-                })
-              }
-            />
 
             <View className="mt-7 space-y-2">
               <Text className="text-base text-slate-700 font-pmedium">
