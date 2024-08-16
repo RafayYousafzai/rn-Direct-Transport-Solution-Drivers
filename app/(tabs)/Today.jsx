@@ -30,7 +30,11 @@ export default function History() {
       bookings.filter((booking) => {
         if (!booking.date) return false;
         const bookingDate = parseDate(booking.date);
-        return bookingDate && isToday(bookingDate);
+        return (
+          bookingDate &&
+          isToday(bookingDate) &&
+          booking.currentStatus !== "delivered"
+        );
       }),
     [bookings]
   );

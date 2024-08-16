@@ -20,7 +20,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logo.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#f1faee"
       },
       "permissions": [
@@ -32,7 +32,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/logo.png"
+      "favicon": "./assets/icon.png"
     },
     "plugins": [
       "expo-router",

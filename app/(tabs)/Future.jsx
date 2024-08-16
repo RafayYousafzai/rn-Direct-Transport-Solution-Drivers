@@ -31,7 +31,12 @@ export default function History() {
     return bookings.filter((booking) => {
       if (!booking.date) return false;
       const bookingDate = parseDate(booking.date);
-      return bookingDate && isFuture(bookingDate) && bookingDate > today;
+      return (
+        bookingDate &&
+        isFuture(bookingDate) &&
+        bookingDate > today &&
+        booking.currentStatus !== "delivered"
+      );
     });
   }, [bookings]);
 
