@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "828818568390",
+    "project_id": "couriers-946ec",
+    "storage_bucket": "couriers-946ec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:828818568390:android:8a8cfb53bbe62fe98093c7",
+        "android_client_info": {
+          "package_name": "com.courierssydney.dtsdriver"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVKOo86bDPHLC46lknj4TbttHnsvV7x6I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
