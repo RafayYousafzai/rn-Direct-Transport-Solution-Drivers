@@ -1,14 +1,14 @@
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
-import { useEffect } from "react";
 import { GlobalProvider } from "@/context/GlobalProvider";
 import registerNNPushToken from "native-notify";
+import React, { useState, useEffect } from "react";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  registerNNPushToken(23360, "EDyy2v4fu4kYBij5jdIdYd");
+  registerNNPushToken(23378, "J29bh2sWQfdcATdeMlJwpl");
 
   const [fontsLoaded, error] = useFonts({
     "Poppins-Black": require("../assets/fonts/Poppins-Black.ttf"),
