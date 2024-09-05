@@ -16,11 +16,11 @@
       "supportsTablet": true,
       "config": {
         "usesNonExemptEncryption": false
-      },
-      "bundleIdentifier": "com.courierssydney.dtsdriver"
+      }
     },
     "android": {
       "googleServicesFile": "./google-services.json",
+      "package": "com.primedev.exponotify",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#f1faee"
@@ -28,8 +28,7 @@
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
-      ],
-      "package": "com.courierssydney.dtsdriver"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -63,7 +62,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "bc20c8fa-fa52-438b-bb31-b7bd17e831af"
+        "projectId": "c100c394-64bc-4989-888c-d8dac2749e35"
       }
     }
   }

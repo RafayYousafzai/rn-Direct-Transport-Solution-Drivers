@@ -21,7 +21,7 @@ const GlobalProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [bookings, setBookings] = useState([]);
   const [selectedBooking, setSelectedBooking] = useState([]);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState([]);
   const router = useRouter();
 
   const db = getFirestore(app);
@@ -128,6 +128,7 @@ const GlobalProvider = ({ children }) => {
         user,
         selectedBooking,
         setSelectedBooking,
+        setUser,
       }}
     >
       {children}
