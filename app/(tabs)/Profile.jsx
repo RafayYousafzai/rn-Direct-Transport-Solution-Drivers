@@ -22,7 +22,7 @@ const img = "https://cdn-icons-png.flaticon.com/512/4128/4128176.png";
 const resetPasswordLink = "https://dts.courierssydney.com.au/ResetPassword";
 
 const Profile = () => {
-  const { user, setIsLoggedIn } = useGlobalContext();
+  const { user, setIsLoggedIn, refreshContext } = useGlobalContext();
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -45,9 +45,8 @@ const Profile = () => {
       );
       console.log({ res });
 
-      // Alert.alert("unregisterIndieDevice");
       await signOut();
-      setIsLoggedIn(false);
+      // setIsLoggedIn(false);
       router.push("signin");
     } catch (error) {
       console.error("Error signing out:", error);
