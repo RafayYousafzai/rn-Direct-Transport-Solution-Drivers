@@ -29,10 +29,10 @@ export default function Index() {
             const regis = await registerIndieID(user.email, APP_ID, APP_TOKEN);
             console.log(user.email, { regis, user, APP_ID, APP_TOKEN });
 
-            Alert.alert(
-              "Notification",
-              "You will receive booking messages from now on."
-            );
+            // Alert.alert(
+            //   "Notification",
+            //   "You will receive booking messages from now on."
+            // );
             router.replace("Home");
           } else {
             router.replace("signin");

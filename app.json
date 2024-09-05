@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "DTS Driver",
-    "slug": "dts-driver",
+    "slug": "expo-notify",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
