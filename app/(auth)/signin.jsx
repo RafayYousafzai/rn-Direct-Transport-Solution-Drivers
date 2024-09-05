@@ -10,7 +10,7 @@ import useGlobalContext from "@/context/GlobalProvider";
 import { save } from "@/lib/SecureStore/SecureStore";
 
 const SignIn = () => {
-  const { setIsLoggedIn } = useGlobalContext();
+  const { setIsLoggedIn, refreshContext } = useGlobalContext();
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     email: "",
@@ -26,6 +26,7 @@ const SignIn = () => {
       const result = await signInWithEmail(form.email, form.password);
       if (result) {
         await save("user", JSON.stringify(result));
+        refreshContext();
         setIsLoggedIn(true);
         router.push("Home");
       } else {

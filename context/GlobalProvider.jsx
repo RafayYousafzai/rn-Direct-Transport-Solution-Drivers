@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 import {
   getFirestore,
   collection,
@@ -26,69 +32,75 @@ const GlobalProvider = ({ children }) => {
 
   const db = getFirestore(app);
 
-  const listenUser = (email) => {
-    const docRef = doc(db, "users", email);
+  const listenUser = useCallback(
+    (email) => {
+      const docRef = doc(db, "users", email);
 
-    return onSnapshot(
-      docRef,
-      (docSnapshot) => {
-        if (docSnapshot.exists()) {
-          const userData = docSnapshot.data();
-          setUser(userData);
-          save("user", JSON.stringify(userData));
-          setIsLoggedIn(true);
-        } else {
+      return onSnapshot(
+        docRef,
+        (docSnapshot) => {
+          if (docSnapshot.exists()) {
+            const userData = docSnapshot.data();
+            setUser(userData);
+            save("user", JSON.stringify(userData));
+            setIsLoggedIn(true);
+          } else {
+            remove("user");
+            router.navigate("signin");
+            console.error("User document not found.");
+            setIsLoggedIn(false);
+          }
+          setIsLoading(false);
+        },
+        (error) => {
+          console.error("Error fetching user:", error);
           remove("user");
           router.navigate("signin");
-          console.error("User document not found.");
+          setIsLoading(false);
           setIsLoggedIn(false);
         }
-        setIsLoading(false);
-      },
-      (error) => {
-        console.error("Error fetching user:", error);
-        remove("user");
-        router.navigate("signin");
-        setIsLoading(false);
-        setIsLoggedIn(false);
-      }
-    );
-  };
+      );
+    },
+    [db, router]
+  );
 
-  const listenBookings = (email) => {
-    const collectionRef = collection(db, "place_bookings");
-    const q = query(
-      collectionRef,
-      where("driverEmail", "==", email),
-      orderBy("createdAt", "desc")
-    );
+  const listenBookings = useCallback(
+    (email) => {
+      const collectionRef = collection(db, "place_bookings");
+      const q = query(
+        collectionRef,
+        where("driverEmail", "==", email),
+        orderBy("createdAt", "desc")
+      );
 
-    return onSnapshot(
-      q,
-      (querySnapshot) => {
-        const documents = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+      return onSnapshot(
+        q,
+        (querySnapshot) => {
+          const documents = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
 
-        setBookings(documents);
+          setBookings(documents);
 
-        if (selectedBooking) {
-          const updatedBooking = documents.find(
-            (booking) => booking.docId === selectedBooking.docId
-          );
-          if (updatedBooking) {
-            setSelectedBooking(updatedBooking);
+          if (selectedBooking) {
+            const updatedBooking = documents.find(
+              (booking) => booking.docId === selectedBooking.docId
+            );
+            if (updatedBooking) {
+              setSelectedBooking(updatedBooking);
+            }
           }
+        },
+        (error) => {
+          console.error("Error fetching bookings:", error);
         }
-      },
-      (error) => {
-        console.error("Error fetching bookings:", error);
-      }
-    );
-  };
+      );
+    },
+    [db, selectedBooking]
+  );
 
-  const initializeListeners = async () => {
+  const initializeListeners = useCallback(async () => {
     try {
       const value = await getValueFor("user");
       if (value) {
@@ -109,14 +121,31 @@ const GlobalProvider = ({ children }) => {
       setIsLoading(false);
       setIsLoggedIn(false);
     }
-  };
+  }, [listenUser, listenBookings, router]);
+
+  const refreshContext = useCallback(async () => {
+    setIsLoading(true);
+    const cleanup = await initializeListeners();
+    return () => {
+      if (cleanup) cleanup();
+    };
+  }, [initializeListeners]);
 
   useEffect(() => {
-    initializeListeners();
-  }, []);
+    const cleanup = initializeListeners();
+    return () => {
+      if (cleanup) cleanup();
+    };
+  }, [initializeListeners]);
+
   useEffect(() => {
-    initializeListeners();
-  }, [isLoggedIn]);
+    if (isLoggedIn) {
+      const cleanup = initializeListeners();
+      return () => {
+        if (cleanup) cleanup();
+      };
+    }
+  }, [isLoggedIn, initializeListeners]);
 
   return (
     <GlobalContext.Provider
@@ -129,6 +158,7 @@ const GlobalProvider = ({ children }) => {
         selectedBooking,
         setSelectedBooking,
         setUser,
+        refreshContext,
       }}
     >
       {children}
