@@ -39,7 +39,7 @@ const Profile = () => {
 
   const handleSignOut = async () => {
     try {
-      unregisterIndieDevice(user.email, 23360, "J29bh2sWQfdcATdeMlJwpl");
+      unregisterIndieDevice(user.email, 23378, "J29bh2sWQfdcATdeMlJwpl");
       await signOut();
       setIsLoggedIn(false);
       router.push("signin");

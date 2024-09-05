@@ -1,8 +1,8 @@
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { GlobalProvider } from "@/context/GlobalProvider";
-import registerNNPushToken from "native-notify";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import registerNNPushToken from 'native-notify';
 
 SplashScreen.preventAutoHideAsync();
 

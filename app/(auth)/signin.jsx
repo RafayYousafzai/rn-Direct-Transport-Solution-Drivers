@@ -28,7 +28,7 @@ const SignIn = () => {
       const result = await signInWithEmail(form.email, form.password);
       if (result) {
         await save("user", JSON.stringify(result));
-        registerIndieID(result.email, 23360, "J29bh2sWQfdcATdeMlJwpl");
+        registerIndieID(result.email, 23378, "J29bh2sWQfdcATdeMlJwpl");
         setIsLoggedIn(true);
         router.push("Home");
       } else {
