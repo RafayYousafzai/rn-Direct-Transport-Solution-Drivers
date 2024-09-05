@@ -16,7 +16,8 @@ import { icons } from "@/constants";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { uploadImages, updateBooking } from "@/lib/firebase/functions/post";
-import { unregisterIndieDevice } from "native-notify";
+import { registerIndieID, unregisterIndieDevice } from "native-notify";
+import axios from "axios";
 
 const img = "https://cdn-icons-png.flaticon.com/512/4128/4128176.png";
 const resetPasswordLink = "https://dts.courierssydney.com.au/ResetPassword";
@@ -38,7 +39,7 @@ const Profile = () => {
 
   const handleSignOut = async () => {
     try {
-      unregisterIndieDevice(user.email, 23360, "EDyy2v4fu4kYBij5jdIdYd");
+      unregisterIndieDevice(user.email, 23360, "J29bh2sWQfdcATdeMlJwpl");
       await signOut();
       setIsLoggedIn(false);
       router.push("signin");

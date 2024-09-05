@@ -8,7 +8,8 @@ import FormField from "@/components/FormField";
 import { signInWithEmail } from "@/lib/firebase/functions/auth";
 import useGlobalContext from "@/context/GlobalProvider";
 import { save } from "@/lib/SecureStore/SecureStore";
-import { registerIndieID } from "native-notify";
+import { registerIndieID, unregisterIndieDevice } from "native-notify";
+import axios from "axios";
 
 const SignIn = () => {
   const { setIsLoggedIn } = useGlobalContext();
@@ -27,7 +28,7 @@ const SignIn = () => {
       const result = await signInWithEmail(form.email, form.password);
       if (result) {
         await save("user", JSON.stringify(result));
-        registerIndieID(result.email, 23360, "EDyy2v4fu4kYBij5jdIdYd");
+        registerIndieID(result.email, 23360, "J29bh2sWQfdcATdeMlJwpl");
         setIsLoggedIn(true);
         router.push("Home");
       } else {

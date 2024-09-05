@@ -4,7 +4,6 @@ import { GlobalProvider } from "@/context/GlobalProvider";
 import registerNNPushToken from "native-notify";
 import React, { useState, useEffect } from "react";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
