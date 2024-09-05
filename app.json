@@ -20,7 +20,7 @@
       "bundleIdentifier": "com.courierssydney.dtsdriver"
     },
     "android": {
-      "googleServicesFile": "./google-services.json",
+      "googleServicesFile": "./google-service.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#f1faee"
