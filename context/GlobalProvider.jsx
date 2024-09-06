@@ -83,21 +83,21 @@ const GlobalProvider = ({ children }) => {
 
           setBookings(documents);
 
-          if (selectedBooking) {
-            const updatedBooking = documents.find(
-              (booking) => booking.docId === selectedBooking.docId
-            );
-            if (updatedBooking) {
-              setSelectedBooking(updatedBooking);
-            }
-          }
+          // if (selectedBooking) {
+          //   const updatedBooking = documents.find(
+          //     (booking) => booking.docId === selectedBooking.docId
+          //   );
+          //   if (updatedBooking) {
+          //     setSelectedBooking(updatedBooking);
+          //   }
+          // }
         },
         (error) => {
           console.error("Error fetching bookings:", error);
         }
       );
     },
-    [db, selectedBooking]
+    [db]
   );
 
   const initializeListeners = useCallback(async () => {
