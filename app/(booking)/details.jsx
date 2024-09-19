@@ -23,6 +23,10 @@ export default function Booking() {
       value: selectedBooking?.pickupReference1,
     },
     {
+      label: "Pickup Phone",
+      value: selectedBooking?.pickupPhone,
+    },
+    {
       label: "Drop Company Name",
       value: selectedBooking?.dropCompanyName,
     },
@@ -33,6 +37,10 @@ export default function Booking() {
     {
       label: "Delivery Instructions",
       value: selectedBooking?.deliveryIns,
+    },
+    {
+      label: "Delivery Phone",
+      value: selectedBooking?.deliveryPhone,
     },
   ];
 
