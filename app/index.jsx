@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, View } from "react-native";
 import { useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import registerNNPushToken from "native-notify";
-import { registerIndieID, unregisterIndieDevice } from "native-notify";
-
+import { registerIndieID } from "native-notify";
+import LoadingScreen from "@/components/LoadingScreen";
 import useGlobalContext from "@/context/GlobalProvider";
-import { getValueFor, remove } from "@/lib/SecureStore/SecureStore";
+import { remove } from "@/lib/SecureStore/SecureStore";
 
 // Prevent the splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
@@ -27,21 +25,16 @@ export default function Index() {
         if (!isLoading && user) {
           if (isLoggedIn) {
             const regis = await registerIndieID(user.email, APP_ID, APP_TOKEN);
-            console.log(user.email, { regis, user, APP_ID, APP_TOKEN });
-
-            // Alert.alert(
-            //   "Notification",
-            //   "You will receive booking messages from now on."
-            // );
+            // console.log(user.email, { regis, user, APP_ID, APP_TOKEN });
             router.replace("Home");
           } else {
             router.replace("signin");
           }
-          await SplashScreen.hideAsync(); // Hide splash screen when navigation is done
+          await SplashScreen.hideAsync();
         }
       } catch (error) {
         console.error("Navigation error:", error);
-        await remove("user"); // Remove user on error
+        await remove("user");
         router.replace("signin");
         await SplashScreen.hideAsync();
       }
@@ -50,15 +43,11 @@ export default function Index() {
     if (!isLoading) {
       handleNavigationAndSplash();
     }
-  }, [isLoggedIn, isLoading, router]); // Depend on user for navigation logic
+  }, [isLoggedIn, isLoading, router]);
 
   if (isLoading) {
-    return (
-      <View className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
+    return <LoadingScreen />;
   }
 
-  return <ActivityIndicator size="large" color="#0000ff" />;
+  return <LoadingScreen />;
 }
