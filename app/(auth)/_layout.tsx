@@ -1,6 +1,7 @@
 import useGlobalContext from "@/context/GlobalProvider";
 import { router, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import React from "react";
 import { useEffect } from "react";
 
 export default function AuthLayout() {
@@ -22,8 +23,7 @@ export default function AuthLayout() {
           }}
         />
       </Stack>
-
-      <StatusBar backgroundColor="#f1faee" style="light" />
+      <StatusBar backgroundColor="#fff" translucent style="dark" />
     </>
   );
 }
