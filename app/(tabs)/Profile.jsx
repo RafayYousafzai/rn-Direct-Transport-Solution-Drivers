@@ -22,7 +22,7 @@ const img = "https://cdn-icons-png.flaticon.com/512/4128/4128176.png";
 const resetPasswordLink = "https://dts.courierssydney.com.au/ResetPassword";
 
 const Profile = () => {
-  const { user, setIsLoggedIn, refreshContext } = useGlobalContext();
+  const { user } = useGlobalContext();
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);

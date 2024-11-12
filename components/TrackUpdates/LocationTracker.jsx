@@ -2,8 +2,17 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Alert, Platform } from "react-native";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
+import { uploadLocation } from "@/lib/firebase/functions/post";
+import { GetUser } from "@/lib/firebase/functions/auth";
 
 const LOCATION_TASK_NAME = "background-location-task";
+
+let user = null;
+
+const fetchUser = async () => {
+  user = await GetUser();
+};
+fetchUser();
 
 TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
   if (error) {
@@ -13,21 +22,12 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
   if (data) {
     const { locations } = data;
     console.log("Background location update:", locations[0]);
-    // Send location data to the server
     sendLocationToServer(locations[0]);
   }
 });
 
 async function sendLocationToServer(location) {
-  try {
-    console.log({
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-      timestamp: location.timestamp,
-    });
-  } catch (error) {
-    console.error("Failed to send location:", error);
-  }
+  await uploadLocation(location, user);
 }
 
 export default function LocationTracker() {
@@ -56,7 +56,7 @@ export default function LocationTracker() {
         return;
       }
 
-      // Request background permissions if supported
+      // Request background permissions if android
       if (Platform.OS === "android") {
         let { status: backgroundStatus } =
           await Location.requestBackgroundPermissionsAsync();
@@ -73,10 +73,10 @@ export default function LocationTracker() {
       await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
         accuracy: Location.Accuracy.High,
         timeInterval: 2000, // Update every 2 seconds
-        distanceInterval: 5, // Update every 5 meters
+        distanceInterval: 2, // Update every 5 meters
         showsBackgroundLocationIndicator: true,
         foregroundService: {
-          notificationTitle: "Tracking Location",
+          notificationTitle: "Direct Transport Solutions",
           notificationBody: "Your location is being tracked.",
         },
       });
@@ -86,7 +86,7 @@ export default function LocationTracker() {
         {
           accuracy: Location.Accuracy.High,
           timeInterval: 2000,
-          distanceInterval: 5,
+          distanceInterval: 2,
         },
         (newLocation) => {
           setLocation(newLocation);
