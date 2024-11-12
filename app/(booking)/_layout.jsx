@@ -4,6 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { icons } from "@/constants";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons"; // Optional: For a nice back arrow icon
+import LocationTracker from "@/components/TrackUpdates/LocationTracker";
 
 export default function BookingLayout() {
   const navigation = useNavigation();
@@ -40,6 +41,7 @@ export default function BookingLayout() {
 
   return (
     <>
+      <LocationTracker />
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: "#1384e1",

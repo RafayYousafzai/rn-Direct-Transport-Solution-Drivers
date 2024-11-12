@@ -28,6 +28,7 @@ const GlobalProvider = ({ children }) => {
   const [bookings, setBookings] = useState([]);
   const [selectedBooking, setSelectedBooking] = useState([]);
   const [user, setUser] = useState([]);
+  const [location, setLocation] = useState(null);
   const router = useRouter();
 
   const db = getFirestore(app);
@@ -82,15 +83,6 @@ const GlobalProvider = ({ children }) => {
           }));
 
           setBookings(documents);
-
-          // if (selectedBooking) {
-          //   const updatedBooking = documents.find(
-          //     (booking) => booking.docId === selectedBooking.docId
-          //   );
-          //   if (updatedBooking) {
-          //     setSelectedBooking(updatedBooking);
-          //   }
-          // }
         },
         (error) => {
           console.error("Error fetching bookings:", error);
@@ -159,6 +151,8 @@ const GlobalProvider = ({ children }) => {
         setSelectedBooking,
         setUser,
         refreshContext,
+        location,
+        setLocation,
       }}
     >
       {children}
