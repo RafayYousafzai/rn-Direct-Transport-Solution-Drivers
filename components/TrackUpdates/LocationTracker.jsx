@@ -2,40 +2,26 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Alert, Platform } from "react-native";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
-import { uploadLocation } from "@/lib/firebase/functions/post";
-import { GetUser } from "@/lib/firebase/functions/auth";
+import { handleLocationUpdate } from "@/lib/firebase/functions/locations_sharing";
 
-const LOCATION_TASK_NAME = "background-location-task";
+const WATCH_LOCATION_UPDATES = "background-location-updates";
 
-let user = null;
-
-const fetchUser = async () => {
-  user = await GetUser();
-};
-fetchUser();
-
-TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
+TaskManager.defineTask(WATCH_LOCATION_UPDATES, ({ data, error }) => {
   if (error) {
     console.error("Background location task error:", error);
     return;
   }
   if (data) {
     const { locations } = data;
-    console.log("Background location update:", locations[0]);
-    sendLocationToServer(locations[0]);
+    handleLocationUpdate(locations[0]);
   }
 });
-
-async function sendLocationToServer(location) {
-  await uploadLocation(location, user);
-}
 
 export default function LocationTracker() {
   const [location, setLocation] = useState(null);
 
   useEffect(() => {
     const startTracking = async () => {
-      // Check if location services are enabled
       const isLocationEnabled = await Location.hasServicesEnabledAsync();
       if (!isLocationEnabled) {
         Alert.alert(
@@ -45,7 +31,6 @@ export default function LocationTracker() {
         return;
       }
 
-      // Request foreground permissions
       let { status: foregroundStatus } =
         await Location.requestForegroundPermissionsAsync();
       if (foregroundStatus !== "granted") {
@@ -56,7 +41,6 @@ export default function LocationTracker() {
         return;
       }
 
-      // Request background permissions if android
       if (Platform.OS === "android") {
         let { status: backgroundStatus } =
           await Location.requestBackgroundPermissionsAsync();
@@ -69,11 +53,10 @@ export default function LocationTracker() {
         }
       }
 
-      // Start background tracking
-      await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+      await Location.startLocationUpdatesAsync(WATCH_LOCATION_UPDATES, {
         accuracy: Location.Accuracy.High,
-        timeInterval: 2000, // Update every 2 seconds
-        distanceInterval: 2, // Update every 5 meters
+        timeInterval: 2000,
+        distanceInterval: 2,
         showsBackgroundLocationIndicator: true,
         foregroundService: {
           notificationTitle: "Direct Transport Solutions",
@@ -81,7 +64,6 @@ export default function LocationTracker() {
         },
       });
 
-      // Start foreground tracking
       await Location.watchPositionAsync(
         {
           accuracy: Location.Accuracy.High,
@@ -90,7 +72,7 @@ export default function LocationTracker() {
         },
         (newLocation) => {
           setLocation(newLocation);
-          sendLocationToServer(newLocation);
+          handleLocationUpdate(newLocation);
         }
       );
     };
