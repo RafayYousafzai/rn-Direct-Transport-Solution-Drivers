@@ -3,126 +3,124 @@ import { View, Text, StyleSheet, Alert, Platform } from "react-native";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
 import { handleLocationUpdate } from "@/lib/firebase/functions/locations_sharing";
-import { GetUser } from "@/lib/firebase/functions/auth";
+import useGlobalContext from "@/context/GlobalProvider";
 
 const WATCH_LOCATION_UPDATES = "background-location-updates";
 
-let user = null;
-
-const fetchUser = async () => {
-  user = await GetUser();
-};
-fetchUser();
-
-// Task Manager for background location updates
-TaskManager.defineTask(WATCH_LOCATION_UPDATES, ({ data, error }) => {
-  if (error) {
-    console.error("Background location task error:", error);
-    return;
-  }
-  if (data) {
-    const { locations } = data;
-    handleLocationUpdate(locations[0], user);
-  }
-});
-
 export default function LocationTracker() {
+  const { user, bookings } = useGlobalContext();
   const [location, setLocation] = useState(null);
 
   useEffect(() => {
+    if (!user) return;
+
+    TaskManager.defineTask(WATCH_LOCATION_UPDATES, async ({ data, error }) => {
+      if (error) {
+        console.error("Background location task error:", error);
+        return;
+      }
+
+      if (data) {
+        const { locations } = data;
+        if (locations && locations.length > 0) {
+          const location = locations[0];
+          await handleLocationUpdate(location, user, bookings);
+        }
+      }
+    });
+
     const startTracking = async () => {
-      const isLocationEnabled = await Location.hasServicesEnabledAsync();
-      if (!isLocationEnabled) {
-        Alert.alert(
-          "Location Services Disabled",
-          "Your location services are currently disabled. To use this app, Please enable 'Allow All the Time' location access in your device settings.",
-          [
-            {
-              text: "Cancel",
-              style: "cancel",
-            },
-            {
-              text: "Open Settings",
-              onPress: () => Location.enableNetworkProviderAsync(),
-            },
-          ]
-        );
-        return;
-      }
-
-      let { status: foregroundStatus } =
-        await Location.requestForegroundPermissionsAsync();
-      if (foregroundStatus !== "granted") {
-        Alert.alert(
-          "Location Access Needed",
-          "This app requires location access to provide tracking features for security. Please grant location permission to continue.",
-          [
-            {
-              text: "Cancel",
-              style: "cancel",
-            },
-            {
-              text: "Grant Access",
-              onPress: async () =>
-                await Location.requestForegroundPermissionsAsync(),
-            },
-          ]
-        );
-        return;
-      }
-
-      if (Platform.OS === "android") {
-        let { status: backgroundStatus } =
-          await Location.requestBackgroundPermissionsAsync();
-        if (backgroundStatus !== "granted") {
+      try {
+        const isLocationEnabled = await Location.hasServicesEnabledAsync();
+        if (!isLocationEnabled) {
           Alert.alert(
-            "Allow Background Location",
-            "To ensure uninterrupted location tracking (even when the app is not in use), please allow background location access. This helps us provide the best tracking experience.",
+            "Location Services Disabled",
+            "Please enable 'Allow All the Time' location access in your device settings.",
             [
+              { text: "Cancel", style: "cancel" },
               {
-                text: "Cancel",
-                style: "cancel",
-              },
-              {
-                text: "Grant Background Access",
-                onPress: async () =>
-                  await Location.requestBackgroundPermissionsAsync(),
+                text: "Open Settings",
+                onPress: () => Location.enableNetworkProviderAsync(),
               },
             ]
           );
           return;
         }
-      }
 
-      // Start background location tracking
-      await Location.startLocationUpdatesAsync(WATCH_LOCATION_UPDATES, {
-        accuracy: Location.Accuracy.High,
-        timeInterval: 10000,
-        distanceInterval: 0.5,
-        showsBackgroundLocationIndicator: true,
-        foregroundService: {
-          notificationTitle: "Direct Transport Solutions",
-          notificationBody:
-            "Your location is being tracked to ensure accurate routing and monitoring.",
-        },
-      });
-
-      // Start foreground location tracking
-      await Location.watchPositionAsync(
-        {
-          accuracy: Location.Accuracy.High,
-          timeInterval: 10000,
-          distanceInterval: 0.5,
-        },
-        (newLocation) => {
-          setLocation(newLocation); // Update UI
-          handleLocationUpdate(newLocation, user); // Shared location handler
+        const { status: foregroundStatus } =
+          await Location.requestForegroundPermissionsAsync();
+        if (foregroundStatus !== "granted") {
+          Alert.alert(
+            "Location Access Needed",
+            "Grant location permissions to continue.",
+            [
+              { text: "Cancel", style: "cancel" },
+              {
+                text: "Grant Access",
+                onPress: async () =>
+                  await Location.requestForegroundPermissionsAsync(),
+              },
+            ]
+          );
+          return;
         }
-      );
+
+        if (Platform.OS === "android") {
+          const { status: backgroundStatus } =
+            await Location.requestBackgroundPermissionsAsync();
+          if (backgroundStatus !== "granted") {
+            Alert.alert(
+              "Allow Background Location",
+              "Please allow background location access for uninterrupted tracking.",
+              [
+                { text: "Cancel", style: "cancel" },
+                {
+                  text: "Grant Access",
+                  onPress: async () =>
+                    await Location.requestBackgroundPermissionsAsync(),
+                },
+              ]
+            );
+            return;
+          }
+        }
+
+        // Start background location tracking
+        await Location.startLocationUpdatesAsync(WATCH_LOCATION_UPDATES, {
+          accuracy: Location.Accuracy.High,
+          timeInterval: 3000,
+          distanceInterval: 1,
+          showsBackgroundLocationIndicator: true,
+          foregroundService: {
+            notificationTitle: "Direct Transport Solutions",
+            notificationBody:
+              "Tracking your location for routing and monitoring.",
+          },
+        });
+
+        // Start foreground location tracking
+        const foregroundSubscription = await Location.watchPositionAsync(
+          {
+            accuracy: Location.Accuracy.High,
+            timeInterval: 3000,
+            distanceInterval: 1,
+          },
+          async (newLocation) => {
+            setLocation(newLocation); // Update the UI
+            await handleLocationUpdate(newLocation, user, bookings); 
+          }
+        );
+
+        return () => {
+          foregroundSubscription?.remove(); // Clean up subscription
+        };
+      } catch (err) {
+        console.error("Error starting location tracking:", err);
+      }
     };
 
     startTracking();
-  }, []);
+  }, [user]);
 
   return (
     <View style={styles.container}>
