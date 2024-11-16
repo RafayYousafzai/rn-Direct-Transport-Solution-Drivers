@@ -3,9 +3,18 @@ import { View, Text, StyleSheet, Alert, Platform } from "react-native";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
 import { handleLocationUpdate } from "@/lib/firebase/functions/locations_sharing";
+import { GetUser } from "@/lib/firebase/functions/auth";
 
 const WATCH_LOCATION_UPDATES = "background-location-updates";
 
+let user = null;
+
+const fetchUser = async () => {
+  user = await GetUser();
+};
+fetchUser();
+
+// Task Manager for background location updates
 TaskManager.defineTask(WATCH_LOCATION_UPDATES, ({ data, error }) => {
   if (error) {
     console.error("Background location task error:", error);
@@ -13,7 +22,7 @@ TaskManager.defineTask(WATCH_LOCATION_UPDATES, ({ data, error }) => {
   }
   if (data) {
     const { locations } = data;
-    handleLocationUpdate(locations[0]);
+    handleLocationUpdate(locations[0], user);
   }
 });
 
@@ -25,8 +34,18 @@ export default function LocationTracker() {
       const isLocationEnabled = await Location.hasServicesEnabledAsync();
       if (!isLocationEnabled) {
         Alert.alert(
-          "Enable Location Services",
-          "Please enable location services in your device settings."
+          "Location Services Disabled",
+          "Your location services are currently disabled. To use this app, Please enable 'Allow All the Time' location access in your device settings.",
+          [
+            {
+              text: "Cancel",
+              style: "cancel",
+            },
+            {
+              text: "Open Settings",
+              onPress: () => Location.enableNetworkProviderAsync(),
+            },
+          ]
         );
         return;
       }
@@ -35,8 +54,19 @@ export default function LocationTracker() {
         await Location.requestForegroundPermissionsAsync();
       if (foregroundStatus !== "granted") {
         Alert.alert(
-          "Location Permission Required",
-          "Please enable location access."
+          "Location Access Needed",
+          "This app requires location access to provide tracking features for security. Please grant location permission to continue.",
+          [
+            {
+              text: "Cancel",
+              style: "cancel",
+            },
+            {
+              text: "Grant Access",
+              onPress: async () =>
+                await Location.requestForegroundPermissionsAsync(),
+            },
+          ]
         );
         return;
       }
@@ -47,32 +77,46 @@ export default function LocationTracker() {
         if (backgroundStatus !== "granted") {
           Alert.alert(
             "Allow Background Location",
-            "Please enable background location access."
+            "To ensure uninterrupted location tracking (even when the app is not in use), please allow background location access. This helps us provide the best tracking experience.",
+            [
+              {
+                text: "Cancel",
+                style: "cancel",
+              },
+              {
+                text: "Grant Background Access",
+                onPress: async () =>
+                  await Location.requestBackgroundPermissionsAsync(),
+              },
+            ]
           );
           return;
         }
       }
 
+      // Start background location tracking
       await Location.startLocationUpdatesAsync(WATCH_LOCATION_UPDATES, {
         accuracy: Location.Accuracy.High,
-        timeInterval: 2000,
-        distanceInterval: 2,
+        timeInterval: 10000,
+        distanceInterval: 0.5,
         showsBackgroundLocationIndicator: true,
         foregroundService: {
           notificationTitle: "Direct Transport Solutions",
-          notificationBody: "Your location is being tracked.",
+          notificationBody:
+            "Your location is being tracked to ensure accurate routing and monitoring.",
         },
       });
 
+      // Start foreground location tracking
       await Location.watchPositionAsync(
         {
           accuracy: Location.Accuracy.High,
-          timeInterval: 2000,
-          distanceInterval: 2,
+          timeInterval: 10000,
+          distanceInterval: 0.5,
         },
         (newLocation) => {
-          setLocation(newLocation);
-          handleLocationUpdate(newLocation);
+          setLocation(newLocation); // Update UI
+          handleLocationUpdate(newLocation, user); // Shared location handler
         }
       );
     };
