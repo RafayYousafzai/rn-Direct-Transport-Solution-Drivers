@@ -8,7 +8,7 @@ import useGlobalContext from "@/context/GlobalProvider";
 const WATCH_LOCATION_UPDATES = "background-location-updates";
 
 export default function LocationTracker() {
-  const { user, bookings } = useGlobalContext();
+  const { user, liveLocSharingBookings } = useGlobalContext();
   const [location, setLocation] = useState(null);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function LocationTracker() {
         const { locations } = data;
         if (locations && locations.length > 0) {
           const location = locations[0];
-          await handleLocationUpdate(location, user, bookings);
+          await handleLocationUpdate(location, user, liveLocSharingBookings);
         }
       }
     });
@@ -88,8 +88,8 @@ export default function LocationTracker() {
         // Start background location tracking
         await Location.startLocationUpdatesAsync(WATCH_LOCATION_UPDATES, {
           accuracy: Location.Accuracy.High,
-          timeInterval: 3000,
-          distanceInterval: 1,
+          timeInterval: 2000,
+          distanceInterval: 0.3,
           showsBackgroundLocationIndicator: true,
           foregroundService: {
             notificationTitle: "Direct Transport Solutions",
@@ -102,12 +102,16 @@ export default function LocationTracker() {
         const foregroundSubscription = await Location.watchPositionAsync(
           {
             accuracy: Location.Accuracy.High,
-            timeInterval: 3000,
-            distanceInterval: 1,
+            timeInterval: 2000,
+            distanceInterval: 0.3,
           },
           async (newLocation) => {
-            setLocation(newLocation); // Update the UI
-            await handleLocationUpdate(newLocation, user, bookings); 
+            setLocation(newLocation);
+            await handleLocationUpdate(
+              newLocation,
+              user,
+              liveLocSharingBookings
+            );
           }
         );
 

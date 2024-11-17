@@ -17,6 +17,7 @@ import {
 import app from "@/lib/firebase/firebaseConfig";
 import { getValueFor, remove, save } from "@/lib/SecureStore/SecureStore";
 import { useRouter } from "expo-router";
+import { ref, onValue, getDatabase } from "firebase/database";
 
 const GlobalContext = createContext();
 
@@ -27,11 +28,24 @@ const GlobalProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [bookings, setBookings] = useState([]);
   const [selectedBooking, setSelectedBooking] = useState([]);
-  const [user, setUser] = useState([]);
-  const [location, setLocation] = useState(null);
+  const [user, setUser] = useState({});
+  const [liveLocSharingBookings, setLiveLocSharingBookings] = useState([]);
+
   const router = useRouter();
 
   const db = getFirestore(app);
+  const realtimeDb = getDatabase(app);
+
+  const getLiveLocSharingBookings = () => {
+    const sanitizedEmail = user?.email?.replace(/[.#$[\]]/g, "_");
+    if (!sanitizedEmail) return;
+
+    const dbRef = ref(realtimeDb, `driversLocations/${sanitizedEmail}`);
+    onValue(dbRef, (snapshot) => {
+      const data = snapshot.val();
+      setLiveLocSharingBookings([...liveLocSharingBookings, data]);
+    });
+  };
 
   const listenUser = useCallback(
     (email) => {
@@ -81,7 +95,6 @@ const GlobalProvider = ({ children }) => {
             id: doc.id,
             ...doc.data(),
           }));
-
           setBookings(documents);
         },
         (error) => {
@@ -124,20 +137,18 @@ const GlobalProvider = ({ children }) => {
   }, [initializeListeners]);
 
   useEffect(() => {
-    const cleanup = initializeListeners();
+    let cleanup;
+    initializeListeners().then((result) => (cleanup = result));
     return () => {
       if (cleanup) cleanup();
     };
   }, [initializeListeners]);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      const cleanup = initializeListeners();
-      return () => {
-        if (cleanup) cleanup();
-      };
+    if (user.email) {
+      getLiveLocSharingBookings();
     }
-  }, [isLoggedIn, initializeListeners]);
+  }, [user]);
 
   return (
     <GlobalContext.Provider
@@ -151,8 +162,7 @@ const GlobalProvider = ({ children }) => {
         setSelectedBooking,
         setUser,
         refreshContext,
-        location,
-        setLocation,
+        liveLocSharingBookings,
       }}
     >
       {children}
