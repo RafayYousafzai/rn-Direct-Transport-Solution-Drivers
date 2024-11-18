@@ -88,8 +88,8 @@ export default function LocationTracker() {
         // Start background location tracking
         await Location.startLocationUpdatesAsync(WATCH_LOCATION_UPDATES, {
           accuracy: Location.Accuracy.High,
-          timeInterval: 2000,
-          distanceInterval: 0.3,
+          timeInterval: 10000,
+          distanceInterval: 1,
           showsBackgroundLocationIndicator: true,
           foregroundService: {
             notificationTitle: "Direct Transport Solutions",
@@ -102,8 +102,8 @@ export default function LocationTracker() {
         const foregroundSubscription = await Location.watchPositionAsync(
           {
             accuracy: Location.Accuracy.High,
-            timeInterval: 2000,
-            distanceInterval: 0.3,
+            timeInterval: 10000,
+            distanceInterval: 1,
           },
           async (newLocation) => {
             setLocation(newLocation);
