@@ -41,12 +41,19 @@ const GlobalProvider = ({ children }) => {
     if (!sanitizedEmail) return;
 
     const dbRef = ref(realtimeDb, `driversLocations/${sanitizedEmail}`);
+
+    let lastUpdateTime = 0;
+
     onValue(dbRef, (snapshot) => {
       const data = snapshot.val();
-      setLiveLocSharingBookings([...liveLocSharingBookings, data]);
+
+      const currentTime = Date.now();
+      if (currentTime - lastUpdateTime >= 5000) {
+        setLiveLocSharingBookings([...liveLocSharingBookings, data]);
+        lastUpdateTime = currentTime;
+      }
     });
   };
-
   const listenUser = useCallback(
     (email) => {
       const docRef = doc(db, "users", email);

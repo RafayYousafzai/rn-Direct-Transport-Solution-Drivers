@@ -9,8 +9,16 @@ import {
 import { format } from "date-fns";
 import useGlobalContext from "@/context/GlobalProvider";
 import { updateBooking } from "@/lib/firebase/functions/post";
+import { stopLocationSharing } from "@/lib/firebase/functions/post";
 
-const statuses = ["pickedup", "delivered", "returned", "cancelled"];
+const statuses = [
+  "pickedup",
+  "delivered",
+  "returned",
+  "cancelled",
+  "Arrived At Drop",
+  "Arrived At Pickup",
+];
 
 export default function Status() {
   const { selectedBooking, setSelectedBooking } = useGlobalContext();
@@ -33,6 +41,15 @@ export default function Status() {
 
     try {
       await updateBooking("place_bookings", selectedBooking.docId, updatedData);
+      if (
+        currentStatus === "delivered" ||
+        currentStatus === "returned" ||
+        currentStatus === "cancelled" ||
+        currentStatus === "Arrived At Drop" ||
+        currentStatus === "Arrived At Pickup"
+      ) {
+        await stopLocationSharing(selectedBooking.driverEmail, selectedBooking.docId);
+      }
       setSelectedBooking(updatedData);
     } catch (error) {
       console.error("Error updating status:", error);

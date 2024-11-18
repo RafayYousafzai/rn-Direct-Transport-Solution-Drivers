@@ -14,20 +14,29 @@ export default function LocationTracker() {
   useEffect(() => {
     if (!user) return;
 
-    TaskManager.defineTask(WATCH_LOCATION_UPDATES, async ({ data, error }) => {
-      if (error) {
-        console.error("Background location task error:", error);
-        return;
-      }
+    if (!TaskManager.isTaskDefined(WATCH_LOCATION_UPDATES)) {
+      TaskManager.defineTask(
+        WATCH_LOCATION_UPDATES,
+        async ({ data, error }) => {
+          if (error) {
+            console.error("Background location task error:", error);
+            return;
+          }
 
-      if (data) {
-        const { locations } = data;
-        if (locations && locations.length > 0) {
-          const location = locations[0];
-          await handleLocationUpdate(location, user, liveLocSharingBookings);
+          if (data) {
+            const { locations } = data;
+            if (locations && locations.length > 0) {
+              const location = locations[0];
+              await handleLocationUpdate(
+                location,
+                user,
+                liveLocSharingBookings
+              );
+            }
+          }
         }
-      }
-    });
+      );
+    }
 
     const startTracking = async () => {
       try {
@@ -85,7 +94,6 @@ export default function LocationTracker() {
           }
         }
 
-        // Start background location tracking
         await Location.startLocationUpdatesAsync(WATCH_LOCATION_UPDATES, {
           accuracy: Location.Accuracy.High,
           timeInterval: 10000,
@@ -98,7 +106,6 @@ export default function LocationTracker() {
           },
         });
 
-        // Start foreground location tracking
         const foregroundSubscription = await Location.watchPositionAsync(
           {
             accuracy: Location.Accuracy.High,
@@ -124,29 +131,16 @@ export default function LocationTracker() {
     };
 
     startTracking();
-  }, [user]);
+  }, [user, liveLocSharingBookings]);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Driver Location Tracker</Text>
+    <View>
+      {/* <Text style={styles.title}>Driver Location Tracker</Text>
       {location ? (
         <Text>Current Location: {JSON.stringify(location.coords)}</Text>
       ) : (
         <Text>Waiting for location...</Text>
-      )}
+      )} */}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-});
