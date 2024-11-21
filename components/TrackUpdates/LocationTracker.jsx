@@ -6,120 +6,136 @@ import { handleLocationUpdate } from "@/lib/firebase/functions/locations_sharing
 import useGlobalContext from "@/context/GlobalProvider";
 import LocationPermissions from "./LocationPermissions";
 
+const WATCH_LOCATION_UPDATES = "background-location-updates";
 
-export default function LocationTracker({ WATCH_LOCATION_UPDATES }) {
+// Define the task globally and pass dependencies dynamically
+if (!TaskManager.isTaskDefined(WATCH_LOCATION_UPDATES)) {
+  TaskManager.defineTask(WATCH_LOCATION_UPDATES, async ({ data, error }) => {
+    if (error) {
+      console.error("Background location task error:", error.message);
+      return;
+    }
+
+    if (data) {
+      const { locations } = data;
+      if (locations && locations.length > 0) {
+        const location = locations[0];
+        console.log("Background location update:", location);
+
+        // Ensure the function handles user and bookings context
+        const context = await getContext();
+        if (context) {
+          const { user, liveLocSharingBookings } = context;
+          try {
+            await handleLocationUpdate(location, user, liveLocSharingBookings);
+          } catch (err) {
+            console.error(
+              "Error handling background location update:",
+              err.message
+            );
+          }
+        }
+      }
+    }
+  });
+}
+
+const getContext = async () => {
+  return {
+    user: useGlobalContext().user,
+    liveLocSharingBookings: useGlobalContext().liveLocSharingBookings,
+  };
+};
+
+export default function LocationTracker() {
   const { user, liveLocSharingBookings } = useGlobalContext();
-  const [location, setLocation] = useState(null);
+  const [foregroundSubscription, setForegroundSubscription] = useState(null);
 
   useEffect(() => {
-    if (!user) return;
-
-    const checkAndDefineTask = async () => {
-      const registeredTasks = await TaskManager.getRegisteredTasksAsync();
-      const taskExists = registeredTasks.some(
-        (task) => task.taskName === WATCH_LOCATION_UPDATES
-      );
-
-      if (!taskExists) {
-        TaskManager.defineTask(
-          WATCH_LOCATION_UPDATES,
-          async ({ data, error }) => {
-            if (error) {
-              console.error("Background location task error:", error);
-              return;
-            }
-
-            if (data) {
-              const { locations } = data;
-              if (locations && locations.length > 0) {
-                const location = locations[0];
-                await handleLocationUpdate(
-                  location,
-                  user,
-                  liveLocSharingBookings
-                );
-              }
-            }
-          }
-        );
-      }
-    };
-
     const startTracking = async () => {
       try {
-        await checkAndDefineTask();
-
         const permissionsGranted = await LocationPermissions();
         if (!permissionsGranted) {
-          console.warn(
-            "Permissions were not granted, stopping location tracking."
-          );
+          console.warn("Permissions not granted for location tracking.");
           return;
         }
 
-        const isTaskRunning = await Location.hasStartedLocationUpdatesAsync(
+        // Check if the task is already registered
+        const isTaskRegistered = await TaskManager.isTaskRegisteredAsync(
           WATCH_LOCATION_UPDATES
         );
-        if (isTaskRunning) {
-          await Location.stopLocationUpdatesAsync(WATCH_LOCATION_UPDATES);
+        if (!isTaskRegistered) {
+          console.log("Starting background location updates...");
+          await Location.startLocationUpdatesAsync(WATCH_LOCATION_UPDATES, {
+            accuracy: Location.Accuracy.High,
+            timeInterval: 1000, // 10 seconds
+            distanceInterval: 1, // 1 meter
+            showsBackgroundLocationIndicator: true,
+            foregroundService: {
+              notificationTitle: "Direct Transport Solutions",
+              notificationBody:
+                "Tracking your location for routing and monitoring.",
+            },
+          });
         }
 
-        await Location.startLocationUpdatesAsync(WATCH_LOCATION_UPDATES, {
-          accuracy: Location.Accuracy.High,
-          timeInterval: 10000,
-          distanceInterval: 1,
-          showsBackgroundLocationIndicator: true,
-          foregroundService: {
-            notificationTitle: "Direct Transport Solutions",
-            notificationBody:
-              "Tracking your location for routing and monitoring.",
-          },
-        });
-
-        const foregroundSubscription = await Location.watchPositionAsync(
+        // Foreground location tracking
+        const foregroundSub = await Location.watchPositionAsync(
           {
             accuracy: Location.Accuracy.High,
-            timeInterval: 10000,
-            distanceInterval: 1,
+            timeInterval: 1000, // 10 seconds
+            distanceInterval: 1, // 1 meter
           },
-          async (newLocation) => {
-            setLocation(newLocation);
-            await handleLocationUpdate(
-              newLocation,
-              user,
-              liveLocSharingBookings
+          (location) => {
+            console.log("Foreground location update:", location);
+            handleLocationUpdate(location, user, liveLocSharingBookings).catch(
+              (err) =>
+                console.error(
+                  "Error handling foreground location update:",
+                  err.message
+                )
             );
           }
         );
 
-        return () => {
-          foregroundSubscription?.remove(); // Clean up subscription
-        };
+        setForegroundSubscription(foregroundSub);
       } catch (err) {
-        console.error("Error starting location tracking:", err);
+        console.error("Error starting location tracking:", err.message);
       }
     };
 
     startTracking();
 
     return async () => {
-      const isTaskRunning = await Location.hasStartedLocationUpdatesAsync(
+      // Cleanup on unmount
+      if (foregroundSubscription) {
+        foregroundSubscription.remove();
+        setForegroundSubscription(null);
+      }
+
+      const isTaskRegistered = await TaskManager.isTaskRegisteredAsync(
         WATCH_LOCATION_UPDATES
       );
-      if (isTaskRunning) {
+      if (isTaskRegistered) {
         await Location.stopLocationUpdatesAsync(WATCH_LOCATION_UPDATES);
       }
     };
   }, [user, liveLocSharingBookings]);
 
-  return (
-    <View>
-      {/* <Text style={styles.title}>Driver Location Tracker</Text>
-      {location ? (
-        <Text>Current Location: {JSON.stringify(location.coords)}</Text>
-      ) : (
-        <Text>Waiting for location...</Text>
-      )} */}
-    </View>
-  );
+  return <View />;
 }
+
+// const foregroundSubscription = await Location.watchPositionAsync(
+//   {
+//     accuracy: Location.Accuracy.High,
+//     timeInterval: 3000,
+//     distanceInterval: 4,
+//   },
+//   async (newLocation) => {
+//     await handleLocationUpdate(
+//       newLocation,
+//       user,
+//       liveLocSharingBookings
+//     );
+//   }
+// );

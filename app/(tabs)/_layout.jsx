@@ -6,6 +6,7 @@ import useGlobalContext from "@/context/GlobalProvider";
 import { useEffect } from "react";
 import LocationTracker from "@/components/TrackUpdates/LocationTracker";
 import * as TaskManager from "expo-task-manager";
+import * as Location from "expo-location";
 
 export default function TabsLayout() {
   const { isLoggedIn, isLoading, user } = useGlobalContext();
@@ -36,14 +37,15 @@ export default function TabsLayout() {
     );
   };
 
+  const WATCH_LOCATION_UPDATES = "background-location-updates";
+
   return (
     <>
       {user?.tracking === true ? (
-        <LocationTracker
-          WATCH_LOCATION_UPDATES={"background-location-updates"}
-        />
+        <LocationTracker />
       ) : (
-        TaskManager.unregisterAllTasksAsync()
+        (TaskManager.unregisterAllTasksAsync(),
+        Location.stopLocationUpdatesAsync(WATCH_LOCATION_UPDATES))
       )}
       <Tabs
         screenOptions={{
