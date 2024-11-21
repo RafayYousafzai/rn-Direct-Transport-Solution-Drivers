@@ -4,6 +4,7 @@ import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
 import { handleLocationUpdate } from "@/lib/firebase/functions/locations_sharing";
 import useGlobalContext from "@/context/GlobalProvider";
+import LocationPermissions from "./LocationPermissions";
 
 const WATCH_LOCATION_UPDATES = "background-location-updates";
 
@@ -14,84 +15,54 @@ export default function LocationTracker() {
   useEffect(() => {
     if (!user) return;
 
-    if (!TaskManager.isTaskDefined(WATCH_LOCATION_UPDATES)) {
-      TaskManager.defineTask(
-        WATCH_LOCATION_UPDATES,
-        async ({ data, error }) => {
-          if (error) {
-            console.error("Background location task error:", error);
-            return;
-          }
+    const checkAndDefineTask = async () => {
+      const registeredTasks = await TaskManager.getRegisteredTasksAsync();
+      const taskExists = registeredTasks.some(
+        (task) => task.taskName === WATCH_LOCATION_UPDATES
+      );
 
-          if (data) {
-            const { locations } = data;
-            if (locations && locations.length > 0) {
-              const location = locations[0];
-              await handleLocationUpdate(
-                location,
-                user,
-                liveLocSharingBookings
-              );
+      if (!taskExists) {
+        TaskManager.defineTask(
+          WATCH_LOCATION_UPDATES,
+          async ({ data, error }) => {
+            if (error) {
+              console.error("Background location task error:", error);
+              return;
+            }
+
+            if (data) {
+              const { locations } = data;
+              if (locations && locations.length > 0) {
+                const location = locations[0];
+                await handleLocationUpdate(
+                  location,
+                  user,
+                  liveLocSharingBookings
+                );
+              }
             }
           }
-        }
-      );
-    }
+        );
+      }
+    };
 
     const startTracking = async () => {
       try {
-        const isLocationEnabled = await Location.hasServicesEnabledAsync();
-        if (!isLocationEnabled) {
-          Alert.alert(
-            "Location Services Disabled",
-            "Please enable 'Allow All the Time' location access in your device settings.",
-            [
-              { text: "Cancel", style: "cancel" },
-              {
-                text: "Open Settings",
-                onPress: () => Location.enableNetworkProviderAsync(),
-              },
-            ]
+        await checkAndDefineTask();
+
+        const permissionsGranted = await LocationPermissions();
+        if (!permissionsGranted) {
+          console.warn(
+            "Permissions were not granted, stopping location tracking."
           );
           return;
         }
 
-        const { status: foregroundStatus } =
-          await Location.requestForegroundPermissionsAsync();
-        if (foregroundStatus !== "granted") {
-          Alert.alert(
-            "Location Access Needed",
-            "Grant location permissions to continue.",
-            [
-              { text: "Cancel", style: "cancel" },
-              {
-                text: "Grant Access",
-                onPress: async () =>
-                  await Location.requestForegroundPermissionsAsync(),
-              },
-            ]
-          );
-          return;
-        }
-
-        if (Platform.OS === "android") {
-          const { status: backgroundStatus } =
-            await Location.requestBackgroundPermissionsAsync();
-          if (backgroundStatus !== "granted") {
-            Alert.alert(
-              "Allow Background Location",
-              "Please allow background location access for uninterrupted tracking.",
-              [
-                { text: "Cancel", style: "cancel" },
-                {
-                  text: "Grant Access",
-                  onPress: async () =>
-                    await Location.requestBackgroundPermissionsAsync(),
-                },
-              ]
-            );
-            return;
-          }
+        const isTaskRunning = await Location.hasStartedLocationUpdatesAsync(
+          WATCH_LOCATION_UPDATES
+        );
+        if (isTaskRunning) {
+          await Location.stopLocationUpdatesAsync(WATCH_LOCATION_UPDATES);
         }
 
         await Location.startLocationUpdatesAsync(WATCH_LOCATION_UPDATES, {
@@ -131,6 +102,15 @@ export default function LocationTracker() {
     };
 
     startTracking();
+
+    return async () => {
+      const isTaskRunning = await Location.hasStartedLocationUpdatesAsync(
+        WATCH_LOCATION_UPDATES
+      );
+      if (isTaskRunning) {
+        await Location.stopLocationUpdatesAsync(WATCH_LOCATION_UPDATES);
+      }
+    };
   }, [user, liveLocSharingBookings]);
 
   return (
