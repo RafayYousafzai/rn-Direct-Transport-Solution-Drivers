@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Alert, Platform } from "react-native";
+import { View } from "react-native";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
 import { handleLocationUpdate } from "@/lib/firebase/functions/locations_sharing";
 import useGlobalContext from "@/context/GlobalProvider";
 import LocationPermissions from "./LocationPermissions";
 
-const WATCH_LOCATION_UPDATES = "background-location-updates";
 
-export default function LocationTracker() {
+export default function LocationTracker({ WATCH_LOCATION_UPDATES }) {
   const { user, liveLocSharingBookings } = useGlobalContext();
   const [location, setLocation] = useState(null);
 
