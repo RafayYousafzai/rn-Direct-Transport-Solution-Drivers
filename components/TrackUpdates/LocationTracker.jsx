@@ -87,7 +87,6 @@ export default function LocationTracker() {
             distanceInterval: 1, // 1 meter
           },
           (location) => {
-            console.log("Foreground location update:", location);
             handleLocationUpdate(location, user, liveLocSharingBookings).catch(
               (err) =>
                 console.error(
