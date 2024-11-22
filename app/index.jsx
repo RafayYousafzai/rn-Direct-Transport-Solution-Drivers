@@ -19,13 +19,10 @@ export default function Index() {
 
   useEffect(() => {
     const handleNavigationAndSplash = async () => {
-      console.log({ user });
-
       try {
         if (!isLoading && user) {
           if (isLoggedIn) {
             const regis = await registerIndieID(user.email, APP_ID, APP_TOKEN);
-            // console.log(user.email, { regis, user, APP_ID, APP_TOKEN });
             router.replace("Home");
           } else {
             router.replace("signin");

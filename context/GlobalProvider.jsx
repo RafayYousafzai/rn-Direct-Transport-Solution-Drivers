@@ -47,11 +47,11 @@ const GlobalProvider = ({ children }) => {
     onValue(dbRef, (snapshot) => {
       const data = snapshot.val();
 
-      const currentTime = Date.now();
-      if (currentTime - lastUpdateTime >= 5000) {
-        setLiveLocSharingBookings([...liveLocSharingBookings, data]);
-        lastUpdateTime = currentTime;
-      }
+      setLiveLocSharingBookings([...liveLocSharingBookings, data]);
+      // const currentTime = Date.now();
+      // if (currentTime - lastUpdateTime >= 5000) {
+      //   lastUpdateTime = currentTime;
+      // }
     });
   };
   const listenUser = useCallback(

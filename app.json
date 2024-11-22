@@ -67,7 +67,8 @@
           "locationAlwaysPermission": "Allow Direct Transport Solution to always use your location.",
           "locationWhenInUsePermission": "Allow Direct Transport Solution to use your location while using the app.",
           "isIosBackgroundLocationEnabled": true,
-          "isAndroidBackgroundLocationEnabled": true
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
         }
       ]
     ],
