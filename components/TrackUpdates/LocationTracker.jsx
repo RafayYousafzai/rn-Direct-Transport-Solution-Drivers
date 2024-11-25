@@ -5,6 +5,7 @@ import * as TaskManager from "expo-task-manager";
 import { handleLocationUpdate } from "@/lib/firebase/functions/locations_sharing";
 import useGlobalContext from "@/context/GlobalProvider";
 import LocationPermissions from "./LocationPermissions";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const WATCH_LOCATION_UPDATES = "background-location-updates";
 
@@ -20,10 +21,23 @@ TaskManager.defineTask(WATCH_LOCATION_UPDATES, async ({ data, error }) => {
       const location = locations[0];
       console.log("Background location update:", location);
 
-      // Use the global context directly here
-      const { user, liveLocSharingBookings } = useGlobalContext();
       try {
-        await handleLocationUpdate(location, user, liveLocSharingBookings);
+        const user = await AsyncStorage.getItem("user");
+        const liveLocSharingBookings = await AsyncStorage.getItem(
+          "liveLocSharingBookings"
+        );
+
+        if (!user || !liveLocSharingBookings) {
+          console.log("User or liveLocSharingBookings not available");
+          return;
+        }
+        console.log(liveLocSharingBookings, user);
+
+        await handleLocationUpdate(
+          location,
+          JSON.parse(user),
+          JSON.parse(liveLocSharingBookings)
+        );
       } catch (err) {
         console.error(
           "Error handling background location update:",

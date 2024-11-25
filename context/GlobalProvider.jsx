@@ -18,7 +18,7 @@ import app from "@/lib/firebase/firebaseConfig";
 import { getValueFor, remove, save } from "@/lib/SecureStore/SecureStore";
 import { useRouter } from "expo-router";
 import { ref, onValue, getDatabase } from "firebase/database";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const GlobalContext = createContext();
 
 const useGlobalContext = () => useContext(GlobalContext);
@@ -47,11 +47,9 @@ const GlobalProvider = ({ children }) => {
     onValue(dbRef, (snapshot) => {
       const data = snapshot.val();
 
+      AsyncStorage.setItem("user", JSON.stringify(user));
+      AsyncStorage.setItem("liveLocSharingBookings", JSON.stringify(data));
       setLiveLocSharingBookings([...liveLocSharingBookings, data]);
-      // const currentTime = Date.now();
-      // if (currentTime - lastUpdateTime >= 5000) {
-      //   lastUpdateTime = currentTime;
-      // }
     });
   };
   const listenUser = useCallback(
