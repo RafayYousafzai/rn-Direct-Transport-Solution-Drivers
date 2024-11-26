@@ -19,7 +19,6 @@ TaskManager.defineTask(WATCH_LOCATION_UPDATES, async ({ data, error }) => {
     const { locations } = data;
     if (locations && locations.length > 0) {
       const location = locations[0];
-      console.log("Background location update:", location);
 
       try {
         const user = await AsyncStorage.getItem("user");
@@ -28,10 +27,9 @@ TaskManager.defineTask(WATCH_LOCATION_UPDATES, async ({ data, error }) => {
         );
 
         if (!user || !liveLocSharingBookings) {
-          console.log("User or liveLocSharingBookings not available");
+          console.error("User or liveLocSharingBookings not available");
           return;
         }
-        console.log(liveLocSharingBookings, user);
 
         await handleLocationUpdate(
           location,
@@ -70,7 +68,7 @@ export default function LocationTracker() {
           await Location.startLocationUpdatesAsync(WATCH_LOCATION_UPDATES, {
             accuracy: Location.Accuracy.High,
             timeInterval: 3000, // 1 second
-            distanceInterval: 1, // 1 meter
+            distanceInterval: 10, // 1 meter
             showsBackgroundLocationIndicator: true,
             foregroundService: {
               notificationTitle: "Direct Transport Solutions",
@@ -85,7 +83,7 @@ export default function LocationTracker() {
           {
             accuracy: Location.Accuracy.High,
             timeInterval: 3000,
-            distanceInterval: 1,
+            distanceInterval: 10,
             mayShowUserSettingsDialog: true,
           },
           (location) =>
