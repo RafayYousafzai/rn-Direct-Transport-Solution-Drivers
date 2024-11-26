@@ -108,7 +108,7 @@ const GlobalProvider = ({ children }) => {
             id: doc.id,
             ...doc.data(),
           }));
-          setBookings(documents);
+          setBookings(documents.filter((doc) => doc.isArchived !== true));
         },
         (error) => {
           console.error("Error fetching bookings:", error);

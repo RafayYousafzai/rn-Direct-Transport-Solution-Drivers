@@ -48,10 +48,6 @@ export default function BookingLayout() {
                 }}
               >
                 {selectedBooking?.userName + " " || ""}
-                {/* -{" "}
-                <Text className="uppercase text-sm ">
-                  {selectedBooking?.currentStatus}
-                </Text> */}
               </Text>
             </TouchableOpacity>
           ),

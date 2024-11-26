@@ -100,7 +100,7 @@ export default function Booking() {
               <Text className="text-sm text-gray-500">
                 Ref:{" "}
                 <Text className="font-semibold">
-                  {selectedBooking?.pickupReference1 || "No Ref Provided"}
+                  {selectedBooking?.pickupReference1 || "Ref Not Provided"}
                 </Text>
               </Text>
             </View>
@@ -110,7 +110,7 @@ export default function Booking() {
               {selectedBooking?.id}
             </Text>
             <Text className="text-base text-gray-800">
-              Tracking: {selectedBooking?.returnType || "N/A"}
+              Job Code: {selectedBooking?.returnType || "N/A"}
             </Text>
           </View>
         </View>
@@ -123,7 +123,11 @@ export default function Booking() {
           <Text className="text-sm text-gray-600">
             {selectedBooking?.address?.Origin?.label || "Pickup Address"}
           </Text>
-          {selectedBooking?.currentStatus !== "pickedup" ? (
+          <Text className="text-sm text-gray-600">
+            Pick Phone: {selectedBooking?.pickupPhone || "N/A"}
+          </Text>
+          {selectedBooking?.currentStatus === "allocated" ||
+          selectedBooking?.currentStatus === "Allocated" ? (
             <CustomButton onPress={updateStatus} loading={loading}>
               {loading ? "Processing" : "Pickup Job"}
             </CustomButton>
@@ -141,7 +145,7 @@ export default function Booking() {
             {selectedBooking?.address?.Destination?.label || "Drop Address"}
           </Text>
           <Text className="text-sm text-gray-600">
-            Drop Reference: {selectedBooking?.dropReference || "N/A"}
+            Drop Reference: {selectedBooking?.deliveryIns || "N/A"}
           </Text>
           <Text className="text-sm text-gray-600">
             Drop Phone: {selectedBooking?.deliveryPhone || "N/A"}
@@ -152,7 +156,7 @@ export default function Booking() {
 
         {/* Pickup Images Section */}
         <View className="mb-4">
-          {selectedBooking?.currentStatus === "pickedup" ? (
+          {selectedBooking?.progressInformation?.pickedup ? (
             selectedBooking?.pickupImages?.length > 0 ? (
               <>
                 <CustomButton

@@ -31,10 +31,11 @@ export default function History() {
         if (!booking.date) return false;
         const bookingDate = parseDate(booking.date);
         return (
-          (bookingDate &&
-            isToday(bookingDate) &&
-            booking.currentStatus === "allocated") ||
-          "pickedup"
+          bookingDate &&
+          isToday(bookingDate) &&
+          (booking.currentStatus === "allocated" ||
+            booking.currentStatus === "Allocated" ||
+            booking.currentStatus === "pickedup")
         );
       }),
     [bookings]

@@ -20,6 +20,7 @@ import PicturePicker from "@/components/PicturePicker";
 import EmptyState from "@/components/EmptyState";
 import FormField from "@/components/FormField";
 import { icons } from "@/constants";
+import { format } from "date-fns";
 
 const Pod = () => {
   const { selectedBooking } = useGlobalContext();
@@ -38,6 +39,7 @@ const Pod = () => {
     setIsLoading(true);
 
     try {
+      const currentDateTime = format(new Date(), "MM/dd/yyyy HH:mm:ss");
       const images = await Promise.all(
         selectedImages.map(async (image) => {
           const url = await uploadImages(image);
@@ -45,11 +47,18 @@ const Pod = () => {
         })
       );
 
-      await updateBooking("place_bookings", selectedBooking.docId, {
+      const updatedData = {
         ...selectedBooking,
+        progressInformation: {
+          ...selectedBooking.progressInformation,
+          delivered: currentDateTime,
+        },
+        currentStatus: "delivered",
         receiverName: name,
         images,
-      });
+      };
+
+      await updateBooking("place_bookings", selectedBooking.docId, updatedData);
 
       // Show a success toast
       Toast.show({
@@ -57,11 +66,10 @@ const Pod = () => {
         text1: "Delivery Completed!",
         text2: "Your delivery was successfully uploaded 🎉",
       });
-      router.push("Home");
+      // router.push("Home");
     } catch (error) {
       console.error("Error uploading images:", error);
 
-      // Show an error toast
       Toast.show({
         type: "error",
         text1: "Upload Failed",
@@ -129,11 +137,12 @@ const Pod = () => {
           <SignatureWrapper />
         </View>
 
-        {/* Complete Delivery Button */}
         <View className="w-[90%] mt-4">
-          {name === "" ||
-          selectedImages.length === 0 ||
-          !selectedBooking.signUrl ? (
+          {selectedBooking?.progressInformation?.delivered ? (
+            <CustomButton title="Booking Delivered" />
+          ) : name === "" ||
+            selectedImages.length === 0 ||
+            !selectedBooking.signUrl ? (
             <CustomButton
               title="Complete Delivery"
               containerStyles="bg-gray-500"

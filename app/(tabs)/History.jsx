@@ -28,17 +28,12 @@ export default function History() {
 
   const pastBookings = useMemo(() => {
     const today = startOfDay(new Date());
-
     return bookings.filter((booking) => {
       if (!booking.date) return false;
       const bookingDate = parseDate(booking.date);
-
       return (
-        bookingDate &&
-        // isBefore(bookingDate, today) &&
-        (!booking?.currentStatus ||
-          (booking.currentStatus !== "allocated" &&
-            booking.currentStatus !== "pickedup"))
+        (bookingDate && isBefore(bookingDate, today)) ||
+        booking.currentStatus === "delivered"
       );
     });
   }, [bookings]);
@@ -52,7 +47,7 @@ export default function History() {
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-primary">
       <FlatList
-        data={paginatedBookings.reverse()}
+        data={paginatedBookings}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <BookingCard

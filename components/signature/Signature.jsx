@@ -45,27 +45,31 @@ const SignatureComponent = ({ handleSave, currentSign, loading }) => {
     "https://img.freepik.com/free-vector/hand-drawn-essay-illustration_23-2150268421.jpg?t=st=1723626153~exp=1723629753~hmac=4625206d373b5f731691c2cbb177e96d2f2b040040ec0beccb02e09bfaa9e2b0&w=740";
 
   return (
-    <View className="flex-1 justify-center items-center bg-white mt-20 p-4">
-      <View className="  items-center">
+    <View className="flex-1  justify-center items-center bg-white mt-20 p-4">
+      <View className=" items-center ">
         <TouchableOpacity
           onPress={() => setIsFullscreen(true)}
-          className=" rounded-lg "
+          className="w-full rounded-lg "
         >
-          {currentSign && (
-            <Text className="text-xl font-semibold text-gray-800 mb-6">
+          {currentSign ? (
+            <Text className="text-lg font-semibold text-center text-gray-700 mb-10">
               Press Below To Add New Signature
+            </Text>
+          ) : (
+            <Text className="text-lg font-semibold text-center text-gray-800 ">
+              Please Add Signature
             </Text>
           )}
           {loading ? (
             <ActivityIndicator
-              className="aspect-square w-full"
+              className="mx-auto aspect-square w-full"
               size="large"
               color="#1384e1"
             />
           ) : (
             <>
               <Image
-                className="aspect-square w-[90%] border border-slate-200  rounded-lg"
+                className="mx-auto aspect-square w-[90%] border border-slate-200  rounded-lg"
                 resizeMode="contain"
                 source={{
                   uri: signature
@@ -75,9 +79,6 @@ const SignatureComponent = ({ handleSave, currentSign, loading }) => {
                     : NoSign,
                 }}
               />
-              <Text className="text-md  font-pregular mx-auto my-4">
-                Please Add Signature
-              </Text>
             </>
           )}
         </TouchableOpacity>

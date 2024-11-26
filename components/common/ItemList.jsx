@@ -11,7 +11,7 @@ const ItemList = ({ items, title }) => {
         {items.map((item, index) => (
           <View
             key={index}
-            className="mx-2 bg-blue-50 rounded-xl p-5 mb-4 shadow-sm border border-blue-200"
+            className=" bg-blue-50 rounded-xl p-5 mb-4 shadow-sm border border-blue-200"
           >
             <View className="flex flex-row justify-between ">
               <Text className="text-lg font-bold text-blue-900 mb-2">

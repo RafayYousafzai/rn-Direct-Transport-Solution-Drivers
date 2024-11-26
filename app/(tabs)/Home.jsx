@@ -6,6 +6,8 @@ import { icons } from "@/constants";
 import Header from "@/components/Header";
 import FeatureCard from "@/components/common/FeatureCard";
 import { unregisterIndieDevice } from "native-notify";
+import { signOut } from "@/lib/firebase/functions/auth";
+import { router } from "expo-router";
 
 const Dashboard = () => {
   const { bookings, user } = useGlobalContext();
@@ -22,17 +24,12 @@ const Dashboard = () => {
 
   const pastBookings = useMemo(() => {
     const today = startOfDay(new Date());
-
     return bookings.filter((booking) => {
       if (!booking.date) return false;
       const bookingDate = parseDate(booking.date);
-
       return (
-        bookingDate &&
-        isBefore(bookingDate, today) &&
-        (!booking?.currentStatus ||
-          (booking.currentStatus !== "allocated" &&
-            booking.currentStatus !== "pickedup"))
+        (bookingDate && isBefore(bookingDate, today)) ||
+        booking.currentStatus === "delivered"
       );
     });
   }, [bookings]);
@@ -49,15 +46,15 @@ const Dashboard = () => {
         if (!booking.date) return false;
         const bookingDate = parseDate(booking.date);
         return (
-          (bookingDate &&
-            isToday(bookingDate) &&
-            booking.currentStatus === "allocated") ||
-          "pickedup"
+          bookingDate &&
+          isToday(bookingDate) &&
+          (booking.currentStatus === "allocated" ||
+            booking.currentStatus === "Allocated" ||
+            booking.currentStatus === "pickedup")
         );
       }),
     [bookings]
   );
-
   const handleSignOut = async () => {
     try {
       const res = unregisterIndieDevice(
@@ -68,8 +65,7 @@ const Dashboard = () => {
       console.log({ res });
 
       await signOut();
-      // setIsLoggedIn(false);
-      router.push("signin");
+      router.replace("signin");
     } catch (error) {
       console.error("Error signing out:", error);
     }
