@@ -47,7 +47,7 @@ export default function History() {
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-primary">
       <FlatList
-        data={paginatedBookings}
+        data={paginatedBookings.reverse()}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <BookingCard

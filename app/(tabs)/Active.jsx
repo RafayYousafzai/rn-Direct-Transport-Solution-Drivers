@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { FlatList, SafeAreaView } from "react-native";
 import EmptyState from "@/components/EmptyState";
 import BookingCard from "@/components/BookingCard";
 import useGlobalContext from "@/context/GlobalProvider";
 import { useRouter } from "expo-router";
-import { parse, startOfDay, isFuture } from "date-fns";
-import { useMemo } from "react";
+import { startOfDay, isToday, parse } from "date-fns";
 import Header from "@/components/Header";
 import Pagination from "@/components/common/Pagination";
 
@@ -13,8 +12,8 @@ const itemsPerPage = 5;
 
 export default function History() {
   const { bookings, setSelectedBooking } = useGlobalContext();
-  const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(1);
 
   const parseDate = (dateString) => {
     try {
@@ -26,32 +25,33 @@ export default function History() {
     }
   };
 
-  const futureBookings = useMemo(() => {
-    const today = startOfDay(new Date());
-    return bookings.filter((booking) => {
-      if (!booking.date) return false;
-      const bookingDate = parseDate(booking.date);
-      return (
-        bookingDate &&
-        isFuture(bookingDate) &&
-        bookingDate > today &&
-        booking.currentStatus !== "delivered"
-      );
-    });
-  }, [bookings]);
+  const todaysBookings = useMemo(
+    () =>
+      bookings.filter((booking) => {
+        if (!booking.date) return false;
+        const bookingDate = parseDate(booking.date);
+        return (
+          (bookingDate &&
+            isToday(bookingDate) &&
+            booking.currentStatus === "allocated") ||
+          "pickedup"
+        );
+      }),
+    [bookings]
+  );
 
   // Calculate paginated data based on current page
   const paginatedBookings = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return futureBookings.slice(startIndex, endIndex);
-  }, [currentPage, futureBookings]);
+    return todaysBookings.slice(startIndex, endIndex);
+  }, [currentPage, todaysBookings]);
 
   return (
-    <SafeAreaView className="flex-1 items-center justify-center bg-primary  ">
+    <SafeAreaView className="flex-1 items-center justify-center bg-primary ">
       <FlatList
         data={paginatedBookings}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.docId}
         renderItem={({ item }) => (
           <BookingCard
             item={item}
@@ -62,20 +62,20 @@ export default function History() {
         contentContainerStyle={{ width: "100%" }}
         ListEmptyComponent={() => (
           <EmptyState
-            title="No Bookings History"
+            title="No Active Bookings"
             subtitle="You have no bookings assigned to you today."
             style="mt-16"
           />
         )}
         ListHeaderComponent={() => (
           <Header
-            title={"Future Bookings"}
-            subtitle={` ${futureBookings.length} Deliveries`}
+            title={"Today's Bookings "}
+            subtitle={` ${todaysBookings.length} Deliveries`}
           />
         )}
         ListFooterComponent={() => (
           <Pagination
-            data={futureBookings}
+            data={todaysBookings}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
             itemsPerPage={itemsPerPage}

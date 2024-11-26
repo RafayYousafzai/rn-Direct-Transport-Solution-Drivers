@@ -76,30 +76,30 @@ export default function TabsLayout() {
           }}
         />
         <Tabs.Screen
-          name="Today"
+          name="Active"
           options={{
-            title: "Today",
+            title: "Active",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 icon={icons.calendar}
                 color={color}
-                name="Today"
+                name="Active"
                 focused={focused}
               />
             ),
           }}
         />
         <Tabs.Screen
-          name="Future"
+          name="Completed"
           options={{
-            title: "Future",
+            title: "Completed",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 icon={icons.future}
                 color={color}
-                name="Future"
+                name="Completed"
                 focused={focused}
               />
             ),

@@ -1,102 +1,160 @@
-import { View, ScrollView } from "react-native";
+import {
+  View,
+  ScrollView,
+  Text,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import renderList from "@/components/renderList";
 import useGlobalContext from "@/context/GlobalProvider";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import ItemList from "@/components/common/ItemList";
+import { format } from "date-fns";
+import { updateBooking } from "@/lib/firebase/functions/post";
+import { useState } from "react";
+import { useEffect } from "react";
+import { router } from "expo-router";
 
 export default function Booking() {
-  const { selectedBooking } = useGlobalContext();
+  const { selectedBooking, bookings, setSelectedBooking } = useGlobalContext();
+  const [loading, setLoading] = useState(false);
 
-  const BookingInfo = [
-    {
-      label: "Pickup Company Name",
-      value: selectedBooking?.pickupCompanyName,
-    },
-    {
-      label: "Pickup Address",
-      value: selectedBooking?.address?.Origin?.label,
-    },
-    {
-      label: "Pickup Reference",
-      value: selectedBooking?.pickupReference1,
-    },
-    {
-      label: "Pickup Phone",
-      value: selectedBooking?.pickupPhone,
-    },
-    {
-      label: "Drop Company Name",
-      value: selectedBooking?.dropCompanyName,
-    },
-    {
-      label: "Delivery Address",
-      value: selectedBooking?.address?.Destination?.label,
-    },
-    {
-      label: "Delivery Instructions",
-      value: selectedBooking?.deliveryIns,
-    },
-    {
-      label: "Delivery Phone",
-      value: selectedBooking?.deliveryPhone,
-    },
-  ];
+  console.log(selectedBooking);
 
-  const obInfo = [
-    { label: "Job No.", value: selectedBooking?.docId },
-    {
-      label: "Job Type",
-      value: selectedBooking?.returnType,
-    },
-    { label: "Service", value: selectedBooking?.service },
-    { label: "Name", value: selectedBooking?.userName },
-    { label: "Email", value: selectedBooking?.userEmail },
-  ];
-  const UserInfo = [
-    { label: "Contact", value: selectedBooking?.contact },
-    { label: "Ready Date", value: selectedBooking?.date },
-    { label: "Ready Time", value: selectedBooking?.time },
-    { label: "Internal Reference", value: selectedBooking?.internalReference },
-  ];
-
-  const getStatusIcon = (status) => {
-    console.log(status);
-    switch (status) {
-      case "pickedup":
-        return <FontAwesome5 name="truck" size={21} color="#ffddd2" />;
-      case "delivered":
-        return (
-          <Ionicons name="checkmark-done-circle" size={24} color="#83c5be" />
-        );
-      case "returned":
-        return <FontAwesome name="undo" size={21} color="#b892ff" />;
-      case "cancelled":
-        return <Ionicons name="close-circle" size={24} color="#e63946" />;
-      default:
-        return <Ionicons name="cube" size={24} color="orange" />;
+  const updateStatus = async () => {
+    setLoading(true);
+    const currentDateTime = format(new Date(), "MM/dd/yyyy HH:mm:ss");
+    const newStatus = "pickedup";
+    try {
+      const updatedData = {
+        ...selectedBooking,
+        progressInformation: {
+          ...selectedBooking.progressInformation,
+          [newStatus]: currentDateTime,
+        },
+        currentStatus: newStatus,
+      };
+      await updateBooking("place_bookings", selectedBooking.docId, updatedData);
+    } catch (error) {
+      console.error("Error updating status:", error);
+    } finally {
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    setSelectedBooking(
+      bookings.find((booking) => booking.id === selectedBooking.id)
+    );
+  }, [bookings]);
 
   return (
     <SafeAreaView className="px-4 bg-primary h-full">
       <ScrollView vertical={true}>
-        <View className="mb-20">
-          {/* <Text className="font-pblack text-slate-800 text-sm mb-4">
-            Booking Details
-          </Text>
-          <View className=" flex-row   ">
-            {getStatusIcon(selectedBooking?.currentStatus || "")}
-            <Text className="font-pblack uppercase mt-[2px] text-slate-800 text-md mb-4">
-              {selectedBooking?.currentStatus || ""}
+        {/* Header Section */}
+        <View className="flex-row justify-between items-center ">
+          <View>
+            <View className="bg-white rounded-lg shadow-md">
+              {/* Code Section */}
+              <Text className="text-sm text-gray-500">
+                Code:{" "}
+                <Text className="font-semibold">
+                  {selectedBooking?.userName}
+                </Text>
+              </Text>
+              <Text className="text-sm text-gray-500">
+                Ref:{"    "}
+                <Text className="font-semibold">
+                  {selectedBooking?.pickupReference1 || "No Ref Provided"}
+                </Text>
+              </Text>
+            </View>
+          </View>
+          <View>
+            <Text className="text-lg font-semibold text-gray-900">
+              {selectedBooking?.id}
             </Text>
-          </View> */}
-          {/* {renderList("Job Details", obInfo)} */}
-          {renderList("Job Details", UserInfo)}
-          {renderList("Address Details", BookingInfo)}
-          <ItemList items={selectedBooking?.items} title={"All Items"} />
+            <Text className="text-base text-gray-800">
+              Tracking: {selectedBooking?.returnType || "N/A"}
+            </Text>
+          </View>
         </View>
+
+        {/* Main Job Details */}
+
+        {/* Pickup Section */}
+        <Text className="text-lg font-semibold text-gray-800 mt-8">
+          {selectedBooking?.address?.Origin?.suburb || "Pickup Suburb"}
+        </Text>
+        <View className="mt-4 p-4 bg-white rounded-lg shadow-md   border border-gray-300">
+          <Text className="text-sm text-gray-600">
+            {selectedBooking?.address?.Origin?.label || "Pickup Address"}
+          </Text>
+          <Text className="text-sm text-gray-600 mt-2">
+            {/* Items: {selectedBooking?.items || "No items listed"} */}
+          </Text>
+          {selectedBooking?.currentStatus !== "pickedup" ? (
+            <Pressable
+              onPress={updateStatus}
+              disabled={loading} // Disable while loading
+              className={`  py-2 h-12 items-center flex flex-row justify-center rounded-lg ${
+                loading ? "bg-gray-400" : "bg-green-600"
+              }`}
+            >
+              <Text className="   text-center align-middle text-white font-semibold">
+                {loading ? "Processing" : "Pickup Job"}{" "}
+              </Text>
+              {loading && <ActivityIndicator />}
+            </Pressable>
+          ) : (
+            <Pressable
+              disabled
+              className="mt-4 bg-gray-400  h-12 items-center flex flex-row justify-center py-2 rounded-lg"
+            >
+              <Text className="text-center text-white font-semibold">
+                Picked Up
+              </Text>
+            </Pressable>
+          )}
+        </View>
+        {/* Pickup Button */}
+
+        {/* Drop Section */}
+        <Text className="text-lg font-semibold text-gray-800 mt-8">
+          {selectedBooking?.address?.Destination?.suburb || "Drop Suburb"}
+        </Text>
+        <View className="mt-4 p-4 bg-white rounded-lg shadow-md   border border-gray-300">
+          <Text className="text-sm text-gray-600">
+            {selectedBooking?.address?.Destination?.label || "Drop Address"}
+          </Text>
+          <Text className="text-sm text-gray-600 mt-2">
+            Drop Reference: {selectedBooking?.dropReference || "N/A"}
+          </Text>
+          <Text className="text-sm text-gray-600">
+            Drop Phone: {selectedBooking?.deliveryPhone || "N/A"}
+          </Text>
+        </View>
+
+        {selectedBooking?.currentStatus === "pickedup" ? (
+          <Pressable
+            onPress={( )=>router.push("pod")}
+            disabled={loading} // Disable while loading
+            className={`mt-20  py-2 h-12 items-center flex flex-row justify-center rounded-lg ${
+              loading ? "bg-gray-400" : "bg-green-600"
+            }`}
+          >
+            <Text className="   text-center align-middle text-white font-semibold">
+              Next
+            </Text>
+          </Pressable>
+        ) : (
+          <Pressable
+            disabled
+            className="mt-4 bg-gray-400  h-12 items-center flex flex-row justify-center py-2 rounded-lg"
+          >
+            <Text className="text-center text-white font-semibold">
+              Picked Up
+            </Text>
+          </Pressable>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
