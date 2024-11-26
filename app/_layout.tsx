@@ -5,6 +5,10 @@ import React, { useEffect } from "react";
 import registerNNPushToken from "native-notify";
 
 SplashScreen.preventAutoHideAsync();
+import * as NavigationBar from "expo-navigation-bar";
+
+NavigationBar.setPositionAsync("absolute");
+NavigationBar.setBackgroundColorAsync("#ffffff00");
 
 export default function RootLayout() {
   registerNNPushToken(23378, "J29bh2sWQfdcATdeMlJwpl");
