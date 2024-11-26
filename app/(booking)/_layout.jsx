@@ -83,21 +83,6 @@ export default function BookingLayout() {
         />
 
         <Tabs.Screen
-          name="signature"
-          options={{
-            header: () => <HeaderWithBackButton title="Signature" />,
-            tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                icon={icons.pencil}
-                color={color}
-                name="Sign"
-                focused={focused}
-              />
-            ),
-          }}
-        />
-
-        <Tabs.Screen
           name="status"
           options={{
             header: () => <HeaderWithBackButton title="Status" />,

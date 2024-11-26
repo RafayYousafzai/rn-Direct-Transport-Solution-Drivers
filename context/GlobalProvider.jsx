@@ -36,6 +36,14 @@ const GlobalProvider = ({ children }) => {
   const db = getFirestore(app);
   const realtimeDb = getDatabase(app);
 
+  useEffect(() => {
+    if (bookings && bookings.length > 0) {
+      setSelectedBooking(
+        bookings.find((booking) => booking.id === selectedBooking.id)
+      );
+    }
+  }, [bookings]);
+
   const getLiveLocSharingBookings = () => {
     const sanitizedEmail = user?.email?.replace(/[.#$[\]]/g, "_");
     if (!sanitizedEmail) return;

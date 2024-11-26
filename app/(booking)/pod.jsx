@@ -6,8 +6,6 @@ import {
   TouchableOpacity,
   View,
   Image,
-  ActivityIndicator,
-  TextInput,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import ImageViewer from "@/components/common/ImageViewer";
@@ -17,14 +15,14 @@ import { icons } from "@/constants";
 import useGlobalContext from "@/context/GlobalProvider";
 import { uploadImages, updateBooking } from "@/lib/firebase/functions/post";
 import FormField from "@/components/FormField";
+import SignatureWrapper from "@/components/signature/SignatureWrapper";
 
 const Pod = () => {
   const { selectedBooking } = useGlobalContext();
-  const [name, setName] = useState(selectedBooking?.receiverName || "");
   const defaultImages = selectedBooking?.images || [];
+  const [name, setName] = useState(selectedBooking?.receiverName || "");
   const [selectedImages, setSelectedImages] = useState(defaultImages);
   const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
 
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -56,10 +54,8 @@ const Pod = () => {
       prevImages.filter((image) => image !== uri)
     );
   };
-
-  const uploadAllImages = async () => {
+  const handleCompleteDelivery = async () => {
     setIsLoading(true);
-    setSuccessMessage("");
 
     try {
       const images = await Promise.all(
@@ -74,8 +70,6 @@ const Pod = () => {
         receiverName: name,
         images,
       });
-
-      setSuccessMessage("Images uploaded successfully!");
     } catch (error) {
       console.error("Error uploading images:", error);
     } finally {
@@ -98,7 +92,7 @@ const Pod = () => {
         data={selectedImages}
         keyExtractor={(item) => item}
         renderItem={({ item }) => (
-          <View className="relative">
+          <View className="relative mx-2">
             <ImageViewer
               placeholderImageSource=""
               selectedImage={item}
@@ -120,26 +114,14 @@ const Pod = () => {
         ListEmptyComponent={() => (
           <EmptyState
             title="No Images Selected"
-            subtitle="Please select an image to add to the bookings list"
+            subtitle="Please select an image "
             style="mt-16"
+            hideBackButton={true}
           />
         )}
         ListHeaderComponent={() => (
-          <View className="my-16 mx-[2%]">
-            {selectedImages.length > 0 && (
-              <CustomButton
-                title="Save Booking"
-                handlePress={uploadAllImages}
-                isLoading={isLoading}
-              />
-            )}
-            {successMessage !== "" && (
-              <Text className="text-green-600 text-center mt-4 font-pmedium">
-                {successMessage}
-              </Text>
-            )}
-
-            <View className="mt-7 space-y-2">
+          <View className="my-6 mx-[2%]">
+            <View className="  space-y-2">
               <Text className="text-base text-slate-700 font-pmedium">
                 Thumbnail Image
               </Text>
@@ -177,6 +159,26 @@ const Pod = () => {
             </View>
           </View>
         )}
+        ListFooterComponent={
+          <>
+            <SignatureWrapper />
+            {name === "" ||
+            selectedImages.length === 0 ||
+            !selectedBooking.signUrl ? (
+              <CustomButton
+                title="Complete Delivery"
+                containerStyles="w-[90%] ml-[5%] my-5 bg-gray-500"
+              />
+            ) : (
+              <CustomButton
+                title="Complete Delivery"
+                handlePress={handleCompleteDelivery}
+                containerStyles="w-[90%] ml-[5%] my-5"
+                isLoading={isLoading}
+              />
+            )}
+          </>
+        }
       />
     </SafeAreaView>
   );

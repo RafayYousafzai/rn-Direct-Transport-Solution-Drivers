@@ -10,14 +10,11 @@ import useGlobalContext from "@/context/GlobalProvider";
 import { format } from "date-fns";
 import { updateBooking } from "@/lib/firebase/functions/post";
 import { useState } from "react";
-import { useEffect } from "react";
 import { router } from "expo-router";
 
 export default function Booking() {
-  const { selectedBooking, bookings, setSelectedBooking } = useGlobalContext();
+  const { selectedBooking } = useGlobalContext();
   const [loading, setLoading] = useState(false);
-
-  console.log(selectedBooking);
 
   const updateStatus = async () => {
     setLoading(true);
@@ -39,12 +36,6 @@ export default function Booking() {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    setSelectedBooking(
-      bookings.find((booking) => booking.id === selectedBooking.id)
-    );
-  }, [bookings]);
 
   return (
     <SafeAreaView className="px-4 bg-primary h-full">
@@ -135,8 +126,8 @@ export default function Booking() {
 
         {selectedBooking?.currentStatus === "pickedup" ? (
           <Pressable
-            onPress={( )=>router.push("pod")}
-            disabled={loading} // Disable while loading
+            onPress={() => router.push("pod")}
+            disabled={loading}
             className={`mt-20  py-2 h-12 items-center flex flex-row justify-center rounded-lg ${
               loading ? "bg-gray-400" : "bg-green-600"
             }`}

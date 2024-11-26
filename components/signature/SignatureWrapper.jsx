@@ -1,11 +1,11 @@
 import { useState } from "react";
-import SignatureComponent from "@/components/Signature";
+import SignatureComponent from "./Signature";
 import { ActivityIndicator, View, Text } from "react-native";
 import useGlobalContext from "@/context/GlobalProvider";
 import { uploadImages, updateBooking } from "@/lib/firebase/functions/post";
 import * as FileSystem from "expo-file-system";
 
-export default function Signature() {
+export default function SignatureWrapper() {
   const [loading, setLoading] = useState(false);
   const { selectedBooking, setSelectedBooking } = useGlobalContext();
 
@@ -46,17 +46,11 @@ export default function Signature() {
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      {loading ? (
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <ActivityIndicator size="large" color="#0000ff" />
-          <Text>Uploading...</Text>
-        </View>
-      ) : (
-        <SignatureComponent
-          handleSave={handleSave}
-          currentSign={selectedBooking?.signUrl}
-        />
-      )}
+      <SignatureComponent
+        handleSave={handleSave}
+        currentSign={selectedBooking?.signUrl}
+        loading={loading}
+      />
     </View>
   );
 }

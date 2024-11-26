@@ -6,11 +6,12 @@ import {
   TouchableOpacity,
   Modal,
   SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
 import Signature from "react-native-signature-canvas";
 import { Dimensions } from "react-native";
 
-const SignatureComponent = ({ handleSave, currentSign }) => {
+const SignatureComponent = ({ handleSave, currentSign, loading }) => {
   const [signature, setSignature] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const ref = useRef();
@@ -40,30 +41,36 @@ const SignatureComponent = ({ handleSave, currentSign }) => {
     ref.current.readSignature();
   };
 
-  const img =
+  const NoSign =
     "https://img.freepik.com/free-vector/hand-drawn-essay-illustration_23-2150268421.jpg?t=st=1723626153~exp=1723629753~hmac=4625206d373b5f731691c2cbb177e96d2f2b040040ec0beccb02e09bfaa9e2b0&w=740";
 
   return (
-    <SafeAreaView className="flex-1 justify-center items-center bg-white p-4">
-      <Text className="text-2xl font-semibold text-gray-800 mb-6">
-        Sign Below
-      </Text>
-
-      <View className="mt-8 items-center">
-        <Text className="text-lg font-medium text-gray-700 mb-4">
-          {signature ? "Your Signature:" : "Please click to add new signature"}
-        </Text>
+    <View className="flex-1 justify-center items-center bg-white mt-20 p-4">
+      <View className="  items-center">
         <TouchableOpacity
           onPress={() => setIsFullscreen(true)}
-          className="border border-gray-300 rounded-lg "
+          className=" rounded-lg "
         >
-          <Image
-            className="aspect-square w-full border border-slate-200  rounded-lg"
-            resizeMode="contain"
-            source={{
-              uri: signature ? signature : currentSign ? currentSign : img,
-            }}
-          />
+          {currentSign && (
+            <Text className="text-xl font-semibold text-gray-800 mb-6">
+              Press Below To Add New Signature
+            </Text>
+          )}
+          {loading ? (
+            <ActivityIndicator
+              className="aspect-square w-full"
+              size="large"
+              color="#1384e1"
+            />
+          ) : (
+            <Image
+              className="aspect-square w-full border border-slate-200  rounded-lg"
+              resizeMode="contain"
+              source={{
+                uri: signature ? signature : currentSign ? currentSign : NoSign,
+              }}
+            />
+          )}
         </TouchableOpacity>
       </View>
 
@@ -116,7 +123,7 @@ const SignatureComponent = ({ handleSave, currentSign }) => {
           </TouchableOpacity>
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 };
 
