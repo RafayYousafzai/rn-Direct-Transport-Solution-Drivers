@@ -10,7 +10,7 @@ import Pagination from "@/components/common/Pagination";
 
 const itemsPerPage = 5;
 
-export default function History() {
+export default function Completed() {
   const { bookings, setSelectedBooking } = useGlobalContext();
   const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
@@ -42,14 +42,14 @@ export default function History() {
         contentContainerStyle={{ width: "100%" }}
         ListEmptyComponent={() => (
           <EmptyState
-            title="No Bookings History"
-            subtitle="You have no bookings assigned to you today."
+            title="No Complete Bookings"
+            subtitle="You have no completed booking today."
             style="mt-16"
           />
         )}
         ListHeaderComponent={() => (
           <Header
-            title={"Future Bookings"}
+            title={"Completed Bookings"}
             subtitle={` ${futureBookings.length} Deliveries`}
           />
         )}

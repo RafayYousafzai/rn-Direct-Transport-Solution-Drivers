@@ -5,6 +5,7 @@ import { startOfDay, isToday, parse, isBefore, isFuture } from "date-fns";
 import { icons } from "@/constants";
 import Header from "@/components/Header";
 import FeatureCard from "@/components/common/FeatureCard";
+import { unregisterIndieDevice } from "native-notify";
 
 const Dashboard = () => {
   const { bookings, user } = useGlobalContext();
@@ -57,6 +58,23 @@ const Dashboard = () => {
     [bookings]
   );
 
+  const handleSignOut = async () => {
+    try {
+      const res = unregisterIndieDevice(
+        user.email,
+        23374,
+        "hZawrJYXBzBbQZgTgLVsZP"
+      );
+      console.log({ res });
+
+      await signOut();
+      // setIsLoggedIn(false);
+      router.push("signin");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
   return (
     <ScrollView className="flex bg-primary">
       <Header title={"Welcome Back"} subtitle={user?.firstName} />
@@ -92,6 +110,13 @@ const Dashboard = () => {
         }
         icon={icons.cancel}
       />
+      <Pressable onPress={handleSignOut}>
+        <FeatureCard
+          title="Logout from your account!"
+          value="Sign out"
+          icon={icons.cancel}
+        />
+      </Pressable>
     </ScrollView>
   );
 };

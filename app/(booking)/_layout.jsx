@@ -44,12 +44,14 @@ export default function BookingLayout() {
                   color: "#fff",
                   fontSize: 20,
                   fontWeight: "bold",
+                  marginBottom: 5,
                 }}
               >
-                {selectedBooking?.userName + " " || ""} -{" "}
+                {selectedBooking?.userName + " " || ""}
+                {/* -{" "}
                 <Text className="uppercase text-sm ">
                   {selectedBooking?.currentStatus}
-                </Text>
+                </Text> */}
               </Text>
             </TouchableOpacity>
           ),

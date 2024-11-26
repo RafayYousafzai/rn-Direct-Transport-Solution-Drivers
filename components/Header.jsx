@@ -3,17 +3,17 @@ import { images } from "@/constants";
 
 export default function Header({ title, subtitle }) {
   return (
-    <View className="flex my-6 space-y-6 h-20 mt-12 px-[4%]">
+    <View className="flex mb-2 space-y-6 h-20 mt-12 px-[4%]">
       <View className="flex justify-between items-start flex-row mb-6">
-        <View className="mt-1.5">
+        <View className="">
           <Image
             source={images.logo}
-            className="w-32 h-10"
+            className="w-[160px] h-[50px]"
             resizeMode="contain"
           />
         </View>
         <View>
-          <Text className="font-pmedium text-sm text-slate-700 capitalize">
+          <Text className="font-pmedium text-md text-slate-700 capitalize">
             {title}
           </Text>
           <Text className="text-xl text-right font-psemibold text-slate-800 capitalize">

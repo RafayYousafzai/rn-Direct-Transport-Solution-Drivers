@@ -20,7 +20,7 @@ export default function TabsLayout() {
 
   const TabIcon = ({ icon, color, name, focused }) => {
     return (
-      <View className="flex items-center justify-center gap-2">
+      <View className="flex pt-3 items-center justify-center gap-2">
         <Image
           source={icon}
           resizeMode="contain"
@@ -50,7 +50,7 @@ export default function TabsLayout() {
             backgroundColor: "#fff",
             borderTopWidth: 1,
             borderTopColor: "#ced4da",
-            height: 84,
+            height: 90,
           },
         }}
       >
