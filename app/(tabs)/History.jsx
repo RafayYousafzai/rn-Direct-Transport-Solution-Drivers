@@ -28,12 +28,17 @@ export default function History() {
 
   const pastBookings = useMemo(() => {
     const today = startOfDay(new Date());
+
     return bookings.filter((booking) => {
       if (!booking.date) return false;
       const bookingDate = parseDate(booking.date);
+
       return (
-        (bookingDate && isBefore(bookingDate, today)) ||
-        booking.currentStatus === "delivered"
+        bookingDate &&
+        // isBefore(bookingDate, today) &&
+        (!booking?.currentStatus ||
+          (booking.currentStatus !== "allocated" &&
+            booking.currentStatus !== "pickedup"))
       );
     });
   }, [bookings]);

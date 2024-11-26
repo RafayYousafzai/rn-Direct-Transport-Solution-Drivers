@@ -21,19 +21,24 @@ const Dashboard = () => {
 
   const pastBookings = useMemo(() => {
     const today = startOfDay(new Date());
+
     return bookings.filter((booking) => {
       if (!booking.date) return false;
       const bookingDate = parseDate(booking.date);
-      return bookingDate && isBefore(bookingDate, today);
+
+      return (
+        bookingDate &&
+        isBefore(bookingDate, today) &&
+        (!booking?.currentStatus ||
+          (booking.currentStatus !== "allocated" &&
+            booking.currentStatus !== "pickedup"))
+      );
     });
   }, [bookings]);
 
   const futureBookings = useMemo(() => {
-    const today = startOfDay(new Date());
     return bookings.filter((booking) => {
-      if (!booking.date) return false;
-      const bookingDate = parseDate(booking.date);
-      return bookingDate && isFuture(bookingDate) && bookingDate > today;
+      return booking.currentStatus === "delivered";
     });
   }, [bookings]);
 
@@ -42,7 +47,12 @@ const Dashboard = () => {
       bookings.filter((booking) => {
         if (!booking.date) return false;
         const bookingDate = parseDate(booking.date);
-        return bookingDate && isToday(bookingDate);
+        return (
+          (bookingDate &&
+            isToday(bookingDate) &&
+            booking.currentStatus === "allocated") ||
+          "pickedup"
+        );
       }),
     [bookings]
   );
@@ -56,24 +66,21 @@ const Dashboard = () => {
       </Text>
 
       <FeatureCard
-        href="/Today"
-        title="Today's Deliveries"
+        href="/Active"
+        title="Active Deliveries"
         value={todaysBookings.length}
         icon={icons.today}
       />
       <FeatureCard
-        href="/Future"
-        title="Future Deliveries"
+        href="/Completed"
+        title="Completed Deliveries"
         value={futureBookings.length}
         icon={icons.future}
       />
       <FeatureCard
         href="/History"
-        title="Deliveries Completed"
-        value={
-          bookings.filter((booking) => booking.currentStatus === "delivered")
-            .length
-        }
+        title="Work History"
+        value={pastBookings.length}
         icon={icons.approved}
       />
       <FeatureCard

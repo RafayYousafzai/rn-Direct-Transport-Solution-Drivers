@@ -78,7 +78,7 @@ const Pod = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 items-center justify-center bg-primary">
+    <SafeAreaView className="flex-1 items-center justify-center bg-primary pt-5">
       <View className="w-[90%]">
         <FormField
           title="Receiver Name"
@@ -165,10 +165,15 @@ const Pod = () => {
             {name === "" ||
             selectedImages.length === 0 ||
             !selectedBooking.signUrl ? (
-              <CustomButton
-                title="Complete Delivery"
-                containerStyles="w-[90%] ml-[5%] my-5 bg-gray-500"
-              />
+              <>
+                <CustomButton
+                  title="Complete Delivery"
+                  containerStyles="w-[90%] ml-[5%] mt-5  bg-gray-500"
+                />
+                <Text className="text-md  text-red-500 font-pregular mx-auto my-4">
+                  Please Fill All The Details
+                </Text>
+              </>
             ) : (
               <CustomButton
                 title="Complete Delivery"

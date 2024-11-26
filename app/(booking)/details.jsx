@@ -38,7 +38,7 @@ export default function Booking() {
   };
 
   return (
-    <SafeAreaView className="px-4 bg-primary h-full">
+    <SafeAreaView className="px-4 bg-primary h-full pt-10">
       <ScrollView vertical={true}>
         {/* Header Section */}
         <View className="flex-row justify-between items-center ">

@@ -1,103 +1,70 @@
-import { Tabs } from "expo-router";
 import { View, Text, Image, TouchableOpacity } from "react-native";
+import { router, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { icons } from "@/constants";
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons"; // Optional: For a nice back arrow icon
+import useGlobalContext from "@/context/GlobalProvider";
 
 export default function BookingLayout() {
   const navigation = useNavigation();
-
-  const TabIcon = ({ icon, color, name, focused }) => {
-    return (
-      <View className="flex items-center justify-center gap-2">
-        <Image
-          source={icon}
-          resizeMode="contain"
-          tintColor={color}
-          className="w-6 h-6"
-        />
-        <Text
-          className={`${focused ? "font-psemibold" : "font-pregular"} text-xs`}
-          style={{ color: color }}
-        >
-          {name}
-        </Text>
-      </View>
-    );
-  };
-
-  const HeaderWithBackButton = ({ title }) => {
-    return (
-      <View className="flex flex-row items-center p-4 mt-6 bg-primary">
-        <TouchableOpacity onPress={() => navigation.goBack()} className="mr-4">
-          <Ionicons name="arrow-back" size={24} color="#1384e1" />
-        </TouchableOpacity>
-        <Text className="font-psemibold text-lg">{title}</Text>
-      </View>
-    );
-  };
+  const { selectedBooking } = useGlobalContext();
 
   return (
     <>
-      <Tabs
+      <Stack
         screenOptions={{
-          tabBarActiveTintColor: "#1384e1",
-          tabBarInactiveTintColor: "#adb5bd",
-          tabBarShowLabel: false,
-          tabBarStyle: {
-            backgroundColor: "#fff",
-            borderTopWidth: 1,
-            borderTopColor: "#ced4da",
-            height: 84,
+          headerShown: true,
+          headerTitle: "",
+          headerStyle: {
+            backgroundColor: "#1384e1",
+            shadowColor: "transparent",
+            elevation: 0,
+            borderBottomWidth: 0,
+            height: 100,
           },
-        }}
-      >
-        <Tabs.Screen
-          name="details"
-          options={{
-            header: () => <HeaderWithBackButton title="Details" />,
-            tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                icon={icons.docs}
-                color={color}
-                name="Details"
-                focused={focused}
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{
+                marginLeft: 10,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 5,
+              }}
+              onPress={() => navigation.goBack()}
+            >
+              <Ionicons
+                name="arrow-back-circle"
+                style={{ marginBottom: 2 }}
+                size={24}
+                color="#fff"
               />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="pod"
-          options={{
-            header: () => <HeaderWithBackButton title="POD" />,
-            tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                icon={icons.photo}
-                color={color}
-                name="POD"
-                focused={focused}
-              />
-            ),
-          }}
-        />
+              <Text
+                style={{
+                  color: "#fff",
+                  fontSize: 20,
+                  fontWeight: "bold",
+                }}
+              >
+                {selectedBooking?.userName + " " || ""} -{" "}
+                <Text className="uppercase text-sm ">
+                  {selectedBooking?.currentStatus}
+                </Text>
+              </Text>
+            </TouchableOpacity>
+          ),
 
-        <Tabs.Screen
-          name="status"
-          options={{
-            header: () => <HeaderWithBackButton title="Status" />,
-            tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                icon={icons.circle}
-                color={color}
-                name="Status"
-                focused={focused}
-              />
-            ),
-          }}
-        />
-      </Tabs>
-      <StatusBar backgroundColor="#fff" translucent style="dark" />
+          headerRight: () => (
+            <TouchableOpacity
+              style={{ marginRight: 10 }}
+              onPress={() => router.push("Home")}
+            >
+              <Ionicons name="home" size={24} color="#fff" />
+            </TouchableOpacity>
+          ),
+        }}
+      ></Stack>
+      <StatusBar backgroundColor="#1384e1" translucent style="light" />
     </>
   );
 }
