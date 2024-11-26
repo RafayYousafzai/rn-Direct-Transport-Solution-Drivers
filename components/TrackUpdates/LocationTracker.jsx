@@ -67,8 +67,8 @@ export default function LocationTracker() {
         if (!isTaskRegistered) {
           await Location.startLocationUpdatesAsync(WATCH_LOCATION_UPDATES, {
             accuracy: Location.Accuracy.High,
-            timeInterval: 3000, // 1 second
-            distanceInterval: 10, // 1 meter
+            timeInterval: 1800000,
+            distanceInterval: 1000,
             showsBackgroundLocationIndicator: true,
             foregroundService: {
               notificationTitle: "Direct Transport Solutions",
@@ -82,8 +82,8 @@ export default function LocationTracker() {
         const foregroundSub = await Location.watchPositionAsync(
           {
             accuracy: Location.Accuracy.High,
-            timeInterval: 3000,
-            distanceInterval: 10,
+            timeInterval: 1800000,
+            distanceInterval: 1000,
             mayShowUserSettingsDialog: true,
           },
           (location) =>

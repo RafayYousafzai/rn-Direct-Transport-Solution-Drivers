@@ -61,7 +61,7 @@ export default function BookingLayout() {
             </TouchableOpacity>
           ),
         }}
-      ></Stack>
+      />
       <StatusBar backgroundColor="#1384e1" translucent style="light" />
     </>
   );

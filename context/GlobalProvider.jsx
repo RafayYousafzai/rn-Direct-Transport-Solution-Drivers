@@ -14,7 +14,7 @@ import {
   where,
   orderBy,
 } from "firebase/firestore";
-import app from "@/lib/firebase/firebaseConfig";
+import app, { realtimeDbOFL } from "@/lib/firebase/firebaseConfig";
 import { getValueFor, remove, save } from "@/lib/SecureStore/SecureStore";
 import { useRouter } from "expo-router";
 import { ref, onValue, getDatabase } from "firebase/database";
@@ -34,7 +34,6 @@ const GlobalProvider = ({ children }) => {
   const router = useRouter();
 
   const db = getFirestore(app);
-  const realtimeDb = getDatabase(app);
 
   useEffect(() => {
     if (bookings && bookings.length > 0) {
@@ -48,9 +47,7 @@ const GlobalProvider = ({ children }) => {
     const sanitizedEmail = user?.email?.replace(/[.#$[\]]/g, "_");
     if (!sanitizedEmail) return;
 
-    const dbRef = ref(realtimeDb, `driversLocations/${sanitizedEmail}`);
-
-    let lastUpdateTime = 0;
+    const dbRef = ref(realtimeDbOFL, `driversLocations/${sanitizedEmail}`);
 
     onValue(dbRef, (snapshot) => {
       const data = snapshot.val();
@@ -60,6 +57,7 @@ const GlobalProvider = ({ children }) => {
       setLiveLocSharingBookings([...liveLocSharingBookings, data]);
     });
   };
+
   const listenUser = useCallback(
     (email) => {
       const docRef = doc(db, "users", email);
