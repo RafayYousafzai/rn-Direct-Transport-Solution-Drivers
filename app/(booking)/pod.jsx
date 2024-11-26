@@ -2,22 +2,24 @@ import React, { useState } from "react";
 import {
   Text,
   SafeAreaView,
-  FlatList,
+  ScrollView,
   TouchableOpacity,
   View,
   Image,
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import Toast from "react-native-toast-message";
-import ImageViewer from "@/components/common/ImageViewer";
-import CustomButton from "@/components/common/CustomButton";
-import EmptyState from "@/components/EmptyState";
-import { icons } from "@/constants";
-import useGlobalContext from "@/context/GlobalProvider";
-import { uploadImages, updateBooking } from "@/lib/firebase/functions/post";
-import FormField from "@/components/FormField";
-import SignatureWrapper from "@/components/signature/SignatureWrapper";
+
 import { router } from "expo-router";
+import Toast from "react-native-toast-message";
+import useGlobalContext from "@/context/GlobalProvider";
+
+import { uploadImages, updateBooking } from "@/lib/firebase/functions/post";
+import SignatureWrapper from "@/components/signature/SignatureWrapper";
+import CustomButton from "@/components/common/CustomButton";
+import ImageViewer from "@/components/common/ImageViewer";
+import PicturePicker from "@/components/PicturePicker";
+import EmptyState from "@/components/EmptyState";
+import FormField from "@/components/FormField";
+import { icons } from "@/constants";
 
 const Pod = () => {
   const { selectedBooking } = useGlobalContext();
@@ -25,31 +27,6 @@ const Pod = () => {
   const [name, setName] = useState(selectedBooking?.receiverName || "");
   const [selectedImages, setSelectedImages] = useState(defaultImages);
   const [isLoading, setIsLoading] = useState(false);
-
-  const pickImageAsync = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      quality: 1,
-      allowsMultipleSelection: true,
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    });
-
-    if (!result.canceled) {
-      const newUris = result.assets.map((asset) => asset.uri);
-      setSelectedImages((prevImages) => [...newUris, ...prevImages]);
-    }
-  };
-
-  const pickCameraAsync = async () => {
-    let result = await ImagePicker.launchCameraAsync({
-      quality: 1,
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    });
-
-    if (!result.canceled) {
-      const newUris = result.assets.map((asset) => asset.uri);
-      setSelectedImages((prevImages) => [...newUris, ...prevImages]);
-    }
-  };
 
   const removeImage = (uri) => {
     setSelectedImages((prevImages) =>
@@ -80,7 +57,7 @@ const Pod = () => {
         text1: "Delivery Completed!",
         text2: "Your delivery was successfully uploaded 🎉",
       });
-      router.push("Home")
+      router.push("Home");
     } catch (error) {
       console.error("Error uploading images:", error);
 
@@ -96,113 +73,81 @@ const Pod = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 items-center justify-center bg-primary pt-5">
-      <View className="w-[90%]">
-        <FormField
-          title="Receiver Name"
-          value={name}
-          placeholder="Write Receiver Name"
-          handleChangeText={(e) => setName(e)}
-          otherStyles="mb-2"
-        />
-      </View>
-      <FlatList
-        data={selectedImages}
-        keyExtractor={(item) => item}
-        renderItem={({ item }) => (
-          <View className="relative mx-2">
-            <ImageViewer
-              placeholderImageSource=""
-              selectedImage={item}
-              styles="w-full h-60 mt-6"
-            />
-            <TouchableOpacity
-              className="absolute top-7 right-2"
-              onPress={() => removeImage(item)}
-            >
-              <Image
-                source={icons.remove}
-                resizeMode="contain"
-                alt="remove"
-                className="w-8 h-8"
+    <SafeAreaView className="flex-1 bg-primary pt-5">
+      <ScrollView
+        contentContainerStyle={{ alignItems: "center", paddingBottom: 20 }}
+      >
+        <View className="w-[90%]">
+          <FormField
+            value={name}
+            placeholder="Write Receiver Name"
+            handleChangeText={(e) => setName(e)}
+            otherStyles="mb-2"
+          />
+        </View>
+
+        {/* Picture Picker */}
+        <View className="w-[90%] mb-4">
+          <PicturePicker
+            title="Select an image"
+            setSelectedImages={setSelectedImages}
+          />
+        </View>
+
+        {/* Selected Images */}
+        {selectedImages.length > 0 ? (
+          selectedImages.map((image, index) => (
+            <View className="relative w-[90%] mt-4" key={index}>
+              <ImageViewer
+                placeholderImageSource=""
+                selectedImage={image}
+                styles="w-full h-60"
               />
-            </TouchableOpacity>
-          </View>
-        )}
-        ListEmptyComponent={() => (
+              <TouchableOpacity
+                className="absolute top-7 right-2"
+                onPress={() => removeImage(image)}
+              >
+                <Image
+                  source={icons.remove}
+                  resizeMode="contain"
+                  alt="remove"
+                  className="w-8 h-8"
+                />
+              </TouchableOpacity>
+            </View>
+          ))
+        ) : (
           <EmptyState
             title="No Images Selected"
-            subtitle="Please select an image "
             style="mt-16"
             hideBackButton={true}
           />
         )}
-        ListHeaderComponent={() => (
-          <View className="my-6 mx-[2%]">
-            <View className="  space-y-2">
-              <Text className="text-base text-slate-700 font-pmedium">
-                Thumbnail Image
-              </Text>
 
-              <View className="w-full p-4 bg-black-100 rounded-xl border-2 border-transparent flex justify-around items-center flex-row space-x-4">
-                <TouchableOpacity
-                  onPress={pickImageAsync}
-                  className="flex justify-center items-center"
-                >
-                  <Image
-                    source={icons.upload}
-                    resizeMode="contain"
-                    alt="upload"
-                    className="w-8 h-8 mb-1"
-                  />
-                  <Text className="text-xs text-slate-700 font-plight">
-                    Choose a file
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={pickCameraAsync}
-                  className="flex justify-center items-center"
-                >
-                  <Image
-                    source={icons.camera}
-                    resizeMode="contain"
-                    alt="camera"
-                    className="w-8 h-8 mb-1"
-                  />
-                  <Text className="text-xs text-slate-700 font-plight">
-                    Take a photo
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        )}
-        ListFooterComponent={
-          <>
-            <SignatureWrapper />
-            {name === "" ||
-            selectedImages.length === 0 ||
-            !selectedBooking.signUrl ? (
-              <>
-                <CustomButton
-                  title="Complete Delivery"
-                  containerStyles="w-[90%] ml-[5%] mt-5  bg-gray-500"
-                />
-                <Text className="text-md  text-red-500 font-pregular mx-auto my-4">
-                  Please Fill All The Details
-                </Text>
-              </>
-            ) : (
-              <CustomButton
-                title="Complete Delivery"
-                handlePress={handleCompleteDelivery}
-                containerStyles="w-[90%] ml-[5%] my-5"
-                isLoading={isLoading}
-              />
-            )}
-          </>
-        }
-      />
+        {/* Signature */}
+        <View className="w-[90%] mt-6">
+          <SignatureWrapper />
+        </View>
+
+        {/* Complete Delivery Button */}
+        <View className="w-[90%] mt-4">
+          {name === "" ||
+          selectedImages.length === 0 ||
+          !selectedBooking.signUrl ? (
+            <CustomButton
+              title="Complete Delivery"
+              containerStyles="bg-gray-500"
+            />
+          ) : (
+            <CustomButton
+              title="Complete Delivery"
+              handlePress={handleCompleteDelivery}
+              containerStyles="bg-green-600"
+              isLoading={isLoading}
+            />
+          )}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

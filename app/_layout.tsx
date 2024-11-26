@@ -3,13 +3,9 @@ import { SplashScreen, Stack } from "expo-router";
 import { GlobalProvider } from "@/context/GlobalProvider";
 import React, { useEffect } from "react";
 import registerNNPushToken from "native-notify";
-import Toast from 'react-native-toast-message';
+import Toast from "react-native-toast-message";
 
 SplashScreen.preventAutoHideAsync();
-import * as NavigationBar from "expo-navigation-bar";
-
-NavigationBar.setPositionAsync("absolute");
-NavigationBar.setBackgroundColorAsync("#ffffff00");
 
 export default function RootLayout() {
   registerNNPushToken(23378, "J29bh2sWQfdcATdeMlJwpl");

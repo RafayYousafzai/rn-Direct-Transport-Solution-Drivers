@@ -63,13 +63,22 @@ const SignatureComponent = ({ handleSave, currentSign, loading }) => {
               color="#1384e1"
             />
           ) : (
-            <Image
-              className="aspect-square w-full border border-slate-200  rounded-lg"
-              resizeMode="contain"
-              source={{
-                uri: signature ? signature : currentSign ? currentSign : NoSign,
-              }}
-            />
+            <>
+              <Image
+                className="aspect-square w-[90%] border border-slate-200  rounded-lg"
+                resizeMode="contain"
+                source={{
+                  uri: signature
+                    ? signature
+                    : currentSign
+                    ? currentSign
+                    : NoSign,
+                }}
+              />
+              <Text className="text-md  font-pregular mx-auto my-4">
+                Please Add Signature
+              </Text>
+            </>
           )}
         </TouchableOpacity>
       </View>

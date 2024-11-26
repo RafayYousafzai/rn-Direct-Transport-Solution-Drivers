@@ -8,26 +8,43 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import useGlobalContext from "@/context/GlobalProvider";
 import { format } from "date-fns";
-import { updateBooking } from "@/lib/firebase/functions/post";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { router } from "expo-router";
+import PicturePicker from "@/components/PicturePicker";
+import { uploadImages, updateBooking } from "@/lib/firebase/functions/post";
+import ItemList from "../../components/common/ItemList";
+
+function CustomButton({ onPress, loading, disabled, children }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled || loading}
+      className={`h-12 mt-3 items-center flex flex-row justify-center rounded-lg ${
+        loading || disabled ? "bg-gray-400" : "bg-green-600"
+      }`}
+    >
+      <Text className="text-center text-white font-semibold">{children}</Text>
+      {loading && <ActivityIndicator />}
+    </Pressable>
+  );
+}
 
 export default function Booking() {
   const { selectedBooking } = useGlobalContext();
   const [loading, setLoading] = useState(false);
+  const [selectedImages, setSelectedImages] = useState([]);
 
   const updateStatus = async () => {
     setLoading(true);
     const currentDateTime = format(new Date(), "MM/dd/yyyy HH:mm:ss");
-    const newStatus = "pickedup";
     try {
       const updatedData = {
         ...selectedBooking,
         progressInformation: {
           ...selectedBooking.progressInformation,
-          [newStatus]: currentDateTime,
+          pickedup: currentDateTime,
         },
-        currentStatus: newStatus,
+        currentStatus: "pickedup",
       };
       await updateBooking("place_bookings", selectedBooking.docId, updatedData);
     } catch (error) {
@@ -37,22 +54,51 @@ export default function Booking() {
     }
   };
 
+  console.log(selectedBooking.pickupImages);
+
+  const handlePickupImages = async () => {
+    if (!selectedImages?.length) return;
+
+    setLoading(true);
+
+    try {
+      const images = await Promise.all(
+        selectedImages.map(async (image) => {
+          const url = await uploadImages(image);
+          return url;
+        })
+      );
+
+      await updateBooking("place_bookings", selectedBooking.docId, {
+        ...selectedBooking,
+        pickupImages: images,
+      });
+    } catch (error) {
+      console.error("Error uploading images:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handlePickupImages();
+  }, [selectedImages]);
+
   return (
-    <SafeAreaView className="px-4 bg-primary h-full pt-10">
-      <ScrollView vertical={true}>
-        {/* Header Section */}
-        <View className="flex-row justify-between items-center ">
+    <SafeAreaView className=" bg-primary h-full  ">
+      <ScrollView className="px-4" vertical>
+        {/* Header */}
+        <View className="flex-row justify-between items-center">
           <View>
             <View className="bg-white rounded-lg shadow-md">
-              {/* Code Section */}
               <Text className="text-sm text-gray-500">
-                Code:{" "}
+                Customer:{" "}
                 <Text className="font-semibold">
                   {selectedBooking?.userName}
                 </Text>
               </Text>
               <Text className="text-sm text-gray-500">
-                Ref:{"    "}
+                Ref:{" "}
                 <Text className="font-semibold">
                   {selectedBooking?.pickupReference1 || "No Ref Provided"}
                 </Text>
@@ -69,54 +115,32 @@ export default function Booking() {
           </View>
         </View>
 
-        {/* Main Job Details */}
-
         {/* Pickup Section */}
         <Text className="text-lg font-semibold text-gray-800 mt-8">
           {selectedBooking?.address?.Origin?.suburb || "Pickup Suburb"}
         </Text>
-        <View className="mt-4 p-4 bg-white rounded-lg shadow-md   border border-gray-300">
+        <View className="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-300">
           <Text className="text-sm text-gray-600">
             {selectedBooking?.address?.Origin?.label || "Pickup Address"}
           </Text>
-          <Text className="text-sm text-gray-600 mt-2">
-            {/* Items: {selectedBooking?.items || "No items listed"} */}
-          </Text>
           {selectedBooking?.currentStatus !== "pickedup" ? (
-            <Pressable
-              onPress={updateStatus}
-              disabled={loading} // Disable while loading
-              className={`  py-2 h-12 items-center flex flex-row justify-center rounded-lg ${
-                loading ? "bg-gray-400" : "bg-green-600"
-              }`}
-            >
-              <Text className="   text-center align-middle text-white font-semibold">
-                {loading ? "Processing" : "Pickup Job"}{" "}
-              </Text>
-              {loading && <ActivityIndicator />}
-            </Pressable>
+            <CustomButton onPress={updateStatus} loading={loading}>
+              {loading ? "Processing" : "Pickup Job"}
+            </CustomButton>
           ) : (
-            <Pressable
-              disabled
-              className="mt-4 bg-gray-400  h-12 items-center flex flex-row justify-center py-2 rounded-lg"
-            >
-              <Text className="text-center text-white font-semibold">
-                Picked Up
-              </Text>
-            </Pressable>
+            <CustomButton disabled>Picked Up</CustomButton>
           )}
         </View>
-        {/* Pickup Button */}
 
         {/* Drop Section */}
         <Text className="text-lg font-semibold text-gray-800 mt-8">
           {selectedBooking?.address?.Destination?.suburb || "Drop Suburb"}
         </Text>
-        <View className="mt-4 p-4 bg-white rounded-lg shadow-md   border border-gray-300">
+        <View className="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-300">
           <Text className="text-sm text-gray-600">
             {selectedBooking?.address?.Destination?.label || "Drop Address"}
           </Text>
-          <Text className="text-sm text-gray-600 mt-2">
+          <Text className="text-sm text-gray-600">
             Drop Reference: {selectedBooking?.dropReference || "N/A"}
           </Text>
           <Text className="text-sm text-gray-600">
@@ -124,28 +148,30 @@ export default function Booking() {
           </Text>
         </View>
 
-        {selectedBooking?.currentStatus === "pickedup" ? (
-          <Pressable
-            onPress={() => router.push("pod")}
-            disabled={loading}
-            className={`mt-20  py-2 h-12 items-center flex flex-row justify-center rounded-lg ${
-              loading ? "bg-gray-400" : "bg-green-600"
-            }`}
-          >
-            <Text className="   text-center align-middle text-white font-semibold">
-              Next
-            </Text>
-          </Pressable>
-        ) : (
-          <Pressable
-            disabled
-            className="mt-4 bg-gray-400  h-12 items-center flex flex-row justify-center py-2 rounded-lg"
-          >
-            <Text className="text-center text-white font-semibold">
-              Picked Up
-            </Text>
-          </Pressable>
-        )}
+        <ItemList title={"Items"} items={selectedBooking.items} />
+
+        {/* Pickup Images Section */}
+        <View className="mb-4">
+          {selectedBooking?.currentStatus === "pickedup" ? (
+            selectedBooking?.pickupImages?.length > 0 ? (
+              <>
+                <CustomButton
+                  onPress={() => router.push("pod")}
+                  loading={loading}
+                >
+                  {loading ? "Loading..." : "Complete Delivery"}
+                </CustomButton>
+              </>
+            ) : (
+              <PicturePicker
+                title="Please Add Pick Up Images To Continue."
+                setSelectedImages={setSelectedImages}
+              />
+            )
+          ) : (
+            <CustomButton disabled>Picked Up</CustomButton>
+          )}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

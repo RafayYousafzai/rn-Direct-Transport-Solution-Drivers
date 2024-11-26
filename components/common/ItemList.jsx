@@ -4,7 +4,7 @@ import { View, Text } from "react-native";
 const ItemList = ({ items, title }) => {
   return (
     <View className="bg-white rounded-md shadow-lg  mt-4">
-      <Text className="text-2xl font-extrabold text-gray-900  my-6 text-center">
+      <Text className="text-lg font-semibold text-gray-800 my-3 ml-2">
         {title}
       </Text>
       <View>

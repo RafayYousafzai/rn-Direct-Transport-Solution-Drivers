@@ -4,9 +4,6 @@ import { Image, Text, View } from "react-native";
 import { icons } from "@/constants";
 import useGlobalContext from "@/context/GlobalProvider";
 import { useEffect } from "react";
-import LocationTracker from "@/components/TrackUpdates/LocationTracker";
-import * as TaskManager from "expo-task-manager";
-import * as Location from "expo-location";
 
 export default function TabsLayout() {
   const { isLoggedIn, isLoading, user } = useGlobalContext();
@@ -50,7 +47,7 @@ export default function TabsLayout() {
             backgroundColor: "#fff",
             borderTopWidth: 1,
             borderTopColor: "#ced4da",
-            height: 90,
+            height: 80,
           },
         }}
       >
