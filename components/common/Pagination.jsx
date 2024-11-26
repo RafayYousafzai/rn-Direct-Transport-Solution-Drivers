@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { styled } from "nativewind";
 
 const Pagination = ({ data, currentPage, setCurrentPage, itemsPerPage }) => {
   const totalPages = Math.ceil(data.length / itemsPerPage);
@@ -23,29 +22,46 @@ const Pagination = ({ data, currentPage, setCurrentPage, itemsPerPage }) => {
   }
 
   return (
-    <View className="flex-row justify-between mt-4">
+    <View className="flex-row items-center justify-center space-x-4 mt-6">
+      {/* Previous Button */}
       <TouchableOpacity
         onPress={handlePreviousPage}
         disabled={currentPage === 1}
-        className={`px-4 py-2 rounded-lg ${
-          currentPage === 1 ? "bg-gray-300" : "bg-blue-500"
+        className={`px-5 py-3 rounded-full shadow-md w-24 texts ${
+          currentPage === 1 ? "bg-gray-300" : "bg-indigo-500"
         }`}
       >
-        <Text className="text-white">Previous</Text>
+        <Text
+          className={`text-sm ${
+            currentPage === 1 ? "text-gray-500" : "text-white"
+          }`}
+        >
+          Previous
+        </Text>
       </TouchableOpacity>
 
-      <Text className="text-lg text-gray-800">
-        Page {currentPage} of {totalPages}
-      </Text>
+      {/* Page Indicator */}
+      <View className="px-6 py-3 rounded-full bg-gray-200 shadow-sm">
+        <Text className="text-lg font-medium text-gray-800">
+          Page {currentPage} of {totalPages}
+        </Text>
+      </View>
 
+      {/* Next Button */}
       <TouchableOpacity
         onPress={handleNextPage}
         disabled={currentPage === totalPages}
-        className={`px-4 py-2 rounded-lg ${
-          currentPage === totalPages ? "bg-gray-300" : "bg-blue-500"
+        className={`px-5 py-3 rounded-full shadow-md w-24 texts ${
+          currentPage === totalPages ? "bg-gray-300" : "bg-indigo-500"
         }`}
       >
-        <Text className="text-white">Next</Text>
+        <Text
+          className={`text-sm text-center ${
+            currentPage === totalPages ? "text-gray-500" : "text-white"
+          }`}
+        >
+          Next
+        </Text>
       </TouchableOpacity>
     </View>
   );

@@ -8,6 +8,7 @@ import {
   Image,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import Toast from "react-native-toast-message";
 import ImageViewer from "@/components/common/ImageViewer";
 import CustomButton from "@/components/common/CustomButton";
 import EmptyState from "@/components/EmptyState";
@@ -16,6 +17,7 @@ import useGlobalContext from "@/context/GlobalProvider";
 import { uploadImages, updateBooking } from "@/lib/firebase/functions/post";
 import FormField from "@/components/FormField";
 import SignatureWrapper from "@/components/signature/SignatureWrapper";
+import { router } from "expo-router";
 
 const Pod = () => {
   const { selectedBooking } = useGlobalContext();
@@ -54,6 +56,7 @@ const Pod = () => {
       prevImages.filter((image) => image !== uri)
     );
   };
+
   const handleCompleteDelivery = async () => {
     setIsLoading(true);
 
@@ -70,8 +73,23 @@ const Pod = () => {
         receiverName: name,
         images,
       });
+
+      // Show a success toast
+      Toast.show({
+        type: "success",
+        text1: "Delivery Completed!",
+        text2: "Your delivery was successfully uploaded 🎉",
+      });
+      router.push("Home")
     } catch (error) {
       console.error("Error uploading images:", error);
+
+      // Show an error toast
+      Toast.show({
+        type: "error",
+        text1: "Upload Failed",
+        text2: "Something went wrong. Please try again.",
+      });
     } finally {
       setIsLoading(false);
     }

@@ -3,6 +3,7 @@ import { SplashScreen, Stack } from "expo-router";
 import { GlobalProvider } from "@/context/GlobalProvider";
 import React, { useEffect } from "react";
 import registerNNPushToken from "native-notify";
+import Toast from 'react-native-toast-message';
 
 SplashScreen.preventAutoHideAsync();
 import * as NavigationBar from "expo-navigation-bar";
@@ -43,6 +44,7 @@ export default function RootLayout() {
 
   return (
     <GlobalProvider>
+      <Toast />
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
