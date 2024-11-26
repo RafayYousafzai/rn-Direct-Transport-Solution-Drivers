@@ -41,12 +41,12 @@ export default function TabsLayout() {
 
   return (
     <>
-      {user?.tracking === true ? (
+      {/* {user?.tracking === true ? (
         <LocationTracker />
       ) : (
         (TaskManager.unregisterAllTasksAsync(),
         Location.stopLocationUpdatesAsync(WATCH_LOCATION_UPDATES))
-      )}
+      )} */}
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: "#1384e1",
