@@ -117,7 +117,7 @@ export default function Booking() {
 
         {/* Pickup Section */}
         <Text className="text-lg font-semibold text-gray-800 mt-8">
-          {selectedBooking?.address?.Origin?.suburb || "Pickup Suburb"}
+          {selectedBooking?.pickupSuburb || "Pickup Suburb"}
         </Text>
         <View className="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-300">
           <Text className="text-sm text-gray-600">
@@ -138,7 +138,7 @@ export default function Booking() {
 
         {/* Drop Section */}
         <Text className="text-lg font-semibold text-gray-800 mt-8">
-          {selectedBooking?.address?.Destination?.suburb || "Drop Suburb"}
+          {selectedBooking?.deliverySuburb || "Drop Suburb"}
         </Text>
         <View className="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-300">
           <Text className="text-sm text-gray-600">
