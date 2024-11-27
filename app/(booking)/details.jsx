@@ -93,6 +93,9 @@ export default function Booking() {
             {selectedBooking?.address?.Origin?.label || "Pickup Address"}
           </Text>
           <Text className="text-sm text-gray-600">
+            Drop Company Name: {selectedBooking?.pickupCompanyName || "N/A"}
+          </Text>
+          <Text className="text-sm text-gray-600">
             Pickup Phone: {selectedBooking?.pickupPhone || "N/A"}
           </Text>
           <PickUpJob
@@ -112,6 +115,9 @@ export default function Booking() {
           </Text>
           <Text className="text-sm text-gray-600">
             Drop Reference: {selectedBooking?.deliveryIns || "N/A"}
+          </Text>
+          <Text className="text-sm text-gray-600">
+            Drop Company Name: {selectedBooking?.dropCompanyName || "N/A"}
           </Text>
           <Text className="text-sm text-gray-600">
             Drop Phone: {selectedBooking?.deliveryPhone || "N/A"}

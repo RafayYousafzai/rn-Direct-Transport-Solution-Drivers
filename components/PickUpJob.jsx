@@ -95,7 +95,7 @@ export default function PickUpJobModal({
         onPress={() => setModalVisible(true)}
         activeOpacity={0.8}
       >
-        <Text style={styles.buttonText}>Open Pickup Job</Text>
+        <Text style={styles.buttonText}>Pickup Job</Text>
       </TouchableOpacity>
 
       {/* Modal */}
