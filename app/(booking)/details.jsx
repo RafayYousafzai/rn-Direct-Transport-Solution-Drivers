@@ -8,11 +8,11 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import useGlobalContext from "@/context/GlobalProvider";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { router } from "expo-router";
-import PicturePicker from "@/components/PicturePicker";
-import { uploadImages, updateBooking } from "@/lib/firebase/functions/post";
-import ItemList from "../../components/common/ItemList";
+import { updateBooking } from "@/lib/firebase/functions/post";
+import ItemList from "@/components/common/ItemList";
+import PickUpJob from "@/components/PickUpJob";
 
 function CustomButton({ onPress, loading, disabled, children }) {
   return (
@@ -32,9 +32,8 @@ function CustomButton({ onPress, loading, disabled, children }) {
 export default function Booking() {
   const { selectedBooking } = useGlobalContext();
   const [loading, setLoading] = useState(false);
-  const [selectedImages, setSelectedImages] = useState([]);
 
-  const updateStatus = async () => {
+  const updateStatus = async (status) => {
     setLoading(true);
     const currentDateTime = format(new Date(), "MM/dd/yyyy HH:mm:ss");
     try {
@@ -42,9 +41,9 @@ export default function Booking() {
         ...selectedBooking,
         progressInformation: {
           ...selectedBooking.progressInformation,
-          pickedup: currentDateTime,
+          [status]: currentDateTime,
         },
-        currentStatus: "pickedup",
+        currentStatus: status,
       };
       await updateBooking("place_bookings", selectedBooking.docId, updatedData);
     } catch (error) {
@@ -53,36 +52,6 @@ export default function Booking() {
       setLoading(false);
     }
   };
-
-  console.log(selectedBooking.pickupImages);
-
-  const handlePickupImages = async () => {
-    if (!selectedImages?.length) return;
-
-    setLoading(true);
-
-    try {
-      const images = await Promise.all(
-        selectedImages.map(async (image) => {
-          const url = await uploadImages(image);
-          return url;
-        })
-      );
-
-      await updateBooking("place_bookings", selectedBooking.docId, {
-        ...selectedBooking,
-        pickupImages: images,
-      });
-    } catch (error) {
-      console.error("Error uploading images:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    handlePickupImages();
-  }, [selectedImages]);
 
   return (
     <SafeAreaView className=" bg-primary h-full  ">
@@ -124,16 +93,13 @@ export default function Booking() {
             {selectedBooking?.address?.Origin?.label || "Pickup Address"}
           </Text>
           <Text className="text-sm text-gray-600">
-            Pick Phone: {selectedBooking?.pickupPhone || "N/A"}
+            Pickup Phone: {selectedBooking?.pickupPhone || "N/A"}
           </Text>
-          {selectedBooking?.currentStatus === "allocated" ||
-          selectedBooking?.currentStatus === "Allocated" ? (
-            <CustomButton onPress={updateStatus} loading={loading}>
-              {loading ? "Processing" : "Pickup Job"}
-            </CustomButton>
-          ) : (
-            <CustomButton disabled>Picked Up</CustomButton>
-          )}
+          <PickUpJob
+            selectedBooking={selectedBooking}
+            updateStatus={updateStatus}
+            loading={loading}
+          />
         </View>
 
         {/* Drop Section */}
@@ -157,23 +123,16 @@ export default function Booking() {
         {/* Pickup Images Section */}
         <View className="mb-4">
           {selectedBooking?.progressInformation?.pickedup ? (
-            selectedBooking?.pickupImages?.length > 0 ? (
-              <>
-                <CustomButton
-                  onPress={() => router.push("pod")}
-                  loading={loading}
-                >
-                  {loading ? "Loading..." : "Complete Delivery"}
-                </CustomButton>
-              </>
-            ) : (
-              <PicturePicker
-                title="Please Add Pick Up Images To Continue."
-                setSelectedImages={setSelectedImages}
-              />
-            )
+            <>
+              <CustomButton
+                onPress={() => router.push("pod")}
+                loading={loading}
+              >
+                Complete Delivery
+              </CustomButton>
+            </>
           ) : (
-            <CustomButton disabled>Picked Up</CustomButton>
+            <CustomButton disabled>Complete Delivery</CustomButton>
           )}
         </View>
       </ScrollView>

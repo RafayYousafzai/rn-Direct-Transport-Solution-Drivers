@@ -66,7 +66,7 @@ const Pod = () => {
         text1: "Delivery Completed!",
         text2: "Your delivery was successfully uploaded 🎉",
       });
-      // router.push("Home");
+      router.push("Home");
     } catch (error) {
       console.error("Error uploading images:", error);
 

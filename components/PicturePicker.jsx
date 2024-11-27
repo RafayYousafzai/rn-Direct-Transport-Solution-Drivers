@@ -30,7 +30,7 @@ export default function PicturePicker({ setSelectedImages, title }) {
   };
 
   return (
-    <View className="my-6 ">
+    <View className="my-6 w-full">
       <View className="  space-y-2">
         <Text className="text-base text-slate-700 font-pmedium">{title}</Text>
 
