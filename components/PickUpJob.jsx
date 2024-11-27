@@ -12,6 +12,7 @@ import {
 import PicturePicker from "./PicturePicker";
 import { uploadImages, updateBooking } from "@/lib/firebase/functions/post";
 import { Entypo } from "@expo/vector-icons";
+import { format } from "date-fns";
 
 const statuses = [
   { val: "pickedup", status: "Picked Up" },
@@ -28,46 +29,62 @@ export default function PickUpJobModal({
   setLoading,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
+
   const [selectedImages, setSelectedImages] = useState([]);
+  const handlePickupImages = async () => {
+    setLoading(true);
+
+    try {
+      const currentDateTime = format(new Date(), "MM/dd/yyyy HH:mm:ss");
+      const pickupImages = await Promise.all(
+        selectedImages.map(async (image) => {
+          const url = await uploadImages(image);
+          return url;
+        })
+      );
+
+      const updatedData = {
+        ...selectedBooking,
+        progressInformation: {
+          ...selectedBooking.progressInformation,
+          pickedup: currentDateTime,
+        },
+        currentStatus: "pickedup",
+        pickupImages:
+          selectedBooking?.pickupImages?.length > 0
+            ? [...selectedBooking?.pickupImages, ...pickupImages]
+            : pickupImages,
+      };
+
+      await updateBooking("place_bookings", selectedBooking.docId, updatedData);
+    } catch (error) {
+      console.error("Error uploading images:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const handlePickupImages = async () => {
-      setLoading(true);
-
-      try {
-        const images = await Promise.all(
-          selectedImages.map(async (image) => {
-            const url = await uploadImages(image);
-            return url;
-          })
-        );
-
-        await updateBooking("place_bookings", selectedBooking.docId, {
-          ...selectedBooking,
-          pickupImages: [...(selectedBooking.pickupImages || []), ...images],
-        });
-        updateStatus("pickedup");
-      } catch (error) {
-        console.error("Error uploading images:", error);
-      } finally {
-        setLoading(false);
-        setModalVisible(false);
-      }
-    };
-
     if (selectedImages?.length > 0) {
       handlePickupImages();
     }
   }, [selectedImages]);
 
   const renderUploadedImages = () => {
-    if (selectedBooking?.pickupImages?.length > 0) {
-      return (
-        <View style={styles.uploadedImagesContainer}>
+    return (
+      <View style={styles.uploadedImagesContainer}>
+        {!selectedBooking?.pickupImages?.length > 0 ? (
+          <Text style={styles.uploadedImagesTitle}>
+            {loading && <ActivityIndicator color={"#2b6cb0"} />}
+          </Text>
+        ) : (
           <Text style={styles.uploadedImagesTitle}>
             {loading && <ActivityIndicator color={"#2b6cb0"} />} Uploaded Images
             ({selectedBooking.pickupImages.length}):
           </Text>
+        )}
+
+        {selectedBooking?.pickupImages?.length > 0 && (
           <FlatList
             showsHorizontalScrollIndicator={false}
             data={selectedBooking.pickupImages}
@@ -81,9 +98,10 @@ export default function PickUpJobModal({
               />
             )}
           />
-        </View>
-      );
-    }
+        )}
+      </View>
+    );
+
     return null;
   };
 

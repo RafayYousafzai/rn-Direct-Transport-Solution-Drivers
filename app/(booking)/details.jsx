@@ -23,8 +23,8 @@ function CustomButton({ onPress, loading, disabled, children }) {
         loading || disabled ? "bg-gray-400" : "bg-green-600"
       }`}
     >
-      <Text className="text-center text-white font-semibold">{children}</Text>
-      {loading && <ActivityIndicator />}
+      <Text className="text-center text-white font-semibold mx-3">{children}</Text>
+      {loading && <ActivityIndicator color={"#fff"} />}
     </Pressable>
   );
 }
@@ -102,6 +102,7 @@ export default function Booking() {
             selectedBooking={selectedBooking}
             updateStatus={updateStatus}
             loading={loading}
+            setLoading={setLoading}
           />
         </View>
 
