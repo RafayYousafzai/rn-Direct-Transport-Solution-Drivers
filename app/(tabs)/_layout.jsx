@@ -37,7 +37,7 @@ export default function TabsLayout() {
 
   return (
     <>
-      {/* <LocationTracker /> */}
+      <LocationTracker />
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: "#1384e1",
