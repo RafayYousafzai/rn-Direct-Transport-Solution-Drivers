@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
-import { handleLocationUpdate } from "@/lib/firebase/functions/locations_sharing";
-import useGlobalContext from "@/context/GlobalProvider";
 import LocationPermissions from "./LocationPermissions";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getValueFor } from "../../lib/SecureStore/SecureStore";
+import Toast from "../common/Toast";
 
 const WATCH_LOCATION_UPDATES = "background-location-updates";
 
+// Define background task for location updates
 TaskManager.defineTask(WATCH_LOCATION_UPDATES, async ({ data, error }) => {
   if (error) {
     console.error("Background location task error:", error.message);
@@ -19,23 +19,8 @@ TaskManager.defineTask(WATCH_LOCATION_UPDATES, async ({ data, error }) => {
     const { locations } = data;
     if (locations && locations.length > 0) {
       const location = locations[0];
-
       try {
-        const user = await AsyncStorage.getItem("user");
-        const liveLocSharingBookings = await AsyncStorage.getItem(
-          "liveLocSharingBookings"
-        );
-
-        if (!user || !liveLocSharingBookings) {
-          console.error("User or liveLocSharingBookings not available");
-          return;
-        }
-
-        await handleLocationUpdate(
-          location,
-          JSON.parse(user),
-          JSON.parse(liveLocSharingBookings)
-        );
+        handleLocationUpdate(location);
       } catch (err) {
         console.error(
           "Error handling background location update:",
@@ -47,51 +32,47 @@ TaskManager.defineTask(WATCH_LOCATION_UPDATES, async ({ data, error }) => {
 });
 
 export default function LocationTracker() {
-  const { user, liveLocSharingBookings } = useGlobalContext();
   const [foregroundSubscription, setForegroundSubscription] = useState(null);
-  const liveLocSharingBookingsRef = useRef(liveLocSharingBookings);
-
-  // Update the ref whenever liveLocSharingBookings changes
-  useEffect(() => {
-    liveLocSharingBookingsRef.current = liveLocSharingBookings;
-  }, [liveLocSharingBookings]);
 
   useEffect(() => {
     const startTracking = async () => {
       try {
-        await LocationPermissions();
+        // Request location permissions
+        const permissions = await LocationPermissions();
+        if (!permissions) {
+          console.error("Location permissions denied.");
+          return;
+        }
 
+        // Check if the background task is already registered
         const isTaskRegistered = await TaskManager.isTaskRegisteredAsync(
           WATCH_LOCATION_UPDATES
         );
         if (!isTaskRegistered) {
+          // Start background location tracking
           await Location.startLocationUpdatesAsync(WATCH_LOCATION_UPDATES, {
-            accuracy: Location.Accuracy.High,
+            accuracy: Location.Accuracy.Highest,
             timeInterval: 1,
             distanceInterval: 1,
             showsBackgroundLocationIndicator: true,
             foregroundService: {
-              notificationTitle: "Direct Transport Solutions",
+              notificationTitle: "Location Tracking Active",
               notificationBody:
-                "Tracking your location for routing and monitoring.",
+                "We are actively tracking your location for routing and monitoring.",
+              notificationColor: "#0856bc",
             },
           });
         }
 
-        // Foreground location tracking
+        // Start foreground location tracking
         const foregroundSub = await Location.watchPositionAsync(
           {
-            accuracy: Location.Accuracy.High,
+            accuracy: Location.Accuracy.Highest,
             timeInterval: 1,
             distanceInterval: 1,
             mayShowUserSettingsDialog: true,
           },
-          (location) =>
-            handleLocationUpdate(
-              location,
-              user,
-              liveLocSharingBookingsRef.current
-            )
+          (location) => handleLocationUpdate(location)
         );
 
         setForegroundSubscription(foregroundSub);
@@ -103,7 +84,7 @@ export default function LocationTracker() {
     startTracking();
 
     return async () => {
-      // Cleanup on unmount
+      // Cleanup foreground and background tasks
       if (foregroundSubscription) {
         foregroundSubscription.remove();
         setForegroundSubscription(null);
@@ -116,7 +97,36 @@ export default function LocationTracker() {
         await Location.stopLocationUpdatesAsync(WATCH_LOCATION_UPDATES);
       }
     };
-  }, [user]); // Only depend on user
+  }, []);
 
   return <View />;
 }
+
+// Handle location updates and send to server
+const handleLocationUpdate = async (location) => {
+  Toast("Updating");
+  try {
+    const userJson = await getValueFor("user");
+    const user = JSON.parse(userJson);
+    const data = JSON.stringify({ email: user.email, location });
+
+    const response = await fetch(
+      "https://direct-transport-server.vercel.app/api/locations/update_current_location",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: data,
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Failed to send location data:", response.statusText);
+    } else {
+      console.log("Location update successful.");
+    }
+  } catch (err) {
+    console.error("Error during location update:", err.message);
+  }
+};

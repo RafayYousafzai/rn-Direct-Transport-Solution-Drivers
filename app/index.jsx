@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { registerIndieID } from "native-notify";
