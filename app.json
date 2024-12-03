@@ -43,7 +43,7 @@
         "FOREGROUND_SERVICE",
         "ACCESS_COARSE_LOCATION",
         "POST_NOTIFICATIONS",
-        "ACTIVITY_RECOGNITION",
+        "ACTIVITY_RECOGNITION"
       ]
     },
     "web": {
@@ -55,6 +55,17 @@
       "expo-router",
       "expo-secure-store",
       "expo-camera",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 34, // Compile with SDK version 34
+            "targetSdkVersion": 34, // Target Android 34 (API 34)
+            "minSdkVersion": 21, // Minimum SDK version (e.g., Android 5.0 Lollipop)
+            "buildToolsVersion": "34.0.0"
+          }
+        }
+      ],
       [
         "expo-camera",
         {
