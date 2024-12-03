@@ -56,17 +56,6 @@
       "expo-secure-store",
       "expo-camera",
       [
-        "expo-build-properties",
-        {
-          "android": {
-            "compileSdkVersion": 34, // Compile with SDK version 34
-            "targetSdkVersion": 34, // Target Android 34 (API 34)
-            "minSdkVersion": 21, // Minimum SDK version (e.g., Android 5.0 Lollipop)
-            "buildToolsVersion": "34.0.0"
-          }
-        }
-      ],
-      [
         "expo-camera",
         {
           "cameraPermission": "Allow DTS to access your camera",
