@@ -4,7 +4,6 @@ import { Image, Text, View } from "react-native";
 import { icons } from "@/constants";
 import useGlobalContext from "@/context/GlobalProvider";
 import { useEffect } from "react";
-import LocationTracker from "@/components/TrackUpdates/LocationTracker";
 
 export default function TabsLayout() {
   const { isLoggedIn, isLoading, user } = useGlobalContext();
@@ -37,7 +36,6 @@ export default function TabsLayout() {
 
   return (
     <>
-      {/* <LocationTracker /> */}
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: "#1384e1",

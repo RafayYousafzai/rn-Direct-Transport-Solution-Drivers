@@ -8,6 +8,7 @@ import FeatureCard from "@/components/common/FeatureCard";
 import { unregisterIndieDevice } from "native-notify";
 import { signOut } from "@/lib/firebase/functions/auth";
 import { router } from "expo-router";
+import LocationTracker from "@/components/TrackUpdates/LocationTracker";
 
 const Dashboard = () => {
   const { bookings, user } = useGlobalContext();
@@ -73,6 +74,7 @@ const Dashboard = () => {
 
   return (
     <ScrollView className="flex bg-primary">
+      <LocationTracker />
       <Header title={"Welcome Back"} subtitle={user?.firstName} />
 
       <Text className="text-lg ml-2 font-pextrabold text-slate-700 mb-3">
