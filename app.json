@@ -56,6 +56,12 @@
       "expo-secure-store",
       "expo-camera",
       [
+        "expo-dev-launcher",
+        {
+          "launchMode": "most-recent"
+        }
+      ],
+      [
         "expo-camera",
         {
           "cameraPermission": "Allow DTS to access your camera",
