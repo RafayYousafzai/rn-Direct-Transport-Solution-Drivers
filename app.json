@@ -79,7 +79,8 @@
           "isAndroidBackgroundLocationEnabled": true,
           "isAndroidForegroundServiceEnabled": true
         }
-      ]
+      ],
+      "react-native-background-geolocation"
     ],
     "experiments": {
       "typedRoutes": true
@@ -94,4 +95,3 @@
     }
   }
 }
-// c100c394-64bc-4989-888c-d8dac2749e35
