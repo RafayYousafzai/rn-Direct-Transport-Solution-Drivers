@@ -1,5 +1,5 @@
 {
-  "name": "dts-driver",
+  "name": "expo-notify",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {

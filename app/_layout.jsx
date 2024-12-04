@@ -9,7 +9,10 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   registerNNPushToken(23378, "J29bh2sWQfdcATdeMlJwpl");
-
+  
+  const isDebug = __DEV__;
+  console.log("Is DEBUG build:", isDebug);
+  
   const [fontsLoaded, error] = useFonts({
     "Poppins-Black": require("../assets/fonts/Poppins-Black.ttf"),
     "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
