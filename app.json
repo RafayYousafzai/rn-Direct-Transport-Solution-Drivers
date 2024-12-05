@@ -18,11 +18,21 @@
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "DTS This app requires location in the background",
+        "NSLocationWhenInUseUsageDescription": "DTS This app requires location while in use",
+        "NSMotionUsageDescription": "DTS This app uses motion-detection to determine the motion-activity of the device (walking, vehicle, bicycle, etc)",
         "UIBackgroundModes": [
           "location",
-          "fetch"
+          "fetch",
+          "processing",
+          "audio"
+        ],
+        "BGTaskSchedulerPermittedIdentifiers": [
+          "com.transistorsoft.fetch",
+          "com.transistorsoft.customtask"
         ]
-      }
+      },
+      "bundleIdentifier": "com.primedev.exponotify"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -62,6 +72,22 @@
         }
       ],
       [
+        "react-native-background-geolocation",
+        {
+          "license": "YOUR_LICENSE_KEY_HERE",
+          "polygonLicense": "YOUR_POLYGON_LICENSE_HERE",
+          "hmsLicense": "YOUR_HMS_LICENSE_HERE"
+        }
+      ],
+      [
+        "expo-gradle-ext-vars",
+        {
+          "googlePlayServicesLocationVersion": "21.1.0",
+          "appCompatVersion": "1.4.2"
+        }
+      ],
+      "react-native-background-fetch",
+      [
         "expo-camera",
         {
           "cameraPermission": "Allow DTS to access your camera",
@@ -75,18 +101,9 @@
           "faceIDPermission": "Allow DTS to access your Face ID biometric data."
         }
       ],
-      [
-        "expo-location",
-        {
-          "locationAlwaysAndWhenInUsePermission": "Allow Direct Transport Solution to use your location at all times.",
-          "locationAlwaysPermission": "Allow Direct Transport Solution to always use your location.",
-          "locationWhenInUsePermission": "Allow Direct Transport Solution to use your location while using the app.",
-          "isIosBackgroundLocationEnabled": true,
-          "isAndroidBackgroundLocationEnabled": true,
-          "isAndroidForegroundServiceEnabled": true
-        }
-      ],
-      "react-native-background-geolocation"
+      "react-native-background-geolocation",
+      "react-native-background-fetch",
+      "expo-gradle-ext-vars"
     ],
     "experiments": {
       "typedRoutes": true
