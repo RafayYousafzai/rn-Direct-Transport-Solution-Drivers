@@ -1,6 +1,6 @@
 import { getValueFor } from "@/lib/SecureStore/SecureStore";
 import React, { useEffect } from "react";
-import { View, Text, Button, ToastAndroid } from "react-native";
+import { ToastAndroid } from "react-native";
 import BackgroundGeolocation from "react-native-background-geolocation";
 
 const handleLocationUpdate = async (location: any) => {
