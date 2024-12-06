@@ -5,7 +5,6 @@ import { startOfDay, isToday, parse, isBefore, isFuture } from "date-fns";
 import { icons } from "@/constants";
 import Header from "@/components/Header";
 import FeatureCard from "@/components/common/FeatureCard";
-import { unregisterIndieDevice } from "native-notify";
 import { signOut } from "@/lib/firebase/functions/auth";
 import { router } from "expo-router";
 import LocationTracker from "@/components/TrackUpdates/LocationTracker";
@@ -58,13 +57,6 @@ const Dashboard = () => {
   );
   const handleSignOut = async () => {
     try {
-      const res = unregisterIndieDevice(
-        user.email,
-        23374,
-        "hZawrJYXBzBbQZgTgLVsZP"
-      );
-      console.log({ res });
-
       await signOut();
       router.replace("signin");
     } catch (error) {

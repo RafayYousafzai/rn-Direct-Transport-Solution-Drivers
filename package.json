@@ -1,5 +1,5 @@
 {
-  "name": "expo-notify",
+  "name": "driverportal",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -44,7 +44,6 @@
     "expo-task-manager": "~11.8.2",
     "expo-web-browser": "~13.0.3",
     "firebase": "^10.14.1",
-    "native-notify": "^4.0.4",
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-dom": "18.2.0",

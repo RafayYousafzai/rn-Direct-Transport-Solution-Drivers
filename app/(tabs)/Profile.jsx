@@ -6,7 +6,6 @@ import {
   Pressable,
   SafeAreaView,
   ScrollView,
-  Alert,
 } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as ImagePicker from "expo-image-picker";
@@ -16,7 +15,6 @@ import { icons } from "@/constants";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { uploadImages, updateBooking } from "@/lib/firebase/functions/post";
-import { unregisterIndieDevice } from "native-notify";
 
 const img = "https://cdn-icons-png.flaticon.com/512/4128/4128176.png";
 const resetPasswordLink = "https://dts.courierssydney.com.au/ResetPassword";
@@ -38,13 +36,6 @@ const Profile = () => {
 
   const handleSignOut = async () => {
     try {
-      const res = unregisterIndieDevice(
-        user.email,
-        23374,
-        "hZawrJYXBzBbQZgTgLVsZP"
-      );
-      console.log({ res });
-
       await signOut();
       // setIsLoggedIn(false);
       router.push("signin");

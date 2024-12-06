@@ -1,11 +1,11 @@
 {
   "expo": {
     "name": "DTS Driver",
-    "slug": "expo-notify",
+    "slug": "driverportal",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "scheme": "expo-notify",
+    "scheme": "driverportal",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
@@ -32,11 +32,11 @@
           "com.transistorsoft.customtask"
         ]
       },
-      "bundleIdentifier": "com.primedev.exponotify"
+      "bundleIdentifier": "com.dts.driverportal"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
-      "package": "com.primedev.exponotify",
+      "package": "com.dts.driverportal",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#f1faee"

@@ -2,17 +2,14 @@ import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { GlobalProvider } from "@/context/GlobalProvider";
 import React, { useEffect } from "react";
-import registerNNPushToken from "native-notify";
 import Toast from "react-native-toast-message";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  registerNNPushToken(23378, "J29bh2sWQfdcATdeMlJwpl");
-  
   const isDebug = __DEV__;
   console.log("Is DEBUG build:", isDebug);
-  
+
   const [fontsLoaded, error] = useFonts({
     "Poppins-Black": require("../assets/fonts/Poppins-Black.ttf"),
     "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),

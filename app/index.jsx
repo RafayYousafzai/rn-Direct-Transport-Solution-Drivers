@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { registerIndieID } from "native-notify";
 import LoadingScreen from "@/components/LoadingScreen";
 import useGlobalContext from "@/context/GlobalProvider";
 import { remove } from "@/lib/SecureStore/SecureStore";
@@ -22,7 +21,6 @@ export default function Index() {
       try {
         if (!isLoading && user) {
           if (isLoggedIn) {
-            const regis = await registerIndieID(user.email, APP_ID, APP_TOKEN);
             router.replace("Home");
           } else {
             router.replace("signin");
