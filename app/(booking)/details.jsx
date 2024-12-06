@@ -13,6 +13,7 @@ import { router } from "expo-router";
 import { updateBooking } from "@/lib/firebase/functions/post";
 import ItemList from "@/components/common/ItemList";
 import PickUpJob from "@/components/PickUpJob";
+import ChangeStatus from "../../components/ChangeStatus";
 
 function CustomButton({ onPress, loading, disabled, children }) {
   return (
@@ -23,7 +24,9 @@ function CustomButton({ onPress, loading, disabled, children }) {
         loading || disabled ? "bg-gray-400" : "bg-green-600"
       }`}
     >
-      <Text className="text-center text-white font-semibold mx-3">{children}</Text>
+      <Text className="text-center text-white font-semibold mx-3">
+        {children}
+      </Text>
       {loading && <ActivityIndicator color={"#fff"} />}
     </Pressable>
   );
@@ -32,26 +35,6 @@ function CustomButton({ onPress, loading, disabled, children }) {
 export default function Booking() {
   const { selectedBooking } = useGlobalContext();
   const [loading, setLoading] = useState(false);
-
-  const updateStatus = async (status) => {
-    setLoading(true);
-    const currentDateTime = format(new Date(), "MM/dd/yyyy HH:mm:ss");
-    try {
-      const updatedData = {
-        ...selectedBooking,
-        progressInformation: {
-          ...selectedBooking.progressInformation,
-          [status]: currentDateTime,
-        },
-        currentStatus: status,
-      };
-      await updateBooking("place_bookings", selectedBooking.docId, updatedData);
-    } catch (error) {
-      console.error("Error updating status:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <SafeAreaView className=" bg-primary h-full  ">
@@ -90,17 +73,17 @@ export default function Booking() {
         </Text>
         <View className="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-300">
           <Text className="text-sm text-gray-600">
-            {selectedBooking?.address?.Origin?.label || "Pickup Address"}
+            Drop Company Name: {selectedBooking?.pickupCompanyName || "N/A"}
           </Text>
           <Text className="text-sm text-gray-600">
-            Drop Company Name: {selectedBooking?.pickupCompanyName || "N/A"}
+            Address:
+            {selectedBooking?.address?.Origin?.label || "Pickup Address"}
           </Text>
           <Text className="text-sm text-gray-600">
             Pickup Phone: {selectedBooking?.pickupPhone || "N/A"}
           </Text>
           <PickUpJob
             selectedBooking={selectedBooking}
-            updateStatus={updateStatus}
             loading={loading}
             setLoading={setLoading}
           />
@@ -112,13 +95,14 @@ export default function Booking() {
         </Text>
         <View className="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-300">
           <Text className="text-sm text-gray-600">
+            Drop Company Name: {selectedBooking?.dropCompanyName || "N/A"}
+          </Text>
+          <Text className="text-sm text-gray-600">
+            Address:
             {selectedBooking?.address?.Destination?.label || "Drop Address"}
           </Text>
           <Text className="text-sm text-gray-600">
             Drop Reference: {selectedBooking?.deliveryIns || "N/A"}
-          </Text>
-          <Text className="text-sm text-gray-600">
-            Drop Company Name: {selectedBooking?.dropCompanyName || "N/A"}
           </Text>
           <Text className="text-sm text-gray-600">
             Drop Phone: {selectedBooking?.deliveryPhone || "N/A"}
@@ -131,6 +115,9 @@ export default function Booking() {
         <View className="mb-4">
           {selectedBooking?.progressInformation?.pickedup ? (
             <>
+              {!selectedBooking?.progressInformation?.delivered && (
+                <ChangeStatus />
+              )}
               <CustomButton
                 onPress={() => router.push("pod")}
                 loading={loading}

@@ -99,7 +99,7 @@ const Dashboard = () => {
         value={pastBookings.length}
         icon={icons.approved}
       />
-      <FeatureCard
+      {/* <FeatureCard
         href="/History"
         title="Deliveries Cancelled"
         value={
@@ -107,7 +107,7 @@ const Dashboard = () => {
             .length
         }
         icon={icons.cancel}
-      />
+      /> */}
       <Pressable onPress={handleSignOut}>
         <FeatureCard
           title="Logout from your account!"

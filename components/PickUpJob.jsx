@@ -8,23 +8,15 @@ import {
   StyleSheet,
   FlatList,
   Image,
+  Pressable,
 } from "react-native";
 import PicturePicker from "./PicturePicker";
 import { uploadImages, updateBooking } from "@/lib/firebase/functions/post";
 import { Entypo } from "@expo/vector-icons";
 import { format } from "date-fns";
 
-const statuses = [
-  { val: "pickedup", status: "Picked Up" },
-  { val: "returned", status: "Returned" },
-  { val: "cancelled", status: "Cancelled" },
-  { val: "Arrived At Drop", status: "Arrived at Drop" },
-  { val: "Arrived At Pickup", status: "Arrived at Pickup" },
-];
-
 export default function PickUpJobModal({
   selectedBooking,
-  updateStatus,
   loading,
   setLoading,
 }) {
@@ -118,12 +110,15 @@ export default function PickUpJobModal({
 
       {/* Modal */}
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View style={styles.modalContainer}>
+        <View
+          style={styles.modalOverlay}
+          onPress={() => setModalVisible(false)}
+        >
           <View style={styles.modalContent}>
             {/* Close Icon */}
             <TouchableOpacity
@@ -131,12 +126,7 @@ export default function PickUpJobModal({
               onPress={() => setModalVisible(false)}
               activeOpacity={0.7}
             >
-              <Entypo
-                style={{ marginTop: 4, marginRight: 4 }}
-                name="cross"
-                size={24}
-                color="black"
-              />
+              <Entypo name="cross" size={24} color="black" />
             </TouchableOpacity>
 
             {/* Display Uploaded Images */}
@@ -154,28 +144,10 @@ export default function PickUpJobModal({
               />
             )}
 
-            {/* Status Buttons */}
+            {/* Status Message */}
             {selectedBooking?.progressInformation?.delivered && (
               <Text style={styles.deliveredText}>Booking Delivered</Text>
             )}
-            {!selectedBooking?.progressInformation?.delivered &&
-              selectedBooking?.progressInformation?.pickedup &&
-              statuses.map((status) => (
-                <TouchableOpacity
-                  key={status.val}
-                  style={[
-                    styles.statusButton,
-                    selectedBooking?.currentStatus === status.val && {
-                      backgroundColor: "#2b6cb0",
-                    },
-                  ]}
-                  disabled={status.val === selectedBooking?.currentStatus}
-                  activeOpacity={0.8}
-                  onPress={() => updateStatus(status.val)}
-                >
-                  <Text style={styles.statusText}>{status.status}</Text>
-                </TouchableOpacity>
-              ))}
           </View>
         </View>
       </Modal>
@@ -185,7 +157,7 @@ export default function PickUpJobModal({
 
 const styles = StyleSheet.create({
   openButton: {
-    backgroundColor: "#2b6cb0",
+    backgroundColor: "#006fee",
     padding: 12,
     borderRadius: 12,
     alignItems: "center",
@@ -195,25 +167,26 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
   },
-  modalContainer: {
+  modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
     alignItems: "center",
   },
   modalContent: {
     backgroundColor: "white",
-    padding: 20,
     borderRadius: 16,
-    width: "100%",
+    padding: 20,
+    width: "90%",
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 8,
-    height: "100%",
   },
   closeIcon: {
     position: "absolute",
@@ -223,37 +196,19 @@ const styles = StyleSheet.create({
   uploadedImagesContainer: {
     marginBottom: 16,
     width: "100%",
-    alignItems: "flex-start",
   },
   uploadedImagesTitle: {
+    fontSize: 16,
     fontWeight: "bold",
-    marginBottom: 35,
-    fontSize: 18,
-    color: "#333",
-    marginTop: -4,
-    marginLeft: 4,
+    marginBottom: 8,
   },
   uploadedImage: {
     width: 100,
     height: 100,
     borderRadius: 12,
     marginRight: 8,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: "#ccc",
-  },
-  statusButton: {
-    backgroundColor: "#457b9d",
-    padding: 12,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 8,
-    width: "100%",
-    elevation: 3,
-  },
-  statusText: {
-    color: "#fff",
-    fontWeight: "600",
   },
   deliveredText: {
     fontSize: 16,
