@@ -1,4 +1,4 @@
-package com.primedev.exponotify
+package com.dts.driverportal
 
 import android.os.Build
 import android.os.Bundle

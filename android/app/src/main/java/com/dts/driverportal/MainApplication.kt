@@ -1,4 +1,4 @@
-package com.primedev.exponotify
+package com.dts.driverportal
 
 import android.app.Application
 import android.content.res.Configuration

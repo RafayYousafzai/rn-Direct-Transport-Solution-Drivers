@@ -39,6 +39,9 @@
         <data android:scheme="expo-notify"/>
         <data android:scheme="com.primedev.exponotify"/>
         <data android:scheme="exp+expo-notify"/>
+        <data android:scheme="com.dts.driverportal"/>
+        <data android:scheme="driverportal"/>
+        <data android:scheme="exp+driverportal"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>

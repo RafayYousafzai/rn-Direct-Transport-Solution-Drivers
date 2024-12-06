@@ -116,9 +116,9 @@ apply from: "${background_geolocation.projectDir}/app.gradle"
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.primedev.exponotify'
+    namespace 'com.dts.driverportal'
     defaultConfig {
-        applicationId 'com.primedev.exponotify'
+        applicationId 'com.dts.driverportal'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
