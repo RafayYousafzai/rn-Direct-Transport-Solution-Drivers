@@ -72,9 +72,7 @@
       [
         "react-native-background-geolocation",
         {
-          "license": "1aab35a73c425d0282aeca5f08f3ec32b79888108a74cd0d19760162e07d1f57",
-          "polygonLicense": "YOUR_POLYGON_LICENSE_HERE",
-          "hmsLicense": "YOUR_HMS_LICENSE_HERE"
+          "license": "1aab35a73c425d0282aeca5f08f3ec32b79888108a74cd0d19760162e07d1f57"
         }
       ],
       [

@@ -46,11 +46,11 @@ const App = () => {
 
     BackgroundGeolocation.ready({
       desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-      distanceFilter: 1,
+      distanceFilter: 50,
       stopOnTerminate: false,
       startOnBoot: true,
-      debug: false, // Enable sounds and verbose logs
-      logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+      debug: false,
+      logLevel: BackgroundGeolocation.LOG_LEVEL_OFF,
     })
       .then((state) => {
         console.log("BackgroundGeolocation ready:", state);
