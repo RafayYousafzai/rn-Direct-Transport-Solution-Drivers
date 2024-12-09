@@ -118,14 +118,16 @@ export default function Booking() {
           {selectedBooking?.progressInformation?.pickedup ? (
             <>
               {!selectedBooking?.progressInformation?.delivered && (
-                <ChangeStatus />
+                <>
+                  <ChangeStatus />
+                  <CustomButton
+                    onPress={() => router.push("pod")}
+                    loading={loading}
+                  >
+                    Complete Delivery
+                  </CustomButton>
+                </>
               )}
-              <CustomButton
-                onPress={() => router.push("pod")}
-                loading={loading}
-              >
-                Complete Delivery
-              </CustomButton>
             </>
           ) : (
             <CustomButton disabled>Complete Delivery</CustomButton>
