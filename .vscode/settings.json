@@ -3,6 +3,7 @@
         "appspot",
         "firebaseapp",
         "firestore",
+        "geolocation",
         "Ionicons",
         "Jone",
         "nativewind",

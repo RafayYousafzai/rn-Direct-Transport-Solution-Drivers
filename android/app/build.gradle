@@ -116,7 +116,7 @@ Project background_fetch = project(':react-native-background-fetch')
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.dts.driverportal'
+    namespace "com.dtsdriver"
     defaultConfig {
         applicationId 'com.dts.driverportal'
         minSdkVersion rootProject.ext.minSdkVersion
