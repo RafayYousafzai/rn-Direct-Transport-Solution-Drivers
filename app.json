@@ -21,12 +21,7 @@
         "NSLocationAlwaysAndWhenInUseUsageDescription": "DTS This app requires location in the background",
         "NSLocationWhenInUseUsageDescription": "DTS This app requires location while in use",
         "NSMotionUsageDescription": "DTS This app uses motion-detection to determine the motion-activity of the device (walking, vehicle, bicycle, etc)",
-        "UIBackgroundModes": [
-          "location",
-          "fetch",
-          "processing",
-          "audio"
-        ],
+        "UIBackgroundModes": ["location", "fetch", "processing", "audio"],
         "BGTaskSchedulerPermittedIdentifiers": [
           "com.transistorsoft.fetch",
           "com.transistorsoft.customtask"
@@ -35,7 +30,6 @@
       "bundleIdentifier": "com.dts.driverportal"
     },
     "android": {
-      "googleServicesFile": "./google-services.json",
       "package": "com.dts.driverportal",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
@@ -48,12 +42,16 @@
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.POST_NOTIFICATIONS",
         "android.permission.ACTIVITY_RECOGNITION",
-        "ACCESS_FINE_LOCATION",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.CAMERA",
         "ACCESS_BACKGROUND_LOCATION",
-        "FOREGROUND_SERVICE",
         "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "FOREGROUND_SERVICE",
         "POST_NOTIFICATIONS",
-        "ACTIVITY_RECOGNITION"
+        "ACTIVITY_RECOGNITION",
+        "RECORD_AUDIO",
+        "CAMERA"
       ]
     },
     "web": {
@@ -74,7 +72,7 @@
       [
         "react-native-background-geolocation",
         {
-          "license": "YOUR_LICENSE_KEY_HERE",
+          "license": "1aab35a73c425d0282aeca5f08f3ec32b79888108a74cd0d19760162e07d1f57",
           "polygonLicense": "YOUR_POLYGON_LICENSE_HERE",
           "hmsLicense": "YOUR_HMS_LICENSE_HERE"
         }
@@ -113,7 +111,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "c100c394-64bc-4989-888c-d8dac2749e35"
+        "projectId": "e6679f77-6cfe-4744-a18d-8f2f1713a5ec"
       }
     }
   }
