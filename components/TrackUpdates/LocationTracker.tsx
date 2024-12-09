@@ -1,10 +1,9 @@
 import { getValueFor } from "@/lib/SecureStore/SecureStore";
 import React, { useEffect } from "react";
-import { ToastAndroid } from "react-native";
 import BackgroundGeolocation from "react-native-background-geolocation";
 
 const handleLocationUpdate = async (location: any) => {
-  ToastAndroid.show("Updating Location", ToastAndroid.SHORT);
+  console.log("Updating Location");
   try {
     const userJson: any = await getValueFor("user");
     const user = JSON.parse(userJson);
@@ -50,7 +49,7 @@ const App = () => {
       distanceFilter: 1,
       stopOnTerminate: false,
       startOnBoot: true,
-      debug: true, // Enable sounds and verbose logs
+      debug: false, // Enable sounds and verbose logs
       logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
     })
       .then((state) => {

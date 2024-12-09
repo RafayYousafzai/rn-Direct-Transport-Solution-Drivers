@@ -73,7 +73,7 @@ export default function Booking() {
         </Text>
         <View className="mt-4 p-4 bg-white rounded-lg shadow-md border border-gray-300">
           <Text className="text-sm text-gray-600">
-            Drop Company Name: {selectedBooking?.pickupCompanyName || "N/A"}
+            Pickup Company Name: {selectedBooking?.pickupCompanyName || "N/A"}
           </Text>
           <Text className="text-sm text-gray-600">
             Address:
@@ -82,11 +82,13 @@ export default function Booking() {
           <Text className="text-sm text-gray-600">
             Pickup Phone: {selectedBooking?.pickupPhone || "N/A"}
           </Text>
-          <PickUpJob
-            selectedBooking={selectedBooking}
-            loading={loading}
-            setLoading={setLoading}
-          />
+          {!selectedBooking?.progressInformation?.delivered && (
+            <PickUpJob
+              selectedBooking={selectedBooking}
+              loading={loading}
+              setLoading={setLoading}
+            />
+          )}
         </View>
 
         {/* Drop Section */}
